@@ -1,46 +1,79 @@
 {
   "date": "2026-03",
-  "generated": "2026-03-18T11:23:51Z",
+  "generated": "2026-03-18T12:37:58Z",
   "etf_weight": 0.4,
   "def_weight": 0.6,
   "etf_signal": {
     "date": "2026-03",
-    "generated": "2026-03-18T11:23:48Z",
-    "strategy": "HolyETF M4",
-    "regime": "ACUTE_EQUITY",
+    "generated": "2026-03-18T12:37:56Z",
+    "regime": "STRESS",
+    "regime_label": "警戒（防御型）",
     "sensors": {
       "CREDIT": "DEF",
-      "RATES": "ATK",
+      "RATES": "NEU",
       "ROTATION": "DEF",
-      "MOMENTUM": "ATK"
+      "MOMENTUM": "DEF"
     },
+    "mode": "NEUTRAL",
+    "c5_active": true,
     "rates_acute": false,
+    "weights_M1": {
+      "GLD": 0.2899,
+      "XLU": 0.2585,
+      "TMV": 0.2475,
+      "TECL": 0.1021,
+      "TQQQ": 0.1021
+    },
+    "weights_M3": {
+      "GLD": 0.2667,
+      "XLU": 0.2747,
+      "TMV": 0.2314,
+      "TECL": 0.1136,
+      "TQQQ": 0.1136
+    },
+    "weights_M4": {
+      "GLD": 0.2667,
+      "XLU": 0.2747,
+      "TMV": 0.2314,
+      "TECL": 0.1136,
+      "TQQQ": 0.1136
+    },
     "holdings": [
       {
-        "ticker": "TQQQ",
-        "weight": 0.35,
-        "price": 48.16
-      },
-      {
-        "ticker": "TECL",
-        "weight": 0.25,
-        "price": 101.48
+        "ticker": "XLU",
+        "weight": 0.2747,
+        "strategy": "ETF M4",
+        "weight_in_strategy": 0.2747
       },
       {
         "ticker": "GLD",
-        "weight": 0.25,
-        "price": 459.27
+        "weight": 0.2667,
+        "strategy": "ETF M4",
+        "weight_in_strategy": 0.2667
       },
       {
-        "ticker": "XLU",
-        "weight": 0.15,
-        "price": 47.13
+        "ticker": "TMV",
+        "weight": 0.2314,
+        "strategy": "ETF M4",
+        "weight_in_strategy": 0.2314
+      },
+      {
+        "ticker": "TECL",
+        "weight": 0.1136,
+        "strategy": "ETF M4",
+        "weight_in_strategy": 0.1136
+      },
+      {
+        "ticker": "TQQQ",
+        "weight": 0.1136,
+        "strategy": "ETF M4",
+        "weight_in_strategy": 0.1136
       }
     ]
   },
   "def_signal": {
     "date": "2026-03",
-    "generated": "2026-03-18T11:23:51Z",
+    "generated": "2026-03-18T12:37:58Z",
     "strategy": "OG防御型",
     "top_n": 4,
     "holdings": [
@@ -103,25 +136,25 @@
       "price": 28.76
     },
     {
-      "ticker": "TQQQ",
+      "ticker": "XLU",
       "strategy": "ETF M4",
-      "weight_in_strategy": 0.35,
-      "weight_in_portfolio": 0.14,
-      "price": 48.16
-    },
-    {
-      "ticker": "TECL",
-      "strategy": "ETF M4",
-      "weight_in_strategy": 0.25,
-      "weight_in_portfolio": 0.1,
-      "price": 101.48
+      "weight_in_strategy": 0.2747,
+      "weight_in_portfolio": 0.1099,
+      "price": 0
     },
     {
       "ticker": "GLD",
       "strategy": "ETF M4",
-      "weight_in_strategy": 0.25,
-      "weight_in_portfolio": 0.1,
-      "price": 459.27
+      "weight_in_strategy": 0.2667,
+      "weight_in_portfolio": 0.1067,
+      "price": 0
+    },
+    {
+      "ticker": "TMV",
+      "strategy": "ETF M4",
+      "weight_in_strategy": 0.2314,
+      "weight_in_portfolio": 0.0926,
+      "price": 0
     },
     {
       "ticker": "GLD",
@@ -133,13 +166,20 @@
       "price": 459.27
     },
     {
-      "ticker": "XLU",
+      "ticker": "TECL",
       "strategy": "ETF M4",
-      "weight_in_strategy": 0.15,
-      "weight_in_portfolio": 0.06,
-      "price": 47.13
+      "weight_in_strategy": 0.1136,
+      "weight_in_portfolio": 0.0454,
+      "price": 0
+    },
+    {
+      "ticker": "TQQQ",
+      "strategy": "ETF M4",
+      "weight_in_strategy": 0.1136,
+      "weight_in_portfolio": 0.0454,
+      "price": 0
     }
   ],
-  "regime": "ACUTE_EQUITY",
-  "regime_label": "急性株式（回復型）"
+  "regime": "STRESS",
+  "regime_label": "ストレス（守備型）"
 }

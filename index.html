@@ -172,6 +172,68 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
   </div>
 </section>
 
+<!-- ═══ SECTION 1.5: 配分カスタマイズ + 戦略指標 ═══ -->
+<section id="alloc-stats" style="margin-bottom:32px">
+<!-- 配分スライダー -->
+    <div style="background:var(--off);border-radius:10px;padding:14px 18px;margin-bottom:16px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <span style="font-size:.75rem;font-weight:600;color:var(--navy)">配分比率カスタマイズ</span>
+        <div style="display:flex;gap:16px">
+          <span style="font-size:.75rem;color:var(--green);font-weight:600">ETF M4: <span id="etfPct">40</span>%</span>
+          <span style="font-size:.75rem;color:var(--gold);font-weight:600">OG防御型: <span id="defPct">60</span>%</span>
+        </div>
+      </div>
+      <input type="range" id="allocSlider" min="0" max="100" value="40" step="10"
+        style="width:100%" oninput="onSlider(this.value)">
+      <div style="display:flex;justify-content:space-between;font-size:.62rem;color:var(--g400);margin-top:4px">
+        <span>防御型100%</span><span>ETF40%</span><span>ETF100%</span>
+      </div>
+    </div>
+
+<div id="statsCards">
+    <div class="stat-card"><div class="stat-label">CAGR</div>
+      <div class="stat-val" id="statCagr" style="color:var(--green)">—</div>
+      <div class="stat-sub">年率リターン</div></div>
+    <div class="stat-card"><div class="stat-label">Sharpe</div>
+      <div class="stat-val" id="statSharpe" style="color:var(--navy)">—</div>
+      <div class="stat-sub">リスク調整後収益</div></div>
+    <div class="stat-card"><div class="stat-label">Sortino</div>
+      <div class="stat-val" id="statSortino" style="color:var(--navy)">—</div>
+      <div class="stat-sub">下方リスク調整後</div></div>
+    <div class="stat-card"><div class="stat-label">Max DD</div>
+      <div class="stat-val" id="statMaxdd" style="color:var(--red)">—</div>
+      <div class="stat-sub">最大ドローダウン</div></div>
+  </div>
+  <!-- 推奨テーブル -->
+  <div class="card">
+    <div style="font-size:.75rem;font-weight:600;color:var(--navy);margin-bottom:12px">
+      配分比率別パフォーマンス（バックテスト 2016〜2026年 / 120ヶ月）
+    </div>
+    <div style="overflow-x:auto">
+    <table style="width:100%;border-collapse:collapse;min-width:500px" id="perfTable">
+      <thead>
+        <tr style="border-bottom:2px solid var(--g100)">
+          <th style="text-align:left;padding:8px 10px;font-size:.62rem;font-weight:600;
+            color:var(--g400);text-transform:uppercase">タイプ</th>
+          <th style="text-align:center;padding:8px 10px;font-size:.62rem;font-weight:600;
+            color:var(--green)">ETF M4</th>
+          <th style="text-align:center;padding:8px 10px;font-size:.62rem;font-weight:600;
+            color:var(--gold)">OG防御型</th>
+          <th style="text-align:right;padding:8px 10px;font-size:.62rem;font-weight:600;
+            color:var(--g400)">CAGR</th>
+          <th style="text-align:right;padding:8px 10px;font-size:.62rem;font-weight:600;
+            color:var(--g400)">MaxDD</th>
+          <th style="text-align:right;padding:8px 10px;font-size:.62rem;font-weight:600;
+            color:var(--g400)">Calmar</th>
+        </tr>
+      </thead>
+      <tbody id="perfBody"></tbody>
+    </table>
+    </div>
+  </div>
+</section>
+</section>
+
 <!-- ═══ SECTION 2: ポートフォリオ ═══ -->
 <section id="portfolio" style="margin-bottom:32px">
   <div class="sec-label">ポートフォリオ構成</div>
@@ -266,21 +328,6 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
           background:var(--white);color:var(--g600);font-weight:500">GLD → GLDM代替</button>
       </div>
     </div>
-    <!-- 配分スライダー -->
-    <div style="background:var(--off);border-radius:10px;padding:14px 18px;margin-bottom:16px">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-        <span style="font-size:.75rem;font-weight:600;color:var(--navy)">配分比率カスタマイズ</span>
-        <div style="display:flex;gap:16px">
-          <span style="font-size:.75rem;color:var(--green);font-weight:600">ETF M4: <span id="etfPct">40</span>%</span>
-          <span style="font-size:.75rem;color:var(--gold);font-weight:600">OG防御型: <span id="defPct">60</span>%</span>
-        </div>
-      </div>
-      <input type="range" id="allocSlider" min="0" max="100" value="40" step="10"
-        style="width:100%" oninput="onSlider(this.value)">
-      <div style="display:flex;justify-content:space-between;font-size:.62rem;color:var(--g400);margin-top:4px">
-        <span>防御型100%</span><span>ETF40%</span><span>ETF100%</span>
-      </div>
-    </div>
     <div id="rebalTable" style="overflow-x:auto">
       <table style="width:100%;border-collapse:collapse;min-width:520px" id="rebalMain">
         <thead>
@@ -305,52 +352,6 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
     </div>
     <div style="margin-top:10px;font-size:.68rem;color:var(--g400)">
       ※ 株価は毎朝JST07:00に自動更新。実際の発注前に証券口座で最終確認。購入株数は切り捨て。端数は現金保有。
-    </div>
-  </div>
-</section>
-
-<!-- ═══ SECTION 4: パフォーマンス指標 ═══ -->
-<section id="perf-cards" style="margin-bottom:32px">
-  <div class="sec-label">戦略指標（選択配分での推定値）</div>
-  <div id="statsCards">
-    <div class="stat-card"><div class="stat-label">CAGR</div>
-      <div class="stat-val" id="statCagr" style="color:var(--green)">—</div>
-      <div class="stat-sub">年率リターン</div></div>
-    <div class="stat-card"><div class="stat-label">Sharpe</div>
-      <div class="stat-val" id="statSharpe" style="color:var(--navy)">—</div>
-      <div class="stat-sub">リスク調整後収益</div></div>
-    <div class="stat-card"><div class="stat-label">Sortino</div>
-      <div class="stat-val" id="statSortino" style="color:var(--navy)">—</div>
-      <div class="stat-sub">下方リスク調整後</div></div>
-    <div class="stat-card"><div class="stat-label">Max DD</div>
-      <div class="stat-val" id="statMaxdd" style="color:var(--red)">—</div>
-      <div class="stat-sub">最大ドローダウン</div></div>
-  </div>
-  <!-- 推奨テーブル -->
-  <div class="card">
-    <div style="font-size:.75rem;font-weight:600;color:var(--navy);margin-bottom:12px">
-      配分比率別パフォーマンス（バックテスト 2016〜2026年 / 120ヶ月）
-    </div>
-    <div style="overflow-x:auto">
-    <table style="width:100%;border-collapse:collapse;min-width:500px" id="perfTable">
-      <thead>
-        <tr style="border-bottom:2px solid var(--g100)">
-          <th style="text-align:left;padding:8px 10px;font-size:.62rem;font-weight:600;
-            color:var(--g400);text-transform:uppercase">タイプ</th>
-          <th style="text-align:center;padding:8px 10px;font-size:.62rem;font-weight:600;
-            color:var(--green)">ETF M4</th>
-          <th style="text-align:center;padding:8px 10px;font-size:.62rem;font-weight:600;
-            color:var(--gold)">OG防御型</th>
-          <th style="text-align:right;padding:8px 10px;font-size:.62rem;font-weight:600;
-            color:var(--g400)">CAGR</th>
-          <th style="text-align:right;padding:8px 10px;font-size:.62rem;font-weight:600;
-            color:var(--g400)">MaxDD</th>
-          <th style="text-align:right;padding:8px 10px;font-size:.62rem;font-weight:600;
-            color:var(--g400)">Calmar</th>
-        </tr>
-      </thead>
-      <tbody id="perfBody"></tbody>
-    </table>
     </div>
   </div>
 </section>
@@ -386,7 +387,7 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
     </div>
     <!-- 凡例 -->
     <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:12px" id="chartLegend">
-      <div class="chart-legend-item" data-key="selected"><span style="background:#0072B2"></span>選択配分（推奨40:60）</div>
+      <div class="chart-legend-item" data-key="selected"><span style="background:#0072B2"></span>選択配分</div>
       <div class="chart-legend-item" data-key="etf"><span style="background:#E69F00"></span>ETF M4 単体</div>
       <div class="chart-legend-item" data-key="def"><span style="background:#009E73"></span>OG防御型 単体</div>
       <div class="chart-legend-item" data-key="spy"><span style="background:#757575"></span>SPY</div>
@@ -499,6 +500,15 @@ function renderSignal(){
   const regimeLabel = d.regime_label || regime;
   document.getElementById('regimeName').textContent = regime;
   document.getElementById('regimeJp').textContent   = regimeLabel;
+  // 推奨配分の固定表示（スライダーと独立）
+  const recEtf = Math.round((d.etf_weight||0.4)*100);
+  const recDef = Math.round((d.def_weight||0.6)*100);
+  const edEl = document.getElementById('etfWeightDisp');
+  const ddEl = document.getElementById('defWeightDisp');
+  const abEl = document.getElementById('allocationBar');
+  if(edEl) edEl.textContent = recEtf+'%';
+  if(ddEl) ddEl.textContent = recDef+'%';
+  if(abEl) abEl.style.width = recEtf+'%';
   // センサー
   const sensors = d.etf_signal?.sensors || {};
   ['credit','rates','rotation','momentum'].forEach(k=>{
@@ -560,11 +570,8 @@ function onSlider(v){
   etfWeight = v/100; defWeight = 1-etfWeight;
   document.getElementById('etfPct').textContent  = v;
   document.getElementById('defPct').textContent  = 100-v;
-  document.getElementById('etfWeightDisp').textContent = v+'%';
-  document.getElementById('defWeightDisp').textContent = (100-v)+'%';
   document.getElementById('etfWeightBadge').textContent = v+'%';
   document.getElementById('defWeightBadge').textContent = (100-v)+'%';
-  document.getElementById('allocationBar').style.width = v+'%';
   renderPortfolio(); calcRebalance(); updateStatsDisplay(); updateCumChart();
 }
 
