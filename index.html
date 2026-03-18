@@ -61,11 +61,56 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
   .header{padding:0 12px}.nav{display:none}
   #statsCards{grid-template-columns:1fr 1fr!important}
   #portfolioGrid{grid-template-columns:1fr!important}
+
+  /* ── シグナルヒーロー ── */
+  #regimeHero{
+    grid-template-columns:1fr !important;
+    padding:20px !important;
+    gap:16px !important;
+  }
+  .regime-sep{ display:none !important; }
+  #allocationRow{ justify-content:center; }
+
+  /* ── パフォーマンス・年次テーブル: フォントサイズ縮小 ── */
+  #perfTable th, #perfTable td,
+  #annualTable th, #annualTable td{
+    font-size:.68rem !important;
+    padding:6px 5px !important;
+  }
+
+  /* ── リバランス計算テーブル: 列を3列に絞る ── */
+  .rebal-hide-mobile{ display:none !important; }
+  #rebalMain th, #rebalMain td{
+    font-size:.72rem !important;
+    padding:7px 6px !important;
+  }
+
+  /* ── DSRテーブル ── */
+  #dsrTable th, #dsrTable td{
+    font-size:.65rem !important;
+    padding:6px 4px !important;
+  }
+  .dsr-hide-mobile{ display:none !important; }
+
+  /* ── ナビ非表示 ── */
+  nav a{ font-size:.68rem; padding:0 8px; }
+
+  /* 配分比率数字をモバイルで小さく */
+  #etfWeightDisp, #defWeightDisp{
+    font-size:1.4rem !important;
+  }
+  /* allocationRowを横並び維持 */
+  #allocationRow{
+    flex-direction:row !important;
+    justify-content:flex-start !important;
+    align-items:center !important;
+    flex-wrap:nowrap !important;
+    gap:10px !important;
+  }
   #regimeHero{grid-template-columns:1fr!important;padding:18px!important}
   .regime-sep{display:none!important}
   #regimeHero>div{padding:12px 0!important;border-bottom:1px solid rgba(255,255,255,.1)!important;margin:0!important}
   #regimeHero>div:last-child{border-bottom:none!important}
-  #allocationRow{flex-direction:column!important;gap:12px!important}
   .perf-table-wrap{overflow-x:auto}
   .annual-font{font-size:.7rem!important}
 }
@@ -358,7 +403,7 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
           <tr style="border-bottom:2px solid var(--g100)">
             <th style="text-align:left;padding:8px 10px;font-size:.62rem;font-weight:600;
               color:var(--g400);text-transform:uppercase">銘柄</th>
-            <th style="text-align:left;padding:8px 10px;font-size:.62rem;font-weight:600;
+            <th class="rebal-hide-mobile" style="text-align:left;padding:8px 10px;font-size:.62rem;font-weight:600;
               color:var(--g400);text-transform:uppercase">戦略</th>
             <th style="text-align:right;padding:8px 10px;font-size:.62rem;font-weight:600;
               color:var(--g400);text-transform:uppercase">目標比率 / 投資額</th>
@@ -437,7 +482,7 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
             color:#E69F00">ETF M4</th>
           <th style="text-align:right;padding:9px 10px;font-size:.62rem;font-weight:600;
             color:#009E73">OG防御型</th>
-          <th style="text-align:right;padding:9px 10px;font-size:.62rem;font-weight:600;
+          <th class="dsr-hide-mobile" style="text-align:right;padding:9px 10px;font-size:.62rem;font-weight:600;
             color:var(--g400)">SPY</th>
         </tr>
       </thead>
@@ -491,7 +536,7 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
           <th style="text-align:right;padding:8px 10px;font-size:.62rem;font-weight:600;color:var(--g400);text-transform:uppercase">CAGR</th>
           <th style="text-align:right;padding:8px 10px;font-size:.62rem;font-weight:600;color:var(--g400);text-transform:uppercase">Sharpe</th>
           <th style="text-align:right;padding:8px 10px;font-size:.62rem;font-weight:600;color:var(--g400);text-transform:uppercase">DSR</th>
-          <th style="text-align:right;padding:8px 10px;font-size:.62rem;font-weight:600;color:var(--g400);text-transform:uppercase">p値</th>
+          <th class="dsr-hide-mobile" style="text-align:right;padding:8px 10px;font-size:.62rem;font-weight:600;color:var(--g400);text-transform:uppercase">p値</th>
           <th style="text-align:center;padding:8px 10px;font-size:.62rem;font-weight:600;color:var(--g400);text-transform:uppercase">判定</th>
         </tr>
       </thead>
@@ -723,7 +768,7 @@ function calcRebalance(){
     rows+=`<tr style="border-bottom:1px solid var(--g100)">
       <td style="padding:9px 10px;font-family:'DM Mono',monospace;font-size:.85rem;font-weight:600">
         ${t}${(useGLDM && h.ticker==='GLD')?'<span style="font-size:.62rem;color:var(--gold);margin-left:4px">GLDM</span>':''}</td>
-      <td style="padding:9px 10px;font-size:.72rem"><span style="color:${stratColor};font-weight:600">${stratLabel}</span></td>
+      <td class="rebal-hide-mobile" style="padding:9px 10px;font-size:.72rem"><span style="color:${stratColor};font-weight:600">${stratLabel}</span></td>
       <td style="padding:9px 10px;text-align:right;font-family:'DM Mono',monospace;font-size:.78rem">
         ${(adjAlloc*100).toFixed(1)}%<br><span style="color:var(--g400)">${amtDisp}</span></td>
       <td style="padding:9px 10px;text-align:right;font-family:'DM Mono',monospace;font-size:.85rem">${priceDisp}</td>
@@ -833,7 +878,7 @@ function renderAnnual(){
       <td style="padding:9px 10px;text-align:right;font-family:'DM Mono',monospace;font-size:.82rem;font-weight:600;${clr(cs)}">${fmtAnn(cs)}</td>
       <td style="padding:9px 10px;text-align:right;font-family:'DM Mono',monospace;font-size:.82rem;${clr(ce)}">${fmtAnn(ce)}</td>
       <td style="padding:9px 10px;text-align:right;font-family:'DM Mono',monospace;font-size:.82rem;${clr(cd)}">${fmtAnn(cd)}</td>
-      <td style="padding:9px 10px;text-align:right;font-family:'DM Mono',monospace;font-size:.82rem;color:var(--g600)">${fmtAnn(cs2)}</td>
+      <td class="dsr-hide-mobile" style="padding:9px 10px;text-align:right;font-family:'DM Mono',monospace;font-size:.82rem;color:var(--g600)">${fmtAnn(cs2)}</td>
     </tr>`;
   }).join('');
 }
@@ -882,7 +927,7 @@ function renderDSR(){
       <td style="padding:8px 10px;text-align:right;font-family:'DM Mono',monospace;font-size:.8rem">${r.Sharpe.toFixed(2)}</td>
       <td style="padding:8px 10px;text-align:right;font-family:'DM Mono',monospace;font-size:.8rem;
         color:${r.DSR>=0.999?'var(--green)':r.DSR>=0.95?'var(--navy)':'var(--red)'}">${(r.DSR*100).toFixed(1)}%</td>
-      <td style="padding:8px 10px;text-align:right;font-family:'DM Mono',monospace;font-size:.78rem;
+      <td class="dsr-hide-mobile" style="padding:8px 10px;text-align:right;font-family:'DM Mono',monospace;font-size:.78rem;
         color:${r.p_val<0.001?'var(--green)':r.p_val<0.05?'var(--navy)':'var(--red)'}">${r.p_val===0?'<0.001':r.p_val.toFixed(4)}</td>
       <td style="padding:8px 10px;text-align:center;font-size:.88rem;font-weight:600;color:${markColor}">${mark}</td>
     </tr>`;
@@ -1026,7 +1071,7 @@ function renderAnnualWithKey(selKey){
       <td style="padding:9px 10px;text-align:right;font-family:'DM Mono',monospace;font-size:.82rem;font-weight:600;${clr(cs)}">${fmtAnn(cs)}</td>
       <td style="padding:9px 10px;text-align:right;font-family:'DM Mono',monospace;font-size:.82rem;${clr(ce)}">${fmtAnn(ce)}</td>
       <td style="padding:9px 10px;text-align:right;font-family:'DM Mono',monospace;font-size:.82rem;${clr(cd)}">${fmtAnn(cd)}</td>
-      <td style="padding:9px 10px;text-align:right;font-family:'DM Mono',monospace;font-size:.82rem;color:var(--g600)">${fmtAnn(cs2)}</td>
+      <td class="dsr-hide-mobile" style="padding:9px 10px;text-align:right;font-family:'DM Mono',monospace;font-size:.82rem;color:var(--g600)">${fmtAnn(cs2)}</td>
     </tr>`;
   }).join('');
 }
