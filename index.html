@@ -449,6 +449,66 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
 </section>
 
 </main>
+
+<!-- ═══ SECTION 7: DSR検定 ═══ -->
+<section id="dsr" style="margin-bottom:32px">
+  <div class="sec-label">統計的有意性検定（DSR / Bootstrap）</div>
+  <div class="card" id="dsrCard">
+    <!-- ヘッダー説明 -->
+    <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:center;margin-bottom:20px">
+      <div style="flex:1;min-width:220px">
+        <div style="font-size:.78rem;font-weight:600;color:var(--navy);margin-bottom:4px">
+          Deflated Sharpe Ratio（DSR）
+        </div>
+        <div style="font-size:.72rem;color:var(--g600);line-height:1.6">
+          多重検定バイアスを補正したSharpe比検定。N=11パターンの試行数でインフレを調整。
+          閾値0.95以上でPASS。
+        </div>
+      </div>
+      <div style="flex:1;min-width:220px">
+        <div style="font-size:.78rem;font-weight:600;color:var(--navy);margin-bottom:4px">
+          Bootstrap検定（Block Bootstrap）
+        </div>
+        <div style="font-size:.72rem;color:var(--g600);line-height:1.6">
+          H₀: SR=0 の帰無仮説検定。ブロック長12ヶ月×10,000回反復。
+          p&lt;0.05でPASS。
+        </div>
+      </div>
+      <div style="background:var(--off);border-radius:8px;padding:10px 16px;text-align:center;min-width:140px">
+        <div style="font-size:.6rem;color:var(--g400);text-transform:uppercase;letter-spacing:.1em">対象期間</div>
+        <div style="font-family:'DM Mono',monospace;font-size:.9rem;font-weight:600;color:var(--navy)">120ヶ月</div>
+        <div style="font-size:.62rem;color:var(--g400)">2016〜2026年</div>
+      </div>
+    </div>
+    <!-- 検定結果テーブル -->
+    <div style="overflow-x:auto">
+    <table style="width:100%;border-collapse:collapse;min-width:560px" id="dsrTable">
+      <thead>
+        <tr style="border-bottom:2px solid var(--g100)">
+          <th style="text-align:left;padding:8px 10px;font-size:.62rem;font-weight:600;color:var(--g400);text-transform:uppercase">配分タイプ</th>
+          <th style="text-align:center;padding:8px 6px;font-size:.62rem;font-weight:600;color:var(--green);text-transform:uppercase">ETF M4</th>
+          <th style="text-align:center;padding:8px 6px;font-size:.62rem;font-weight:600;color:var(--gold);text-transform:uppercase">防御型</th>
+          <th style="text-align:right;padding:8px 10px;font-size:.62rem;font-weight:600;color:var(--g400);text-transform:uppercase">CAGR</th>
+          <th style="text-align:right;padding:8px 10px;font-size:.62rem;font-weight:600;color:var(--g400);text-transform:uppercase">Sharpe</th>
+          <th style="text-align:right;padding:8px 10px;font-size:.62rem;font-weight:600;color:var(--g400);text-transform:uppercase">DSR</th>
+          <th style="text-align:right;padding:8px 10px;font-size:.62rem;font-weight:600;color:var(--g400);text-transform:uppercase">p値</th>
+          <th style="text-align:center;padding:8px 10px;font-size:.62rem;font-weight:600;color:var(--g400);text-transform:uppercase">判定</th>
+        </tr>
+      </thead>
+      <tbody id="dsrBody">
+        <tr><td colspan="8" style="padding:16px;text-align:center;color:var(--g400)">読込中...</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <!-- 凡例 -->
+    <div style="margin-top:12px;font-size:.68rem;color:var(--g400);line-height:1.7">
+      ✅✅ = DSR PASS かつ Bootstrap PASS &nbsp;|&nbsp;
+      N=11（試行数）&nbsp;|&nbsp; Block Bootstrap ブロック長=12ヶ月, 反復=10,000回<br>
+      Bailey &amp; Lopez de Prado (2014) "The Deflated Sharpe Ratio"
+    </div>
+  </div>
+</section>
+
 <footer>
   <p><strong>Combined Grail</strong> — HolyETF M4 × OG防御型 &nbsp;·&nbsp; 推奨配分: ETF 40% + 防御型 60%</p>
   <p style="margin-top:4px">シグナルは毎月1日JST06:30に自動更新・株価は毎日JST06:30に更新 &nbsp;·&nbsp; 過去の成績は将来を保証しません</p>
@@ -458,6 +518,7 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
 // ── データ ──────────────────────────────────────────
 let signalData  = null;
 let cumData     = null;
+let dsrData     = null;
 let priceData   = null;
 let currentCurrency = 'USD';
 let useGLDM = false;
@@ -498,6 +559,10 @@ async function loadAll(){
     const r3 = await fetch('output/cumulative_returns.json?t='+Date.now());
     if(r3.ok) cumData = await r3.json();
   }catch(e){}
+  try{
+    const r4 = await fetch('output/dsr_results.json?t='+Date.now());
+    if(r4.ok) dsrData = await r4.json();
+  }catch(e){}
   renderAll();
 }
 
@@ -509,7 +574,7 @@ async function renderAll(){
   renderPerfTable();
   renderAnnual();
   initCumChart();
-  updateStatsDisplay();
+  updateStatsDisplay(); renderDSR();
   const d=signalData.date; if(d){
     const parts=d.split('-'); const y=parts[0]; const m=parseInt(parts[1],10);
     const pmEl=document.getElementById('portfolioMonthText');
@@ -776,6 +841,54 @@ function renderAnnual(){
 // ── 累積チャート ──────────────────────────────────
 function getSelectedKey(){
   return 'r'+Math.round(etfWeight*100)+'_'+Math.round(defWeight*100);
+}
+
+
+// ── DSR検定テーブル ──────────────────────────────────────────
+const DSR_TYPE_LABELS = {
+  'r0_100':  '防御型単体',
+  'r10_90':  '超安全型+',
+  'r20_80':  '超安全型',
+  'r30_70':  '安全寄り',
+  'r40_60':  '推奨バランス',
+  'r50_50':  '中間',
+  'r60_40':  '成長寄り',
+  'r70_30':  '成長重視',
+  'r80_20':  '成長強化',
+  'r90_10':  '成長優先+',
+  'r100_0':  'ETF単体',
+};
+
+function renderDSR(){
+  if(!dsrData) return;
+  const rows = dsrData.results || [];
+  let html = '';
+  rows.forEach(r => {
+    const isRec = r.key === 'r40_60';
+    const bg = isRec ? 'background:rgba(10,37,64,.04)' : '';
+    const dsr_ok  = r.DSR_pass;
+    const boot_ok = r.Boot_pass;
+    const mark = dsr_ok && boot_ok ? '✅✅' : (dsr_ok ? '✅❌' : '❌❌');
+    const markColor = (dsr_ok && boot_ok) ? 'var(--green)' : 'var(--red)';
+    const lbl = DSR_TYPE_LABELS[r.key] || r.label;
+    const starBadge = isRec
+      ? '<span style="font-size:.6rem;background:rgba(212,175,90,.15);color:#b8960a;border:1px solid rgba(212,175,90,.4);border-radius:10px;padding:1px 6px;margin-left:6px;font-weight:600">★推奨</span>'
+      : '';
+    html += `<tr style="border-bottom:1px solid var(--g100);${bg}">
+      <td style="padding:8px 10px;font-size:.8rem;font-weight:${isRec?'700':'400'}">${lbl}${starBadge}</td>
+      <td style="padding:8px 6px;text-align:center;font-family:'DM Mono',monospace;font-size:.78rem;color:var(--green)">${r.etf_pct}%</td>
+      <td style="padding:8px 6px;text-align:center;font-family:'DM Mono',monospace;font-size:.78rem;color:var(--gold)">${r.def_pct}%</td>
+      <td style="padding:8px 10px;text-align:right;font-family:'DM Mono',monospace;font-size:.8rem;color:var(--green)">${(r.CAGR*100).toFixed(1)}%</td>
+      <td style="padding:8px 10px;text-align:right;font-family:'DM Mono',monospace;font-size:.8rem">${r.Sharpe.toFixed(2)}</td>
+      <td style="padding:8px 10px;text-align:right;font-family:'DM Mono',monospace;font-size:.8rem;
+        color:${r.DSR>=0.999?'var(--green)':r.DSR>=0.95?'var(--navy)':'var(--red)'}">${(r.DSR*100).toFixed(1)}%</td>
+      <td style="padding:8px 10px;text-align:right;font-family:'DM Mono',monospace;font-size:.78rem;
+        color:${r.p_val<0.001?'var(--green)':r.p_val<0.05?'var(--navy)':'var(--red)'}">${r.p_val===0?'<0.001':r.p_val.toFixed(4)}</td>
+      <td style="padding:8px 10px;text-align:center;font-size:.88rem;font-weight:600;color:${markColor}">${mark}</td>
+    </tr>`;
+  });
+  const el = document.getElementById('dsrBody');
+  if(el) el.innerHTML = html || '<tr><td colspan="8" style="padding:16px;color:var(--g400);text-align:center">データなし</td></tr>';
 }
 
 function updateCumChart(){
