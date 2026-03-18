@@ -236,7 +236,15 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
 
 <!-- ═══ SECTION 2: ポートフォリオ ═══ -->
 <section id="portfolio" style="margin-bottom:32px">
-  <div class="sec-label">ポートフォリオ構成</div>
+  <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:14px">
+    <div class="sec-label" style="margin-bottom:0">ポートフォリオ構成</div>
+    <div id="portMonth" style="display:inline-flex;align-items:center;gap:6px;
+      background:rgba(10,37,64,.08);border-radius:20px;padding:4px 12px">
+      <span style="width:5px;height:5px;border-radius:50%;background:var(--navy);flex-shrink:0"></span>
+      <span id="portMonthText" style="font-family:'DM Mono',monospace;font-size:.72rem;
+        font-weight:600;color:var(--navy)">—</span>
+    </div>
+  </div>
   <div id="portfolioGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
     <!-- ETF M4 -->
     <div class="card">
@@ -297,7 +305,16 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
 
 <!-- ═══ SECTION 3: リバランス計算 ═══ -->
 <section id="rebalance" style="margin-bottom:32px">
-  <div class="sec-label">月次リバランス計算</div>
+  <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:14px">
+    <div class="sec-label" style="margin-bottom:0">月次リバランス計算</div>
+    <div id="rebalMonth" style="display:inline-flex;align-items:center;gap:6px;
+      background:rgba(10,37,64,.08);border-radius:20px;padding:4px 12px">
+      <span style="width:5px;height:5px;border-radius:50%;background:var(--navy);flex-shrink:0"></span>
+      <span id="rebalMonthText" style="font-family:'DM Mono',monospace;font-size:.72rem;
+        font-weight:600;color:var(--navy)">—</span>
+    </div>
+    <span style="font-size:.65rem;color:var(--g400)">シグナル日時点の銘柄・配分</span>
+  </div>
   <div class="card">
     <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:20px">
       <div style="display:flex;align-items:center;gap:8px">
@@ -490,6 +507,12 @@ async function renderAll(){
     const parts=d.split('-'); const y=parts[0]; const m=parseInt(parts[1],10);
     const pmEl=document.getElementById('portfolioMonthText');
     if(pmEl) pmEl.textContent = y+'年 '+m+'月';
+    // ポートフォリオ構成・リバランスの年月も同期
+    const portEl = document.getElementById('portMonthText');
+    const rebEl  = document.getElementById('rebalMonthText');
+    const ymlbl = y+'年 '+m+'月 シグナル';
+    if(portEl) portEl.textContent = ymlbl;
+    if(rebEl)  rebEl.textContent  = ymlbl;
   }
   document.getElementById('headerDate').textContent = (signalData.date||'—') + ' データ';
 }
