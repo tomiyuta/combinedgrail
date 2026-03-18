@@ -19,7 +19,7 @@ OUTPUT = ROOT / 'output'
 OUTPUT.mkdir(exist_ok=True)
 
 TICKERS = [
-    'TQQQ','TECL','SOXL','GLD','XLU','TMV','TLT','XLV',
+    'TQQQ','TECL','SOXL','GLD','GLDM','XLU','TMV','TLT','XLV',
     'EEM','IWM','EFA','QQQ','AGG','IEF','SHY','DBC','TIP','IYR','LQD',
     'SPY','QQQ','AAPL','MSFT','NVDA',
 ]
