@@ -12,9 +12,9 @@ import pandas as pd
 warnings.filterwarnings('ignore')
 logging.basicConfig(level=logging.INFO, format='%(asctime)s [%(levelname)s] %(message)s')
 
-# ── HolyGrail_ETF/engine を sys.path に追加 ────────────────────
+# ── CombinedGrail/engine を sys.path に追加（GitHub Actions対応）──
 _CG_ROOT    = Path(__file__).parent.parent
-_ETF_ENGINE = Path('/Users/yutatomi/Downloads/01_投資・定量分析/HolyGrail_ETF/engine')
+_ETF_ENGINE = _CG_ROOT / 'engine'
 sys.path.insert(0, str(_ETF_ENGINE))
 
 try:

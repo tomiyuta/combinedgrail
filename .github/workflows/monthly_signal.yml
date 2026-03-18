@@ -18,10 +18,12 @@ jobs:
           python-version: '3.11'
           cache: 'pip'
       - run: pip install -r requirements.txt
+      - name: Update market data
+        run: python3 scripts/update_data.py
       - run: python3 scripts/generate_combined.py
       - run: |
           git config user.name "tomiyuta"
           git config user.email "tomiyutaka@gmail.com"
-          git add output/signal_latest.json output/signal_etf_latest.json output/signal_def_latest.json
+          git add output/signal_latest.json output/signal_etf_latest.json output/signal_def_latest.json data/market/prices_monthly_2004_2026.csv data/fred/FRED_VXVCLS_auto.csv
           if git diff --staged --quiet; then echo "No changes"
           else git commit -m "📊 Monthly signal update $(date +'%Y-%m')" && git push; fi
