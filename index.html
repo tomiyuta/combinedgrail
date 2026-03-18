@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Combined Grail — ETF M4 × OG防御型</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root{
+  --navy:#0A2540;--gold:#B8975A;--gold-l:#D4AF7A;
+  --green:#2D7D46;--red:#C0392B;
+  --white:#fff;--off:#F8F7F3;--g100:#EDEDEA;--g200:#D5D3CC;
+  --g400:#9B9990;--g600:#5C5A56;--sh-sm:0 1px 4px rgba(0,0,0,.08);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--off);color:var(--navy);font-size:15px}
+.header{background:var(--white);border-bottom:1px solid var(--g100);padding:0 40px;height:52px;
+  display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.logo{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;color:var(--navy)}
+.logo span{color:var(--gold)}
+.logo-sub{font-size:.6rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--gold);background:rgba(184,151,90,.1);border:1px solid rgba(184,151,90,.3);
+  border-radius:4px;padding:2px 8px;margin-left:8px;vertical-align:middle}
+.nav{display:flex;gap:28px}
+.nav a{font-size:.82rem;font-weight:500;color:var(--g600);cursor:pointer;text-decoration:none;
+  transition:color .15s}
+.nav a:hover{color:var(--navy)}
+.header-right{font-family:'DM Mono',monospace;font-size:.7rem;color:var(--g400)}
+.container{max-width:1140px;margin:0 auto;padding:32px 40px 80px}
+.sec-label{font-size:.62rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--g400);margin-bottom:14px}
+.card{background:var(--white);border-radius:14px;padding:24px 28px;
+  box-shadow:var(--sh-sm);border:1px solid var(--g100)}
+#statsCards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:32px}
+.stat-card{background:var(--white);border-radius:12px;padding:18px 20px;
+  border:1px solid var(--g100);text-align:center}
+.stat-label{font-size:.6rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--g400);margin-bottom:8px}
+.stat-val{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:700;line-height:1}
+.stat-sub{font-size:.68rem;color:var(--g400);margin-top:4px}
+footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
+  font-size:.7rem;color:var(--g400)}
+.chart-legend-item{display:flex;align-items:center;gap:6px;font-size:.75rem;
+  color:var(--g600);cursor:pointer;user-select:none;padding:4px 0}
+.chart-legend-item span{width:22px;height:3px;border-radius:2px;display:inline-block;flex-shrink:0}
+.chart-legend-item.hidden{opacity:.35}
+.tab-btn{padding:7px 18px;border-radius:8px;font-size:.78rem;font-weight:500;
+  border:none;cursor:pointer;transition:all .15s;background:transparent;color:var(--g600)}
+.tab-btn.active{background:var(--navy);color:#fff}
+.pill{display:inline-flex;align-items:center;gap:5px;border-radius:20px;
+  padding:4px 12px;font-size:.7rem;font-weight:600}
+.pill-bull{background:rgba(45,125,70,.12);color:var(--green);border:1px solid rgba(45,125,70,.25)}
+.pill-bear{background:rgba(192,57,43,.1);color:var(--red);border:1px solid rgba(192,57,43,.2)}
+.pill-stress{background:rgba(184,151,90,.12);color:var(--gold);border:1px solid rgba(184,151,90,.25)}
+.ret-pos{color:var(--green);font-weight:600}
+.ret-neg{color:var(--red);font-weight:600}
+@media(max-width:700px){
+  .container{padding:12px 12px 60px}
+  .header{padding:0 12px}.nav{display:none}
+  #statsCards{grid-template-columns:1fr 1fr!important}
+  #portfolioGrid{grid-template-columns:1fr!important}
+  #regimeHero{grid-template-columns:1fr!important;padding:18px!important}
+  .regime-sep{display:none!important}
+  #regimeHero>div{padding:12px 0!important;border-bottom:1px solid rgba(255,255,255,.1)!important;margin:0!important}
+  #regimeHero>div:last-child{border-bottom:none!important}
+  #allocationRow{flex-direction:column!important;gap:12px!important}
+  .perf-table-wrap{overflow-x:auto}
+  .annual-font{font-size:.7rem!important}
+}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div style="display:flex;align-items:center">
+    <span class="logo">Combined<span>Grail</span></span>
+    <span class="logo-sub">ETF M4 × OG防御型</span>
+  </div>
+  <nav class="nav">
+    <a onclick="scrollToId('signal')">シグナル</a>
+    <a onclick="scrollToId('portfolio')">ポートフォリオ</a>
+    <a onclick="scrollToId('rebalance')">リバランス</a>
+    <a onclick="scrollToId('chart')">チャート</a>
+    <a onclick="scrollToId('perf')">パフォーマンス</a>
+  </nav>
+  <div class="header-right" id="headerDate">—</div>
+</header>
+<main class="container">
+
+<!-- ═══ SECTION 1: シグナル ═══ -->
+<section id="signal" style="margin-bottom:32px">
+  <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:14px">
+    <div class="sec-label" style="margin-bottom:0">今月のシグナル</div>
+    <div style="display:inline-flex;align-items:center;gap:6px;background:var(--white);
+      border:1px solid var(--g200);border-radius:6px;padding:4px 10px;box-shadow:var(--sh-sm)">
+      <span style="width:6px;height:6px;border-radius:50%;background:#5dba7a;flex-shrink:0" id="statusDot"></span>
+      <span style="font-family:'DM Mono',monospace;font-size:.68rem;color:var(--g600);font-weight:500">
+        更新: <span id="lastUpdated">—</span>
+      </span>
+    </div>
+  </div>
+  <div style="background:var(--navy);border-radius:18px;padding:28px 36px;
+    position:relative;overflow:hidden;display:grid;
+    grid-template-columns:1fr 1px 1fr 1px 220px;gap:0;align-items:center" id="regimeHero">
+    <div style="position:absolute;top:-60px;right:-60px;width:300px;height:300px;
+      background:radial-gradient(circle,rgba(184,151,90,.12) 0%,transparent 70%);pointer-events:none"></div>
+    <!-- レジーム -->
+    <div style="padding-right:32px">
+      <div style="font-size:.55rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
+        color:rgba(255,255,255,.35);margin-bottom:8px">レジーム / 状態</div>
+      <div id="regimeName" style="font-family:'Playfair Display',serif;font-size:2.2rem;
+        font-weight:700;color:#fff;line-height:1;margin-bottom:5px">—</div>
+      <div id="regimeJp" style="font-size:.85rem;color:var(--gold-l);font-weight:500;margin-bottom:14px">読込中...</div>
+      <div id="portfolioMonth" style="font-family:'DM Mono',monospace;font-size:.75rem;font-weight:600;
+        color:var(--navy);background:rgba(255,255,255,.12);border-radius:4px;
+        padding:3px 10px;display:inline-block">—</div>
+    </div>
+    <div class="regime-sep" style="background:rgba(255,255,255,.08);margin:0 28px;align-self:stretch"></div>
+    <!-- 配分比率 -->
+    <div style="padding:0 28px">
+      <div style="font-size:.55rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
+        color:rgba(255,255,255,.35);margin-bottom:12px">配分比率</div>
+      <div id="allocationRow" style="display:flex;gap:16px;align-items:center">
+        <div>
+          <div style="font-size:.62rem;color:rgba(255,255,255,.5);margin-bottom:4px">HolyETF M4</div>
+          <div id="etfWeightDisp" style="font-family:'Playfair Display',serif;font-size:2rem;
+            font-weight:700;color:#5dba7a;line-height:1">40%</div>
+        </div>
+        <div style="font-size:1.2rem;color:rgba(255,255,255,.3)">:</div>
+        <div>
+          <div style="font-size:.62rem;color:rgba(255,255,255,.5);margin-bottom:4px">OG防御型</div>
+          <div id="defWeightDisp" style="font-family:'Playfair Display',serif;font-size:2rem;
+            font-weight:700;color:var(--gold-l);line-height:1">60%</div>
+        </div>
+      </div>
+      <div style="margin-top:12px;height:6px;background:rgba(255,255,255,.12);border-radius:3px;overflow:hidden">
+        <div id="allocationBar" style="height:100%;width:40%;background:#5dba7a;border-radius:3px;
+          transition:width .5s ease"></div>
+      </div>
+      <div style="font-size:.62rem;color:rgba(255,255,255,.3);margin-top:6px">ETF ← → 防御型</div>
+    </div>
+    <div class="regime-sep" style="background:rgba(255,255,255,.08);margin:0 28px;align-self:stretch"></div>
+    <!-- 信頼度 / センサー -->
+    <div style="padding-left:8px">
+      <div style="font-size:.55rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
+        color:rgba(255,255,255,.35);margin-bottom:10px;text-align:center">センサー状態</div>
+      <div id="sensorGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+        <div style="background:rgba(255,255,255,.07);border-radius:6px;padding:6px 8px;text-align:center">
+          <div style="font-size:.55rem;color:rgba(255,255,255,.4)">CREDIT</div>
+          <div id="s-credit" style="font-size:.75rem;font-weight:600;color:#fff">—</div>
+        </div>
+        <div style="background:rgba(255,255,255,.07);border-radius:6px;padding:6px 8px;text-align:center">
+          <div style="font-size:.55rem;color:rgba(255,255,255,.4)">RATES</div>
+          <div id="s-rates" style="font-size:.75rem;font-weight:600;color:#fff">—</div>
+        </div>
+        <div style="background:rgba(255,255,255,.07);border-radius:6px;padding:6px 8px;text-align:center">
+          <div style="font-size:.55rem;color:rgba(255,255,255,.4)">ROTATION</div>
+          <div id="s-rotation" style="font-size:.75rem;font-weight:600;color:#fff">—</div>
+        </div>
+        <div style="background:rgba(255,255,255,.07);border-radius:6px;padding:6px 8px;text-align:center">
+          <div style="font-size:.55rem;color:rgba(255,255,255,.4)">MOMENTUM</div>
+          <div id="s-momentum" style="font-size:.75rem;font-weight:600;color:#fff">—</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SECTION 2: ポートフォリオ ═══ -->
+<section id="portfolio" style="margin-bottom:32px">
+  <div class="sec-label">ポートフォリオ構成</div>
+  <div id="portfolioGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+    <!-- ETF M4 -->
+    <div class="card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+        <div>
+          <div style="font-size:.6rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+            color:var(--green);margin-bottom:4px">HolyETF M4</div>
+          <div style="font-size:.82rem;color:var(--g600)" id="etfRegimeLabel">—</div>
+        </div>
+        <div id="etfWeightBadge" style="font-family:'DM Mono',monospace;font-size:1.1rem;
+          font-weight:700;color:var(--green)">40%</div>
+      </div>
+      <table style="width:100%;border-collapse:collapse" id="etfTable">
+        <thead>
+          <tr style="border-bottom:2px solid var(--g100)">
+            <th style="text-align:left;padding:6px 0;font-size:.62rem;font-weight:600;
+              color:var(--g400);text-transform:uppercase">銘柄</th>
+            <th style="text-align:right;padding:6px 0;font-size:.62rem;font-weight:600;
+              color:var(--g400);text-transform:uppercase">戦略内比率</th>
+            <th style="text-align:right;padding:6px 0;font-size:.62rem;font-weight:600;
+              color:var(--g400);text-transform:uppercase">PF全体比率</th>
+          </tr>
+        </thead>
+        <tbody id="etfBody">
+          <tr><td colspan="3" style="padding:12px 0;color:var(--g400);font-size:.8rem">読込中...</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <!-- OG防御型 -->
+    <div class="card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+        <div>
+          <div style="font-size:.6rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+            color:var(--gold);margin-bottom:4px">OG防御型（ETF Top4モメンタム）</div>
+          <div style="font-size:.82rem;color:var(--g600)">6Mモメンタム Top4 / InvVol加重</div>
+        </div>
+        <div id="defWeightBadge" style="font-family:'DM Mono',monospace;font-size:1.1rem;
+          font-weight:700;color:var(--gold)">60%</div>
+      </div>
+      <table style="width:100%;border-collapse:collapse">
+        <thead>
+          <tr style="border-bottom:2px solid var(--g100)">
+            <th style="text-align:left;padding:6px 0;font-size:.62rem;font-weight:600;
+              color:var(--g400);text-transform:uppercase">銘柄</th>
+            <th style="text-align:right;padding:6px 0;font-size:.62rem;font-weight:600;
+              color:var(--g400);text-transform:uppercase">6Mモメンタム</th>
+            <th style="text-align:right;padding:6px 0;font-size:.62rem;font-weight:600;
+              color:var(--g400);text-transform:uppercase">PF全体比率</th>
+          </tr>
+        </thead>
+        <tbody id="defBody">
+          <tr><td colspan="3" style="padding:12px 0;color:var(--g400);font-size:.8rem">読込中...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SECTION 3: リバランス計算 ═══ -->
+<section id="rebalance" style="margin-bottom:32px">
+  <div class="sec-label">月次リバランス計算</div>
+  <div class="card">
+    <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:20px">
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="font-size:.82rem;color:var(--g600)">投資資金</span>
+        <div style="display:flex;background:var(--off);border-radius:8px;padding:3px;border:1px solid var(--g200)">
+          <button onclick="setCurrency('USD')" id="btnUSD" class="tab-btn active">USD</button>
+          <button onclick="setCurrency('JPY')" id="btnJPY" class="tab-btn">JPY</button>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span id="currSymbol" style="font-family:'DM Mono',monospace;font-size:.9rem;color:var(--g600)">$</span>
+        <input type="number" id="investAmt" value="10000" min="0" step="100"
+          style="width:130px;font-family:'DM Mono',monospace;font-size:.9rem;padding:6px 10px;
+          border:1px solid var(--g200);border-radius:8px;background:var(--white);"
+          oninput="calcRebalance()">
+      </div>
+      <div style="display:flex;align-items:center;gap:6px">
+        <span style="font-size:.75rem;color:var(--g400)">ドル円:</span>
+        <input type="number" id="usdjpy" value="155.0" step="0.1"
+          style="width:80px;font-family:'DM Mono',monospace;font-size:.82rem;padding:5px 8px;
+          border:1px solid var(--g200);border-radius:6px;background:var(--white)"
+          oninput="calcRebalance()">
+        <span style="font-size:.72rem;color:var(--g400)">円/ドル</span>
+        <button onclick="fetchRate()" style="font-size:.72rem;padding:5px 10px;border:1px solid var(--g200);
+          border-radius:6px;cursor:pointer;background:var(--white);color:var(--navy)">現在レート取得</button>
+      </div>
+    </div>
+    <!-- 配分スライダー -->
+    <div style="background:var(--off);border-radius:10px;padding:14px 18px;margin-bottom:16px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <span style="font-size:.75rem;font-weight:600;color:var(--navy)">配分比率カスタマイズ</span>
+        <div style="display:flex;gap:16px">
+          <span style="font-size:.75rem;color:var(--green);font-weight:600">ETF M4: <span id="etfPct">40</span>%</span>
+          <span style="font-size:.75rem;color:var(--gold);font-weight:600">OG防御型: <span id="defPct">60</span>%</span>
+        </div>
+      </div>
+      <input type="range" id="allocSlider" min="0" max="100" value="40" step="10"
+        style="width:100%" oninput="onSlider(this.value)">
+      <div style="display:flex;justify-content:space-between;font-size:.62rem;color:var(--g400);margin-top:4px">
+        <span>防御型100%</span><span>ETF40%</span><span>ETF100%</span>
+      </div>
+    </div>
+    <div id="rebalTable" style="overflow-x:auto">
+      <table style="width:100%;border-collapse:collapse;min-width:520px" id="rebalMain">
+        <thead>
+          <tr style="border-bottom:2px solid var(--g100)">
+            <th style="text-align:left;padding:8px 10px;font-size:.62rem;font-weight:600;
+              color:var(--g400);text-transform:uppercase">銘柄</th>
+            <th style="text-align:left;padding:8px 10px;font-size:.62rem;font-weight:600;
+              color:var(--g400);text-transform:uppercase">戦略</th>
+            <th style="text-align:right;padding:8px 10px;font-size:.62rem;font-weight:600;
+              color:var(--g400);text-transform:uppercase">目標比率 / 投資額</th>
+            <th style="text-align:right;padding:8px 10px;font-size:.62rem;font-weight:600;
+              color:var(--g400);text-transform:uppercase">株価</th>
+            <th style="text-align:right;padding:8px 10px;font-size:.62rem;font-weight:600;
+              color:var(--g400);text-transform:uppercase">購入株数 / 実配分</th>
+          </tr>
+        </thead>
+        <tbody id="rebalBody">
+          <tr><td colspan="5" style="padding:16px;text-align:center;color:var(--g400)">読込中...</td></tr>
+        </tbody>
+        <tfoot id="rebalFoot"></tfoot>
+      </table>
+    </div>
+    <div style="margin-top:10px;font-size:.68rem;color:var(--g400)">
+      ※ 株価は毎朝JST07:00に自動更新。実際の発注前に証券口座で最終確認。購入株数は切り捨て。端数は現金保有。
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SECTION 4: パフォーマンス指標 ═══ -->
+<section id="perf-cards" style="margin-bottom:32px">
+  <div class="sec-label">戦略指標（選択配分での推定値）</div>
+  <div id="statsCards">
+    <div class="stat-card"><div class="stat-label">CAGR</div>
+      <div class="stat-val" id="statCagr" style="color:var(--green)">—</div>
+      <div class="stat-sub">年率リターン</div></div>
+    <div class="stat-card"><div class="stat-label">Sharpe</div>
+      <div class="stat-val" id="statSharpe" style="color:var(--navy)">—</div>
+      <div class="stat-sub">リスク調整後収益</div></div>
+    <div class="stat-card"><div class="stat-label">Sortino</div>
+      <div class="stat-val" id="statSortino" style="color:var(--navy)">—</div>
+      <div class="stat-sub">下方リスク調整後</div></div>
+    <div class="stat-card"><div class="stat-label">Max DD</div>
+      <div class="stat-val" id="statMaxdd" style="color:var(--red)">—</div>
+      <div class="stat-sub">最大ドローダウン</div></div>
+  </div>
+  <!-- 推奨テーブル -->
+  <div class="card">
+    <div style="font-size:.75rem;font-weight:600;color:var(--navy);margin-bottom:12px">
+      配分比率別パフォーマンス（バックテスト 2016〜2026年 / 120ヶ月）
+    </div>
+    <div style="overflow-x:auto">
+    <table style="width:100%;border-collapse:collapse;min-width:500px" id="perfTable">
+      <thead>
+        <tr style="border-bottom:2px solid var(--g100)">
+          <th style="text-align:left;padding:8px 10px;font-size:.62rem;font-weight:600;
+            color:var(--g400);text-transform:uppercase">タイプ</th>
+          <th style="text-align:center;padding:8px 10px;font-size:.62rem;font-weight:600;
+            color:var(--green)">ETF M4</th>
+          <th style="text-align:center;padding:8px 10px;font-size:.62rem;font-weight:600;
+            color:var(--gold)">OG防御型</th>
+          <th style="text-align:right;padding:8px 10px;font-size:.62rem;font-weight:600;
+            color:var(--g400)">CAGR</th>
+          <th style="text-align:right;padding:8px 10px;font-size:.62rem;font-weight:600;
+            color:var(--g400)">MaxDD</th>
+          <th style="text-align:right;padding:8px 10px;font-size:.62rem;font-weight:600;
+            color:var(--g400)">Calmar</th>
+        </tr>
+      </thead>
+      <tbody id="perfBody"></tbody>
+    </table>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SECTION 5: 累積チャート ═══ -->
+<section id="chart" style="margin-bottom:32px">
+  <div class="card">
+    <div style="display:flex;align-items:center;justify-content:space-between;
+      flex-wrap:wrap;gap:10px;margin-bottom:16px">
+      <div>
+        <div style="font-weight:600;font-size:.95rem;color:var(--navy)">
+          累積リターン推移（2016〜2026年）
+        </div>
+        <div style="font-size:.7rem;color:var(--g400);margin-top:2px">
+          選択配分 / ETF M4単体 / OG防御型単体 / SPY
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        <!-- 期間ボタン -->
+        <div style="display:flex;gap:0;background:var(--off);border-radius:8px;
+          padding:3px;border:1px solid var(--g200)">
+          <button class="tab-btn" onclick="setCumPeriod('5Y',this)">5Y</button>
+          <button class="tab-btn active" onclick="setCumPeriod('ALL',this)">ALL</button>
+        </div>
+        <!-- スケールボタン -->
+        <div style="display:flex;gap:0;background:var(--navy);border-radius:8px;padding:3px">
+          <button class="tab-btn active" onclick="setCumScale('linear',this)"
+            style="color:#fff;font-size:.72rem">LINEAR</button>
+          <button class="tab-btn" onclick="setCumScale('log',this)"
+            style="color:rgba(255,255,255,.5);font-size:.72rem">LOG</button>
+        </div>
+      </div>
+    </div>
+    <!-- 凡例 -->
+    <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:12px" id="chartLegend">
+      <div class="chart-legend-item" data-key="selected"><span style="background:#0072B2"></span>選択配分（推奨40:60）</div>
+      <div class="chart-legend-item" data-key="etf"><span style="background:#E69F00"></span>ETF M4 単体</div>
+      <div class="chart-legend-item" data-key="def"><span style="background:#009E73"></span>OG防御型 単体</div>
+      <div class="chart-legend-item" data-key="spy"><span style="background:#757575"></span>SPY</div>
+    </div>
+    <div style="position:relative;height:340px">
+      <canvas id="cumChart"></canvas>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SECTION 6: 年次パフォーマンス ═══ -->
+<section id="perf" style="margin-bottom:32px">
+  <div class="sec-label">年次パフォーマンス（バックテスト 2016〜2026年）</div>
+  <div class="card perf-table-wrap" style="overflow-x:auto">
+    <table style="width:100%;border-collapse:collapse;min-width:480px">
+      <thead>
+        <tr style="border-bottom:2px solid var(--g100)">
+          <th style="text-align:left;padding:9px 10px;font-size:.62rem;font-weight:600;
+            color:var(--g400);text-transform:uppercase">年</th>
+          <th style="text-align:right;padding:9px 10px;font-size:.62rem;font-weight:600;
+            color:#0072B2">選択配分</th>
+          <th style="text-align:right;padding:9px 10px;font-size:.62rem;font-weight:600;
+            color:#E69F00">ETF M4</th>
+          <th style="text-align:right;padding:9px 10px;font-size:.62rem;font-weight:600;
+            color:#009E73">OG防御型</th>
+          <th style="text-align:right;padding:9px 10px;font-size:.62rem;font-weight:600;
+            color:var(--g400)">SPY</th>
+        </tr>
+      </thead>
+      <tbody id="annualBody" class="annual-font">
+        <tr><td colspan="5" style="padding:16px;text-align:center;color:var(--g400)">読込中...</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+</main>
+<footer>
+  <p><strong>Combined Grail</strong> — HolyETF M4 × OG防御型 &nbsp;·&nbsp; 推奨配分: ETF 40% + 防御型 60%</p>
+  <p style="margin-top:4px">シグナルは毎月1日JST06:30に自動更新・株価は毎日JST06:30に更新 &nbsp;·&nbsp; 過去の成績は将来を保証しません</p>
+</footer>
+
+<script>
+// ── データ ──────────────────────────────────────────
+let signalData  = null;
+let cumData     = null;
+let priceData   = null;
+let currentCurrency = 'USD';
+let etfWeight   = 0.40;
+let defWeight   = 0.60;
+let cumChart    = null;
+let cumLogScale = false;
+let cumPeriod   = 'ALL';
+const hiddenSeries = new Set();
+
+const PERF_ROWS = [
+  {key:'r20_80', type:'超安全型',  etf:20, def:80},
+  {key:'r30_70', type:'安全寄り',  etf:30, def:70},
+  {key:'r40_60', type:'推奨バランス', etf:40, def:60},
+  {key:'r50_50', type:'中間',      etf:50, def:50},
+  {key:'r60_40', type:'成長寄り',  etf:60, def:40},
+  {key:'r70_30', type:'成長重視',  etf:70, def:30},
+  {key:'r100_0', type:'ETF単体',   etf:100,def:0},
+  {key:'r0_100', type:'防御型単体',etf:0,  def:100},
+];
+
+function scrollToId(id){ document.getElementById(id)?.scrollIntoView({behavior:'smooth',block:'start'}); }
+function scrollToOffset(id){ const el=document.getElementById(id); if(el){window.scrollTo({top:el.offsetTop-60,behavior:'smooth'});} }
+
+// ── ロード ──────────────────────────────────────────
+async function loadAll(){
+  try{
+    const r1 = await fetch('output/signal_latest.json?t='+Date.now());
+    if(r1.ok) signalData = await r1.json();
+  }catch(e){}
+  try{
+    const r2 = await fetch('output/prices_latest.json?t='+Date.now());
+    if(r2.ok){ priceData = await r2.json();
+      document.getElementById('usdjpy').value = priceData.usdjpy || 155;
+    }
+  }catch(e){}
+  try{
+    const r3 = await fetch('output/cumulative_returns.json?t='+Date.now());
+    if(r3.ok) cumData = await r3.json();
+  }catch(e){}
+  renderAll();
+}
+
+async function renderAll(){
+  if(!signalData){ document.getElementById('regimeJp').textContent='データ取得失敗'; return; }
+  renderSignal();
+  renderPortfolio();
+  calcRebalance();
+  renderPerfTable();
+  renderAnnual();
+  initCumChart();
+  updateStatsDisplay();
+  const d=signalData.date; if(d){
+    const parts=d.split('-'); const y=parts[0]; const m=parseInt(parts[1],10);
+    const pmEl=document.getElementById('portfolioMonth');
+    if(pmEl) pmEl.textContent = y+'年 '+m+'月';
+  }
+  document.getElementById('headerDate').textContent = (signalData.date||'—') + ' データ';
+}
+
+function renderSignal(){
+  const d = signalData;
+  const regime = d.regime || '—';
+  const regimeLabel = d.regime_label || regime;
+  document.getElementById('regimeName').textContent = regime;
+  document.getElementById('regimeJp').textContent   = regimeLabel;
+  // センサー
+  const sensors = d.etf_signal?.sensors || {};
+  ['credit','rates','rotation','momentum'].forEach(k=>{
+    const el = document.getElementById('s-'+k);
+    if(!el) return;
+    const v = sensors[k.toUpperCase()] || '—';
+    el.textContent = v;
+    el.style.color = v==='ATK' ? '#5dba7a' : v==='DEF' ? '#e07070' : '#fff';
+  });
+  // 最終更新
+  if(priceData?.generated){
+    const dt=new Date(priceData.generated);
+    const jst=new Date(dt.getTime()+9*60*60*1000);
+    document.getElementById('lastUpdated').textContent =
+      jst.toISOString().replace('T',' ').slice(0,16)+' JST';
+  }
+  renderETFLabel(regime);
+}
+
+function renderETFLabel(regime){
+  const el = document.getElementById('etfRegimeLabel');
+  if(el) el.textContent = regime + ' 配分';
+}
+
+function renderPortfolio(){
+  const etfH = signalData?.etf_signal?.holdings || [];
+  const defH = signalData?.def_signal?.holdings || [];
+  // ETF
+  document.getElementById('etfBody').innerHTML = etfH.map(h=>`
+    <tr style="border-bottom:1px solid var(--g100)">
+      <td style="padding:8px 0;font-family:'DM Mono',monospace;font-size:.88rem;font-weight:600">${h.ticker}</td>
+      <td style="padding:8px 0;text-align:right;font-family:'DM Mono',monospace;font-size:.82rem">
+        ${(h.weight*100).toFixed(1)}%</td>
+      <td style="padding:8px 0;text-align:right;font-family:'DM Mono',monospace;font-size:.82rem;color:var(--green)">
+        ${(h.weight*etfWeight*100).toFixed(1)}%</td>
+    </tr>`).join('');
+  // DEF
+  document.getElementById('defBody').innerHTML = defH.map(h=>`
+    <tr style="border-bottom:1px solid var(--g100)">
+      <td style="padding:8px 0;font-family:'DM Mono',monospace;font-size:.88rem;font-weight:600">${h.ticker}</td>
+      <td style="padding:8px 0;text-align:right;font-family:'DM Mono',monospace;font-size:.82rem;
+        color:${(h.momentum_6m||0)>=0?'var(--green)':'var(--red)'}">
+        ${((h.momentum_6m||0)*100).toFixed(1)}%</td>
+      <td style="padding:8px 0;text-align:right;font-family:'DM Mono',monospace;font-size:.82rem;color:var(--gold)">
+        ${(h.weight*defWeight*100).toFixed(1)}%</td>
+    </tr>`).join('');
+}
+
+// ── リバランス計算 ──────────────────────────────────
+function setCurrency(c){
+  currentCurrency=c;
+  document.getElementById('btnUSD').classList.toggle('active',c==='USD');
+  document.getElementById('btnJPY').classList.toggle('active',c==='JPY');
+  document.getElementById('currSymbol').textContent = c==='USD'?'$':'¥';
+  calcRebalance();
+}
+
+function onSlider(v){
+  etfWeight = v/100; defWeight = 1-etfWeight;
+  document.getElementById('etfPct').textContent  = v;
+  document.getElementById('defPct').textContent  = 100-v;
+  document.getElementById('etfWeightDisp').textContent = v+'%';
+  document.getElementById('defWeightDisp').textContent = (100-v)+'%';
+  document.getElementById('etfWeightBadge').textContent = v+'%';
+  document.getElementById('defWeightBadge').textContent = (100-v)+'%';
+  document.getElementById('allocationBar').style.width = v+'%';
+  renderPortfolio(); calcRebalance(); updateStatsDisplay();
+}
+
+function calcRebalance(){
+  if(!signalData) return;
+  const raw  = parseFloat(document.getElementById('investAmt').value)||10000;
+  const usdjpy=parseFloat(document.getElementById('usdjpy').value)||155;
+  const totalUSD = currentCurrency==='USD' ? raw : raw/usdjpy;
+  const holdings = signalData.holdings||[];
+  const prices = priceData?.prices||{};
+  let rows=''; let invested=0;
+  holdings.forEach(h=>{
+    const alloc = h.weight_in_portfolio;
+    const adjAlloc = h.strategy==='ETF M4'
+      ? h.weight_in_strategy * etfWeight
+      : h.weight_in_strategy * defWeight;
+    const targetUSD = totalUSD * adjAlloc;
+    const price = prices[h.ticker] || h.price || 0;
+    const shares = price>0 ? Math.floor(targetUSD/price) : 0;
+    const actualUSD = shares * price;
+    const actualPct = totalUSD>0 ? actualUSD/totalUSD*100 : 0;
+    invested += actualUSD;
+    const diffPct = actualPct - adjAlloc*100;
+    const stratColor = h.strategy==='ETF M4'?'var(--green)':'var(--gold)';
+    const priceDisp = price>0?'$'+price.toFixed(2):'—';
+    const amtDisp = currentCurrency==='USD'?('$'+(targetUSD).toFixed(0))
+      :('¥'+(targetUSD*usdjpy).toFixed(0));
+    rows+=`<tr style="border-bottom:1px solid var(--g100)">
+      <td style="padding:9px 10px;font-family:'DM Mono',monospace;font-size:.85rem;font-weight:600">${h.ticker}</td>
+      <td style="padding:9px 10px;font-size:.72rem"><span style="color:${stratColor};font-weight:600">${h.strategy}</span></td>
+      <td style="padding:9px 10px;text-align:right;font-family:'DM Mono',monospace;font-size:.78rem">
+        ${(adjAlloc*100).toFixed(1)}%<br><span style="color:var(--g400)">${amtDisp}</span></td>
+      <td style="padding:9px 10px;text-align:right;font-family:'DM Mono',monospace;font-size:.85rem">${priceDisp}</td>
+      <td style="padding:9px 10px;text-align:right;font-family:'DM Mono',monospace;font-size:.78rem">
+        <span style="font-weight:600">${shares}株</span><br>
+        <span style="color:${Math.abs(diffPct)<2?'var(--g400)':'var(--red)'};font-size:.7rem">
+          実${actualPct.toFixed(1)}% (${diffPct>=0?'+':''}${diffPct.toFixed(1)}%)</span></td>
+    </tr>`;
+  });
+  document.getElementById('rebalBody').innerHTML = rows;
+  const remaining = totalUSD - invested;
+  const remDisp = currentCurrency==='USD'?('$'+remaining.toFixed(0)):('¥'+(remaining*usdjpy).toFixed(0));
+  document.getElementById('rebalFoot').innerHTML=`
+    <tr style="border-top:2px solid var(--g200)">
+      <td colspan="3" style="padding:10px;font-size:.8rem;color:var(--g600)">実投資額 <strong>$${invested.toFixed(0)}</strong></td>
+      <td colspan="2" style="padding:10px;text-align:right;font-size:.8rem">
+        未使用現金（端数）<strong style="color:var(--red)">${remDisp} (${(remaining/totalUSD*100).toFixed(1)}%)</strong></td>
+    </tr>`;
+}
+
+async function fetchRate(){
+  try{
+    const r=await fetch('https://open.er-api.com/v6/latest/USD');
+    const d=await r.json();
+    document.getElementById('usdjpy').value=d.rates.JPY.toFixed(2);
+    calcRebalance();
+  }catch(e){ alert('レート取得失敗'); }
+}
+
+// ── パフォーマンス表 ──────────────────────────────────
+function renderPerfTable(){
+  if(!cumData) return;
+  const curKey = 'r'+Math.round(etfWeight*100)+'_'+Math.round(defWeight*100);
+  document.getElementById('perfBody').innerHTML = PERF_ROWS.map(row=>{
+    const s = cumData.stats?.[row.key]||{};
+    const isSelected = row.key===curKey;
+    const bg = isSelected ? 'background:rgba(0,114,178,.06)' : '';
+    const mark = isSelected ? '★ ' : '';
+    const clrC = s.cagr>=0?'color:var(--green)':'color:var(--red)';
+    const clrD = 'color:var(--red)';
+    const cal  = s.calmar||0;
+    return `<tr style="border-bottom:1px solid var(--g100);${bg}">
+      <td style="padding:9px 10px;font-size:.8rem;font-weight:${isSelected?'600':'400'}">${mark}${row.type}</td>
+      <td style="padding:9px 10px;text-align:center;font-family:'DM Mono',monospace;font-size:.8rem;color:var(--green)">${row.etf}%</td>
+      <td style="padding:9px 10px;text-align:center;font-family:'DM Mono',monospace;font-size:.8rem;color:var(--gold)">${row.def}%</td>
+      <td style="padding:9px 10px;text-align:right;font-family:'DM Mono',monospace;font-size:.82rem;${clrC}">${s.cagr!=null?((s.cagr*100).toFixed(1)+'%'):'—'}</td>
+      <td style="padding:9px 10px;text-align:right;font-family:'DM Mono',monospace;font-size:.82rem;${clrD}">${s.maxdd!=null?((s.maxdd*100).toFixed(1)+'%'):'—'}</td>
+      <td style="padding:9px 10px;text-align:right;font-family:'DM Mono',monospace;font-size:.82rem">${cal?cal.toFixed(2):'—'}</td>
+    </tr>`;
+  }).join('');
+}
+
+function updateStatsDisplay(){
+  if(!cumData) return;
+  const key = 'r'+Math.round(etfWeight*100)+'_'+Math.round(defWeight*100);
+  const s   = cumData.stats?.[key] || cumData.stats?.['r40_60'];
+  if(!s) return;
+  document.getElementById('statCagr').textContent    = (s.cagr*100).toFixed(1)+'%';
+  document.getElementById('statSharpe').textContent  = s.sharpe.toFixed(2);
+  document.getElementById('statSortino').textContent = s.sortino.toFixed(2);
+  document.getElementById('statMaxdd').textContent   = (s.maxdd*100).toFixed(1)+'%';
+  renderPerfTable();
+  if(cumChart) updateChartSelected();
+}
+
+// ── 年次パフォーマンス ──────────────────────────────────
+function renderAnnual(){
+  if(!cumData) return;
+  const dates   = cumData.dates||[];
+  const curKey  = 'r40_60';
+  const retSel  = cumData['ret_'+curKey]||[];
+  const retETF  = cumData['ret_r100_0']||[];
+  const retDEF  = cumData['ret_r0_100']||[];
+  const retSPY  = cumData['ret_SPY']||[];
+  const yearMap = {};
+  dates.forEach((d,i)=>{
+    const y=d.slice(0,4);
+    if(!yearMap[y]) yearMap[y]={sel:[],etf:[],def:[],spy:[]};
+    yearMap[y].sel.push(retSel[i]||0);
+    yearMap[y].etf.push(retETF[i]||0);
+    yearMap[y].def.push(retDEF[i]||0);
+    yearMap[y].spy.push(retSPY[i]||0);
+  });
+  const prod = arr => (1+arr.reduce((a,v)=>(1+a)*(1+v)-1,0))*-1+1-1;
+  const fmtAnn = v => v==null?'—':(v>=0?'+':'')+((v*100).toFixed(1))+'%';
+  const clr = v => v>=0?'color:var(--green)':'color:var(--red)';
+  const years = Object.keys(yearMap).sort().reverse();
+  document.getElementById('annualBody').innerHTML = years.map(y=>{
+    const d=yearMap[y];
+    const cs=(1+d.sel.reduce((a,v)=>(1+a)*(1+v)-1,0))*1-1;
+    const ce=(1+d.etf.reduce((a,v)=>(1+a)*(1+v)-1,0))*1-1;
+    const cd=(1+d.def.reduce((a,v)=>(1+a)*(1+v)-1,0))*1-1;
+    const cs2=(1+d.spy.reduce((a,v)=>(1+a)*(1+v)-1,0))*1-1;
+    return `<tr style="border-bottom:1px solid var(--g100)">
+      <td style="padding:9px 10px;font-family:'DM Mono',monospace;font-size:.82rem;font-weight:600">${y}</td>
+      <td style="padding:9px 10px;text-align:right;font-family:'DM Mono',monospace;font-size:.82rem;font-weight:600;${clr(cs)}">${fmtAnn(cs)}</td>
+      <td style="padding:9px 10px;text-align:right;font-family:'DM Mono',monospace;font-size:.82rem;${clr(ce)}">${fmtAnn(ce)}</td>
+      <td style="padding:9px 10px;text-align:right;font-family:'DM Mono',monospace;font-size:.82rem;${clr(cd)}">${fmtAnn(cd)}</td>
+      <td style="padding:9px 10px;text-align:right;font-family:'DM Mono',monospace;font-size:.82rem;color:var(--g600)">${fmtAnn(cs2)}</td>
+    </tr>`;
+  }).join('');
+}
+
+// ── 累積チャート ──────────────────────────────────
+function getSelectedKey(){
+  return 'r'+Math.round(etfWeight*100)+'_'+Math.round(defWeight*100);
+}
+
+function initCumChart(){
+  if(!cumData) return;
+  const ctx = document.getElementById('cumChart').getContext('2d');
+  const dates = cumData.dates||[];
+
+  // 選択配分のデータ
+  const selKey = getSelectedKey();
+  const series = {
+    selected: cumData[selKey]||cumData['r40_60']||[],
+    etf:      cumData['r100_0']||[],
+    def:      cumData['r0_100']||[],
+    spy:      cumData['SPY']||[],
+  };
+  const colors = {
+    selected:'#0072B2', etf:'#E69F00', def:'#009E73', spy:'#757575'
+  };
+  const widths = { selected:2.8, etf:2.0, def:2.0, spy:1.4 };
+  const labels = {
+    selected:`選択配分（ETF${Math.round(etfWeight*100)}%）`,
+    etf:'ETF M4 単体', def:'OG防御型 単体', spy:'SPY'
+  };
+
+  if(cumChart){ cumChart.destroy(); }
+
+  cumChart = new Chart(ctx, {
+    type:'line',
+    data:{
+      labels: dates,
+      datasets: Object.keys(series).map(k=>({
+        label: labels[k],
+        data:  series[k],
+        borderColor: colors[k],
+        backgroundColor: colors[k]+'18',
+        borderWidth: widths[k],
+        pointRadius:0, pointHoverRadius:4,
+        tension:0.2,
+        hidden: hiddenSeries.has(k),
+        fill: k==='selected',
+      }))
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      animation:{duration:400},
+      interaction:{mode:'index',intersect:false},
+      scales:{
+        x:{
+          ticks:{maxTicksLimit:8,font:{size:11},color:'#9B9990',
+            callback:(v,i)=>dates[i]?.slice(0,7)},
+          grid:{color:'rgba(0,0,0,.04)'},border:{display:false}
+        },
+        y:{
+          type: cumLogScale?'logarithmic':'linear',
+          ticks:{font:{size:11},color:'#9B9990',
+            callback:v=>v.toFixed(0)+'x'},
+          grid:{color:'rgba(0,0,0,.04)'},border:{display:false}
+        }
+      },
+      plugins:{
+        legend:{display:false},
+        tooltip:{
+          backgroundColor:'rgba(10,37,64,.92)',
+          titleColor:'rgba(255,255,255,.7)',
+          bodyColor:'#fff', padding:10, cornerRadius:8,
+          callbacks:{
+            label: ctx=>`${ctx.dataset.label}: ${ctx.parsed.y.toFixed(2)}x`
+          }
+        }
+      }
+    }
+  });
+
+  // 凡例クリック
+  document.querySelectorAll('.chart-legend-item').forEach(el=>{
+    el.addEventListener('click',()=>{
+      const k = el.dataset.key;
+      if(hiddenSeries.has(k)) hiddenSeries.delete(k);
+      else hiddenSeries.add(k);
+      el.classList.toggle('hidden', hiddenSeries.has(k));
+      const ds = cumChart.data.datasets.find(d=>d.label===labels[k]);
+      if(ds){ ds.hidden=hiddenSeries.has(k); cumChart.update(); }
+    });
+  });
+}
+
+function updateChartSelected(){
+  if(!cumChart||!cumData) return;
+  const key = getSelectedKey();
+  const data = cumData[key]||cumData['r40_60']||[];
+  const label = `選択配分（ETF${Math.round(etfWeight*100)}%）`;
+  const ds = cumChart.data.datasets[0];
+  if(ds){ ds.data=data; ds.label=label; }
+  // 年次テーブルも更新（選択配分が変わるため）
+  renderAnnualWithKey(key);
+  cumChart.update();
+}
+
+function renderAnnualWithKey(selKey){
+  if(!cumData) return;
+  const dates  = cumData.dates||[];
+  const retSel = cumData['ret_'+selKey]||cumData['ret_r40_60']||[];
+  const retETF = cumData['ret_r100_0']||[];
+  const retDEF = cumData['ret_r0_100']||[];
+  const retSPY = cumData['ret_SPY']||[];
+  const yearMap={};
+  dates.forEach((d,i)=>{
+    const y=d.slice(0,4);
+    if(!yearMap[y]) yearMap[y]={sel:[],etf:[],def:[],spy:[]};
+    yearMap[y].sel.push(retSel[i]||0);
+    yearMap[y].etf.push(retETF[i]||0);
+    yearMap[y].def.push(retDEF[i]||0);
+    yearMap[y].spy.push(retSPY[i]||0);
+  });
+  const fmtAnn=v=>v==null?'—':(v>=0?'+':'')+((v*100).toFixed(1))+'%';
+  const clr=v=>v>=0?'color:var(--green)':'color:var(--red)';
+  document.getElementById('annualBody').innerHTML = Object.keys(yearMap).sort().reverse().map(y=>{
+    const d=yearMap[y];
+    const cs=(1+d.sel.reduce((a,v)=>(1+a)*(1+v)-1,0))*1-1;
+    const ce=(1+d.etf.reduce((a,v)=>(1+a)*(1+v)-1,0))*1-1;
+    const cd=(1+d.def.reduce((a,v)=>(1+a)*(1+v)-1,0))*1-1;
+    const cs2=(1+d.spy.reduce((a,v)=>(1+a)*(1+v)-1,0))*1-1;
+    return `<tr style="border-bottom:1px solid var(--g100)">
+      <td style="padding:9px 10px;font-family:'DM Mono',monospace;font-size:.82rem;font-weight:600">${y}</td>
+      <td style="padding:9px 10px;text-align:right;font-family:'DM Mono',monospace;font-size:.82rem;font-weight:600;${clr(cs)}">${fmtAnn(cs)}</td>
+      <td style="padding:9px 10px;text-align:right;font-family:'DM Mono',monospace;font-size:.82rem;${clr(ce)}">${fmtAnn(ce)}</td>
+      <td style="padding:9px 10px;text-align:right;font-family:'DM Mono',monospace;font-size:.82rem;${clr(cd)}">${fmtAnn(cd)}</td>
+      <td style="padding:9px 10px;text-align:right;font-family:'DM Mono',monospace;font-size:.82rem;color:var(--g600)">${fmtAnn(cs2)}</td>
+    </tr>`;
+  }).join('');
+}
+
+function setCumPeriod(p, btn){
+  cumPeriod=p;
+  document.querySelectorAll('.tab-btn').forEach(b=>{ if(['5Y','ALL'].includes(b.textContent)) b.classList.remove('active'); });
+  btn.classList.add('active');
+  if(!cumChart||!cumData) return;
+  const all = cumData.dates||[];
+  let startIdx=0;
+  if(p==='5Y'){ const cut=new Date(); cut.setFullYear(cut.getFullYear()-5);
+    startIdx=all.findIndex(d=>new Date(d)>=cut)||0; }
+  cumChart.data.labels = all.slice(startIdx);
+  Object.keys({selected:1,etf:1,def:1,spy:1}).forEach((k,i)=>{
+    const keys={selected:getSelectedKey(),etf:'r100_0',def:'r0_100',spy:'SPY'};
+    const data = (cumData[keys[k]]||[]).slice(startIdx);
+    if(cumChart.data.datasets[i]) cumChart.data.datasets[i].data=data;
+  });
+  cumChart.update();
+}
+
+function setCumScale(mode, btn){
+  cumLogScale = mode==='log';
+  document.querySelectorAll('.tab-btn').forEach(b=>{ if(['LINEAR','LOG'].includes(b.textContent)){
+    b.classList.toggle('active',b.textContent.toLowerCase()===mode);
+    b.style.color = b.textContent.toLowerCase()===mode?'#fff':'rgba(255,255,255,.5)';
+  }});
+  if(cumChart){ cumChart.options.scales.y.type=cumLogScale?'logarithmic':'linear'; cumChart.update(); }
+}
+
+loadAll();
+</script>
+</body>
+</html>

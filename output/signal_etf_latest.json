@@ -1,0 +1,35 @@
+{
+  "date": "2026-03",
+  "generated": "2026-03-18T11:23:48Z",
+  "strategy": "HolyETF M4",
+  "regime": "ACUTE_EQUITY",
+  "sensors": {
+    "CREDIT": "DEF",
+    "RATES": "ATK",
+    "ROTATION": "DEF",
+    "MOMENTUM": "ATK"
+  },
+  "rates_acute": false,
+  "holdings": [
+    {
+      "ticker": "TQQQ",
+      "weight": 0.35,
+      "price": 48.16
+    },
+    {
+      "ticker": "TECL",
+      "weight": 0.25,
+      "price": 101.48
+    },
+    {
+      "ticker": "GLD",
+      "weight": 0.25,
+      "price": 459.27
+    },
+    {
+      "ticker": "XLU",
+      "weight": 0.15,
+      "price": 47.13
+    }
+  ]
+}

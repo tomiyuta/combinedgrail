@@ -1,0 +1,27 @@
+name: Monthly Signal — Combined Grail
+
+on:
+  schedule:
+    - cron: '30 21 1 * *'  # 毎月1日 UTC21:30 = JST06:30
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+      - run: pip install -r requirements.txt
+      - run: python3 scripts/generate_combined.py
+      - run: |
+          git config user.name "tomiyuta"
+          git config user.email "tomiyutaka@gmail.com"
+          git add output/signal_latest.json output/signal_etf_latest.json output/signal_def_latest.json
+          if git diff --staged --quiet; then echo "No changes"
+          else git commit -m "📊 Monthly signal update $(date +'%Y-%m')" && git push; fi

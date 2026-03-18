@@ -1,0 +1,145 @@
+{
+  "date": "2026-03",
+  "generated": "2026-03-18T11:23:51Z",
+  "etf_weight": 0.4,
+  "def_weight": 0.6,
+  "etf_signal": {
+    "date": "2026-03",
+    "generated": "2026-03-18T11:23:48Z",
+    "strategy": "HolyETF M4",
+    "regime": "ACUTE_EQUITY",
+    "sensors": {
+      "CREDIT": "DEF",
+      "RATES": "ATK",
+      "ROTATION": "DEF",
+      "MOMENTUM": "ATK"
+    },
+    "rates_acute": false,
+    "holdings": [
+      {
+        "ticker": "TQQQ",
+        "weight": 0.35,
+        "price": 48.16
+      },
+      {
+        "ticker": "TECL",
+        "weight": 0.25,
+        "price": 101.48
+      },
+      {
+        "ticker": "GLD",
+        "weight": 0.25,
+        "price": 459.27
+      },
+      {
+        "ticker": "XLU",
+        "weight": 0.15,
+        "price": 47.13
+      }
+    ]
+  },
+  "def_signal": {
+    "date": "2026-03",
+    "generated": "2026-03-18T11:23:51Z",
+    "strategy": "OG防御型",
+    "top_n": 4,
+    "holdings": [
+      {
+        "ticker": "DBC",
+        "name": "Invesco DB Commodity",
+        "momentum_6m": 0.3195,
+        "weight": 0.2465,
+        "price": 28.76
+      },
+      {
+        "ticker": "GLD",
+        "name": "SPDR Gold Shares",
+        "momentum_6m": 0.292,
+        "weight": 0.1437,
+        "price": 459.27
+      },
+      {
+        "ticker": "EEM",
+        "name": "iShares MSCI Emerging Markets",
+        "momentum_6m": 0.1159,
+        "weight": 0.2537,
+        "price": 58.75
+      },
+      {
+        "ticker": "EFA",
+        "name": "iShares MSCI EAFE",
+        "momentum_6m": 0.0726,
+        "weight": 0.3561,
+        "price": 98.37
+      }
+    ]
+  },
+  "holdings": [
+    {
+      "ticker": "EFA",
+      "name": "iShares MSCI EAFE",
+      "strategy": "OG防御型",
+      "momentum_6m": 0.0726,
+      "weight_in_strategy": 0.3561,
+      "weight_in_portfolio": 0.2137,
+      "price": 98.37
+    },
+    {
+      "ticker": "EEM",
+      "name": "iShares MSCI Emerging Markets",
+      "strategy": "OG防御型",
+      "momentum_6m": 0.1159,
+      "weight_in_strategy": 0.2537,
+      "weight_in_portfolio": 0.1522,
+      "price": 58.75
+    },
+    {
+      "ticker": "DBC",
+      "name": "Invesco DB Commodity",
+      "strategy": "OG防御型",
+      "momentum_6m": 0.3195,
+      "weight_in_strategy": 0.2465,
+      "weight_in_portfolio": 0.1479,
+      "price": 28.76
+    },
+    {
+      "ticker": "TQQQ",
+      "strategy": "ETF M4",
+      "weight_in_strategy": 0.35,
+      "weight_in_portfolio": 0.14,
+      "price": 48.16
+    },
+    {
+      "ticker": "TECL",
+      "strategy": "ETF M4",
+      "weight_in_strategy": 0.25,
+      "weight_in_portfolio": 0.1,
+      "price": 101.48
+    },
+    {
+      "ticker": "GLD",
+      "strategy": "ETF M4",
+      "weight_in_strategy": 0.25,
+      "weight_in_portfolio": 0.1,
+      "price": 459.27
+    },
+    {
+      "ticker": "GLD",
+      "name": "SPDR Gold Shares",
+      "strategy": "OG防御型",
+      "momentum_6m": 0.292,
+      "weight_in_strategy": 0.1437,
+      "weight_in_portfolio": 0.0862,
+      "price": 459.27
+    },
+    {
+      "ticker": "XLU",
+      "strategy": "ETF M4",
+      "weight_in_strategy": 0.15,
+      "weight_in_portfolio": 0.06,
+      "price": 47.13
+    }
+  ],
+  "regime": "ACUTE_EQUITY",
+  "regime_label": "急性株式（回復型）"
+}

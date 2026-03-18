@@ -1,0 +1,27 @@
+name: Daily Prices — Combined Grail
+
+on:
+  schedule:
+    - cron: '30 21 * * *'  # 毎日 UTC21:30 = JST06:30
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+      - run: pip install -r requirements.txt
+      - run: python3 scripts/update_prices.py
+      - run: |
+          git config user.name "tomiyuta"
+          git config user.email "tomiyutaka@gmail.com"
+          git add output/prices_latest.json
+          if git diff --staged --quiet; then echo "No changes"
+          else git commit -m "💹 Daily prices update $(date +'%Y-%m-%d')" && git push; fi
