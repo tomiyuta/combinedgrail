@@ -113,9 +113,13 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
       <div id="regimeName" style="font-family:'Playfair Display',serif;font-size:2.2rem;
         font-weight:700;color:#fff;line-height:1;margin-bottom:5px">—</div>
       <div id="regimeJp" style="font-size:.85rem;color:var(--gold-l);font-weight:500;margin-bottom:14px">読込中...</div>
-      <div id="portfolioMonth" style="font-family:'DM Mono',monospace;font-size:.75rem;font-weight:600;
-        color:var(--navy);background:rgba(255,255,255,.12);border-radius:4px;
-        padding:3px 10px;display:inline-block">—</div>
+      <div id="portfolioMonth" style="display:inline-flex;align-items:center;gap:6px;
+        background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);
+        border-radius:20px;padding:5px 14px;margin-top:4px">
+        <span style="width:6px;height:6px;border-radius:50%;background:#5dba7a;flex-shrink:0"></span>
+        <span id="portfolioMonthText" style="font-family:'DM Mono',monospace;font-size:.78rem;
+          font-weight:600;color:#fff;letter-spacing:.04em">—</span>
+      </div>
     </div>
     <div class="regime-sep" style="background:rgba(255,255,255,.08);margin:0 28px;align-self:stretch"></div>
     <!-- 配分比率 -->
@@ -257,6 +261,9 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
         <span style="font-size:.72rem;color:var(--g400)">円/ドル</span>
         <button onclick="fetchRate()" style="font-size:.72rem;padding:5px 10px;border:1px solid var(--g200);
           border-radius:6px;cursor:pointer;background:var(--white);color:var(--navy)">現在レート取得</button>
+        <button id="btnGLDM" onclick="toggleGLDM()" style="font-size:.72rem;padding:5px 10px;
+          border:1px solid var(--g200);border-radius:6px;cursor:pointer;
+          background:var(--white);color:var(--g600);font-weight:500">GLD → GLDM代替</button>
       </div>
     </div>
     <!-- 配分スライダー -->
@@ -428,9 +435,10 @@ let signalData  = null;
 let cumData     = null;
 let priceData   = null;
 let currentCurrency = 'USD';
+let useGLDM = false;
 let etfWeight   = 0.40;
 let defWeight   = 0.60;
-let cumChart    = null;
+let cumChartInst    = null;
 let cumLogScale = false;
 let cumPeriod   = 'ALL';
 const hiddenSeries = new Set();
@@ -479,7 +487,7 @@ async function renderAll(){
   updateStatsDisplay();
   const d=signalData.date; if(d){
     const parts=d.split('-'); const y=parts[0]; const m=parseInt(parts[1],10);
-    const pmEl=document.getElementById('portfolioMonth');
+    const pmEl=document.getElementById('portfolioMonthText');
     if(pmEl) pmEl.textContent = y+'年 '+m+'月';
   }
   document.getElementById('headerDate').textContent = (signalData.date||'—') + ' データ';
@@ -557,7 +565,7 @@ function onSlider(v){
   document.getElementById('etfWeightBadge').textContent = v+'%';
   document.getElementById('defWeightBadge').textContent = (100-v)+'%';
   document.getElementById('allocationBar').style.width = v+'%';
-  renderPortfolio(); calcRebalance(); updateStatsDisplay();
+  renderPortfolio(); calcRebalance(); updateStatsDisplay(); updateCumChart();
 }
 
 function calcRebalance(){
@@ -568,25 +576,42 @@ function calcRebalance(){
   const holdings = signalData.holdings||[];
   const prices = priceData?.prices||{};
   let rows=''; let invested=0;
+  // 同一ticker（GLD等）をマージ
+  const merged = {};
   holdings.forEach(h=>{
-    const alloc = h.weight_in_portfolio;
     const adjAlloc = h.strategy==='ETF M4'
       ? h.weight_in_strategy * etfWeight
       : h.weight_in_strategy * defWeight;
+    const key = h.ticker;
+    if(merged[key]){
+      merged[key].adjAlloc += adjAlloc;
+      merged[key].strategies.push(h.strategy);
+    } else {
+      merged[key] = { ticker:h.ticker, adjAlloc, strategies:[h.strategy],
+                      price: prices[h.ticker] || h.price || 0 };
+    }
+  });
+  Object.values(merged).forEach(h=>{
+    const t = useGLDM && h.ticker==='GLD' ? 'GLDM' : h.ticker;
+    const adjAlloc = h.adjAlloc;
     const targetUSD = totalUSD * adjAlloc;
-    const price = prices[h.ticker] || h.price || 0;
+    const price = (useGLDM && h.ticker==='GLD')
+      ? (prices['GLDM']||0) : (h.price);
     const shares = price>0 ? Math.floor(targetUSD/price) : 0;
     const actualUSD = shares * price;
     const actualPct = totalUSD>0 ? actualUSD/totalUSD*100 : 0;
     invested += actualUSD;
     const diffPct = actualPct - adjAlloc*100;
-    const stratColor = h.strategy==='ETF M4'?'var(--green)':'var(--gold)';
+    const hasBoth = h.strategies.includes('ETF M4') && h.strategies.includes('OG防御型');
+    const stratColor = hasBoth ? 'var(--navy)' : (h.strategies[0]==='ETF M4'?'var(--green)':'var(--gold)');
+    const stratLabel = hasBoth ? 'ETF M4 + 防御型' : h.strategies[0];
     const priceDisp = price>0?'$'+price.toFixed(2):'—';
     const amtDisp = currentCurrency==='USD'?('$'+(targetUSD).toFixed(0))
       :('¥'+(targetUSD*usdjpy).toFixed(0));
     rows+=`<tr style="border-bottom:1px solid var(--g100)">
-      <td style="padding:9px 10px;font-family:'DM Mono',monospace;font-size:.85rem;font-weight:600">${h.ticker}</td>
-      <td style="padding:9px 10px;font-size:.72rem"><span style="color:${stratColor};font-weight:600">${h.strategy}</span></td>
+      <td style="padding:9px 10px;font-family:'DM Mono',monospace;font-size:.85rem;font-weight:600">
+        ${t}${(useGLDM && h.ticker==='GLD')?'<span style="font-size:.62rem;color:var(--gold);margin-left:4px">GLDM</span>':''}</td>
+      <td style="padding:9px 10px;font-size:.72rem"><span style="color:${stratColor};font-weight:600">${stratLabel}</span></td>
       <td style="padding:9px 10px;text-align:right;font-family:'DM Mono',monospace;font-size:.78rem">
         ${(adjAlloc*100).toFixed(1)}%<br><span style="color:var(--g400)">${amtDisp}</span></td>
       <td style="padding:9px 10px;text-align:right;font-family:'DM Mono',monospace;font-size:.85rem">${priceDisp}</td>
@@ -605,6 +630,17 @@ function calcRebalance(){
       <td colspan="2" style="padding:10px;text-align:right;font-size:.8rem">
         未使用現金（端数）<strong style="color:var(--red)">${remDisp} (${(remaining/totalUSD*100).toFixed(1)}%)</strong></td>
     </tr>`;
+}
+
+function toggleGLDM(){
+  useGLDM = !useGLDM;
+  const btn = document.getElementById('btnGLDM');
+  if(btn){
+    btn.style.background = useGLDM ? 'var(--navy)' : 'var(--white)';
+    btn.style.color = useGLDM ? '#fff' : 'var(--g600)';
+    btn.textContent = useGLDM ? '✓ GLDM使用中' : 'GLD → GLDM代替';
+  }
+  calcRebalance();
 }
 
 async function fetchRate(){
@@ -649,14 +685,14 @@ function updateStatsDisplay(){
   document.getElementById('statSortino').textContent = s.sortino.toFixed(2);
   document.getElementById('statMaxdd').textContent   = (s.maxdd*100).toFixed(1)+'%';
   renderPerfTable();
-  if(cumChart) updateChartSelected();
+  if(cumChartInst) updateChartSelected();
 }
 
 // ── 年次パフォーマンス ──────────────────────────────────
 function renderAnnual(){
   if(!cumData) return;
   const dates   = cumData.dates||[];
-  const curKey  = 'r40_60';
+  const curKey  = getSelectedKey();
   const retSel  = cumData['ret_'+curKey]||[];
   const retETF  = cumData['ret_r100_0']||[];
   const retDEF  = cumData['ret_r0_100']||[];
@@ -695,6 +731,16 @@ function getSelectedKey(){
   return 'r'+Math.round(etfWeight*100)+'_'+Math.round(defWeight*100);
 }
 
+function updateCumChart(){
+  if(!cumChartInst || !cumData) return;
+  const selKey = getSelectedKey();
+  const selData = cumData[selKey]||cumData['r40_60']||[];
+  // dataset[0] = selected
+  cumChartInst.data.datasets[0].data  = selData;
+  cumChartInst.data.datasets[0].label = `選択配分（ETF${Math.round(etfWeight*100)}%）`;
+  cumChartInst.update('none');
+}
+
 function initCumChart(){
   if(!cumData) return;
   const ctx = document.getElementById('cumChart').getContext('2d');
@@ -717,9 +763,9 @@ function initCumChart(){
     etf:'ETF M4 単体', def:'OG防御型 単体', spy:'SPY'
   };
 
-  if(cumChart){ cumChart.destroy(); }
+  if(cumChartInst){ cumChartInst.destroy(); }
 
-  cumChart = new Chart(ctx, {
+  cumChartInst = new Chart(ctx, {
     type:'line',
     data:{
       labels: dates,
@@ -773,22 +819,22 @@ function initCumChart(){
       if(hiddenSeries.has(k)) hiddenSeries.delete(k);
       else hiddenSeries.add(k);
       el.classList.toggle('hidden', hiddenSeries.has(k));
-      const ds = cumChart.data.datasets.find(d=>d.label===labels[k]);
-      if(ds){ ds.hidden=hiddenSeries.has(k); cumChart.update(); }
+      const ds = cumChartInst.data.datasets.find(d=>d.label===labels[k]);
+      if(ds){ ds.hidden=hiddenSeries.has(k); cumChartInst.update(); }
     });
   });
 }
 
 function updateChartSelected(){
-  if(!cumChart||!cumData) return;
+  if(!cumChartInst||!cumData) return;
   const key = getSelectedKey();
   const data = cumData[key]||cumData['r40_60']||[];
   const label = `選択配分（ETF${Math.round(etfWeight*100)}%）`;
-  const ds = cumChart.data.datasets[0];
+  const ds = cumChartInst.data.datasets[0];
   if(ds){ ds.data=data; ds.label=label; }
   // 年次テーブルも更新（選択配分が変わるため）
   renderAnnualWithKey(key);
-  cumChart.update();
+  cumChartInst.update();
 }
 
 function renderAnnualWithKey(selKey){
@@ -829,18 +875,18 @@ function setCumPeriod(p, btn){
   cumPeriod=p;
   document.querySelectorAll('.tab-btn').forEach(b=>{ if(['5Y','ALL'].includes(b.textContent)) b.classList.remove('active'); });
   btn.classList.add('active');
-  if(!cumChart||!cumData) return;
+  if(!cumChartInst||!cumData) return;
   const all = cumData.dates||[];
   let startIdx=0;
   if(p==='5Y'){ const cut=new Date(); cut.setFullYear(cut.getFullYear()-5);
     startIdx=all.findIndex(d=>new Date(d)>=cut)||0; }
-  cumChart.data.labels = all.slice(startIdx);
+  cumChartInst.data.labels = all.slice(startIdx);
   Object.keys({selected:1,etf:1,def:1,spy:1}).forEach((k,i)=>{
     const keys={selected:getSelectedKey(),etf:'r100_0',def:'r0_100',spy:'SPY'};
     const data = (cumData[keys[k]]||[]).slice(startIdx);
-    if(cumChart.data.datasets[i]) cumChart.data.datasets[i].data=data;
+    if(cumChartInst.data.datasets[i]) cumChartInst.data.datasets[i].data=data;
   });
-  cumChart.update();
+  cumChartInst.update();
 }
 
 function setCumScale(mode, btn){
@@ -849,7 +895,7 @@ function setCumScale(mode, btn){
     b.classList.toggle('active',b.textContent.toLowerCase()===mode);
     b.style.color = b.textContent.toLowerCase()===mode?'#fff':'rgba(255,255,255,.5)';
   }});
-  if(cumChart){ cumChart.options.scales.y.type=cumLogScale?'logarithmic':'linear'; cumChart.update(); }
+  if(cumChartInst){ cumChartInst.options.scales.y.type=cumLogScale?'logarithmic':'linear'; cumChartInst.update(); }
 }
 
 loadAll();
