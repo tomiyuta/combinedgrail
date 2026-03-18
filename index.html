@@ -124,8 +124,15 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
     <div class="regime-sep" style="background:rgba(255,255,255,.08);margin:0 28px;align-self:stretch"></div>
     <!-- 配分比率 -->
     <div style="padding:0 28px">
-      <div style="font-size:.55rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
-        color:rgba(255,255,255,.35);margin-bottom:12px">配分比率</div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+        <div style="font-size:.55rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
+          color:rgba(255,255,255,.35)">配分比率</div>
+        <div id="allocRecBadge" style="display:inline-flex;align-items:center;gap:4px;
+          background:rgba(212,175,90,.2);border:1px solid rgba(212,175,90,.5);
+          border-radius:20px;padding:2px 8px">
+          <span style="font-size:.6rem;color:#D4AF5A;font-weight:700">★ 推奨バランス</span>
+        </div>
+      </div>
       <div id="allocationRow" style="display:flex;gap:16px;align-items:center">
         <div>
           <div style="font-size:.62rem;color:rgba(255,255,255,.5);margin-bottom:4px">HolyETF M4</div>
@@ -595,6 +602,16 @@ function onSlider(v){
   document.getElementById('defPct').textContent  = 100-v;
   document.getElementById('etfWeightBadge').textContent = v+'%';
   document.getElementById('defWeightBadge').textContent = (100-v)+'%';
+  // 推奨バランス(40:60)かどうかでバッジを切り替え
+  const recBadge = document.getElementById('allocRecBadge');
+  if(recBadge){
+    const isRec = (parseInt(v)===40);
+    recBadge.innerHTML = isRec
+      ? '<span style="font-size:.6rem;color:#D4AF5A;font-weight:700">★ 推奨バランス</span>'
+      : '<span style="font-size:.6rem;color:rgba(255,255,255,.5);font-weight:600">カスタム配分</span>';
+    recBadge.style.background    = isRec ? 'rgba(212,175,90,.2)' : 'rgba(255,255,255,.08)';
+    recBadge.style.borderColor   = isRec ? 'rgba(212,175,90,.5)' : 'rgba(255,255,255,.2)';
+  }
   renderPortfolio(); calcRebalance(); updateStatsDisplay(); updateCumChart();
 }
 
