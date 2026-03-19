@@ -778,6 +778,21 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
 </section>
 
 
+
+<!-- バイアス免責注記 -->
+<section style="padding:24px 0 8px;">
+  <div style="border:1px solid var(--color-border-tertiary);border-radius:12px;overflow:hidden;font-size:12px;">
+    <div style="padding:10px 16px;background:var(--color-background-secondary);border-bottom:1px solid var(--color-border-tertiary);font-size:11px;font-weight:500;letter-spacing:.06em;color:var(--color-text-secondary);">バックテスト上の留意事項</div>
+    <div style="padding:14px 16px;display:flex;flex-direction:column;gap:6px;color:var(--color-text-secondary);line-height:1.6;">
+      <div style="display:flex;gap:8px;"><span style="flex-shrink:0;color:var(--color-text-warning);">⚠</span><span>二重継承バイアス: HolyGrail ETF（2016年〜）とopengrail（1999年〜）を合成。ETF側の開始日制約によりバックテストは2016年以降のみ有効。2016-2025は強気相場中心のため成績は楽観寄り。</span></div>
+      <div style="display:flex;gap:8px;"><span style="flex-shrink:0;color:var(--color-text-warning);">⚠</span><span>レバレッジETF継承: HolyGrail ETFのM4成分（TQQQ/TECL等）を含むため、レバレッジETF特有のリスク（月中急落・Volatility Decay）を継承する。</span></div>
+      <div style="display:flex;gap:8px;"><span style="flex-shrink:0;color:var(--color-text-warning);">⚠</span><span>取引コスト: opengrail側にTC=10bps/月を適用済み。ETF側はTC未考慮。</span></div>
+      <div style="display:flex;gap:8px;"><span style="flex-shrink:0;color:var(--color-text-warning);">ℹ</span><span>事後配分選択: r40_60を推奨としているが、11配分のCSCV検証（PBO=23.4%）によりこのバランスが最も統計的に安定と確認。</span></div>
+      <div style="display:flex;gap:8px;"><span style="flex-shrink:0;color:var(--color-text-warning);">ℹ</span><span>DSRテスト: opengrail側FAIL / Bootstrap PASS。holyetf側 N/A（期間不足）。</span></div>
+    </div>
+  </div>
+</section>
+<!-- /バイアス免責注記 -->
 <footer>
   <p><strong>Combined Grail</strong> — HolyETF M4 × OG防御型 &nbsp;·&nbsp; 推奨配分: ETF 40% + 防御型 60%</p>
   <p style="margin-top:4px">シグナルは毎月1日JST06:30に自動更新・株価は毎日JST06:30に更新 &nbsp;·&nbsp; 過去の成績は将来を保証しません</p>
