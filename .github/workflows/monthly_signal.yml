@@ -13,17 +13,27 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
           cache: 'pip'
+
       - run: pip install -r requirements.txt
+
       - name: Update market data
         run: python3 scripts/update_data.py
-      - run: python3 scripts/generate_combined.py
-      - run: |
+
+      - name: Generate signals (ETF M4 + OG defense)
+        run: python3 scripts/generate_combined.py
+
+      - name: Generate cumulative returns (standalone — no external deps)
+        run: python3 scripts/gen_cumulative.py
+
+      - name: Commit and push
+        run: |
           git config user.name "tomiyuta"
           git config user.email "tomiyutaka@gmail.com"
-          git add output/signal_latest.json output/signal_etf_latest.json output/signal_def_latest.json data/market/prices_monthly_2004_2026.csv data/fred/FRED_VXVCLS_auto.csv
+          git add output/ data/market/prices_monthly_2004_2026.csv data/fred/FRED_VXVCLS_auto.csv
           if git diff --staged --quiet; then echo "No changes"
-          else git commit -m "📊 Monthly signal update $(date +'%Y-%m')" && git push; fi
+          else git commit -m "📊 Monthly update $(date +'%Y-%m')" && git push; fi
