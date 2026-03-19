@@ -542,8 +542,9 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
         </div>
         <div style="font-size:.72rem;color:var(--g600);line-height:1.6">
           多重検定バイアスを補正したSharpe比検定。N=11パターンの試行数でインフレを調整。
-          閾値0.95以上でPASS。現在の防御型仕様（日次・SPYあり・Top4）では
-          全配分比率でFAIL（Sharpe水準が0.95未満）。Bootstrap検定は全比率PASSを確認。
+          閾値0.95以上でPASS。防御型ロジックを日次計算に整合させた結果、
+          現在は多重検定補正後の閾値に未到達。Bootstrap検定では依然として正のリターン有意性を確認。
+          これは戦略の無効化を意味するものではなく、より保守的で信頼性の高い評価です。
         </div>
       </div>
       <div style="flex:1;min-width:220px">
@@ -553,8 +554,10 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
         <div style="font-size:.72rem;color:var(--g600);line-height:1.6">
           H₀: SR=0 の帰無仮説検定。ブロック長12ヶ月×10,000回反復。
           p&lt;0.05でPASS。全11配分比率でPASS（p≈0）。
-          DSRとBootstrapの乖離は、DSRが期間短さ（123ヶ月）と多重検定補正の両方を同時に考慮するためであり、
-          Bootstrapの有意性を否定するものではありません。
+          DSRが示すのは「11比率から最良を選ぶ選択バイアスを考慮すると、観測Sharpeはなお決定的とは言えない」
+          という点であり、戦略シグナルの存在や収益の有意性を否定するものではありません。
+          観測期間の拡大はDSR判定を改善し得ますが、N=11の多重検定補正は重く、
+          現状のSharpe水準では短期間で明確PASSに達する保証はありません。
         </div>
       </div>
       <div style="background:var(--off);border-radius:8px;padding:10px 16px;text-align:center;min-width:140px">
@@ -587,7 +590,8 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
     <div style="margin-top:12px;font-size:.68rem;color:var(--g400);line-height:1.7">
       ✅✅ = DSR PASS かつ Bootstrap PASS &nbsp;|&nbsp; ❌✅ = DSR FAIL / Bootstrap PASS<br>
       N=11（試行数・多重検定補正） &nbsp;|&nbsp; T=123ヶ月 &nbsp;|&nbsp; Block Bootstrap ブロック長=12ヶ月, 反復=10,000回<br>
-      現在の成績水準ではDSR閾値（0.95）に未到達。Bootstrap検定は全比率で統計的有意性を確認（p≈0）。<br>
+      旧版DSRの全PASSは防御型の近似計算に依存した過大評価。新版は日次ロジック整合後の保守的評価。<br>
+      DSR未達 ≠ 戦略無効。Bootstrap有意性（p≈0）は維持。観測期間拡大によりDSR改善の余地あり。<br>
       Bailey &amp; Lopez de Prado (2014) "The Deflated Sharpe Ratio"
     </div>
   </div>
@@ -685,7 +689,7 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
         </div>
         <ul style="font-size:.7rem;color:var(--g600);line-height:1.85;padding-left:14px;margin:0">
           <li>全11配分比率で <strong>OOS Sharpe &gt; IS Sharpe</strong><br>
-            単一パラメータへの過剰依存ではなく、戦略構造全体の優位を示唆</li>
+            戦略が即崩壊するタイプではないことを示す、有望な非劣化シグナル</li>
           <li>2019〜2025の全7ウィンドウで明確な破綻なし</li>
           <li>2022年（唯一の強い下落局面）でも r40_60 は<strong>CAGR +1.1%</strong> を確保<br>
             （SPY −18.3%と対比）</li>
@@ -699,7 +703,8 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
         <ul style="font-size:.7rem;color:var(--g600);line-height:1.85;padding-left:14px;margin:0">
           <li>7窓中6つが<strong>強気相場</strong> — ベア相場耐性の検証は限定的</li>
           <li>OOS &gt; IS は2023〜2025の高リターン期間がOOS平均を押し上げている可能性あり。
-            <strong>「過学習なしの証明」と直ちに解釈するのは早計</strong></li>
+            OOS &gt; ISを「過学習なし」の<strong>確定的証明と解釈するのは早計</strong>であり、
+            あくまで<strong>非劣化の有望シグナル</strong>として読むのが妥当</li>
           <li>2022年 r40_60: Sharpe 0.155 — 破綻はしていないが強い優位とも言いにくい水準</li>
           <li>ウィンドウ数7回では<strong>統計的検定力に限界</strong>があります</li>
         </ul>
@@ -710,9 +715,10 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
     <div style="background:rgba(10,37,64,.04);border-radius:8px;padding:12px 16px;
       font-size:.72rem;color:var(--g600);line-height:1.75;margin-bottom:12px">
       <strong style="color:var(--navy)">Practical Reading —</strong>
-      本結果は「この戦略はOOSで直ちに崩壊するタイプではない」ことを示す一方、
-      「あらゆる市場環境で再現性が高い」とまではまだ言えません。
-      有望な頑健性シグナルとして参照してください。
+      本結果は「この戦略はOOSで直ちに崩壊するタイプではない」ことを示す、有望な非劣化シグナルです。
+      ただし、OOS期間は強気相場寄りで7ウィンドウにとどまり、
+      「あらゆる市場環境で再現性が高い」とまでは言えません。
+      戦略シグナルの存在と、比率最適化の統計的確実性を分けて理解することが重要です。
     </div>
 
     <!-- ⑦ 注記 -->
