@@ -606,6 +606,8 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
     <!-- ① リード文 -->
     <div style="font-size:.82rem;color:var(--navy);line-height:1.75;margin-bottom:18px;
       padding:12px 16px;background:rgba(10,37,64,.04);border-radius:8px;border-left:3px solid var(--navy)">
+      本検証は、防御型ロジックを日次シグナル生成と整合させた更新版リターン系列に基づいて再計算されています。
+      内部整合性（IS指標・構成系列・配分式）は確認済みです。<br>
       全11配分比率で OOS Sharpe &gt; IS Sharpe を確認。これは構造的な頑健性を示唆する一方、
       OOSサンプルは7年分に限られ、2022年以外の本格ストレス局面が少ないため、解釈には留保が必要です。
     </div>
@@ -691,7 +693,7 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
           <li>全11配分比率で <strong>OOS Sharpe &gt; IS Sharpe</strong><br>
             戦略が即崩壊するタイプではないことを示す、有望な非劣化シグナル</li>
           <li>2019〜2025の全7ウィンドウで明確な破綻なし</li>
-          <li>2022年（唯一の強い下落局面）でも r40_60 は<strong>CAGR +1.1%</strong> を確保<br>
+          <li>2022年（唯一の強い下落局面）でも r40_60 は<strong>CAGR +0.9%</strong> を確保<br>
             （SPY −18.3%と対比）</li>
         </ul>
       </div>
@@ -715,10 +717,13 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
     <div style="background:rgba(10,37,64,.04);border-radius:8px;padding:12px 16px;
       font-size:.72rem;color:var(--g600);line-height:1.75;margin-bottom:12px">
       <strong style="color:var(--navy)">Practical Reading —</strong>
-      本結果は「この戦略はOOSで直ちに崩壊するタイプではない」ことを示す、有望な非劣化シグナルです。
-      ただし、OOS期間は強気相場寄りで7ウィンドウにとどまり、
-      「あらゆる市場環境で再現性が高い」とまでは言えません。
-      戦略シグナルの存在と、比率最適化の統計的確実性を分けて理解することが重要です。
+      本結果は「更新後の戦略がOOSで直ちに崩壊しないこと」を確認するためのものです。
+      「あらゆる市場環境での再現性を保証するものではありません」。<br>
+      また、DSR検定（N=11多重選択補正）では現在のSharpe水準が補正後閾値を満たしておらず、
+      <strong>配分最適化の統計的確実性は限定的</strong>です。
+      一方でBootstrap検定では正のリターン有意性が確認されており、
+      戦略の無効性を示すものではありません。
+      戦略シグナルの存在と比率最適化の確実性を分けて理解することが重要です。
     </div>
 
     <!-- ⑦ 注記 -->
@@ -726,8 +731,10 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
       <strong>注記：</strong>
       指標はすべて月次リターンベースで算出。
       売買コスト・スリッページ・信託報酬・税金は未反映。
-      最大ドローダウンは月末系列ベースであり、月中リスクを過小評価する可能性あり。
-      Walk-Forward結果は2019〜2025の7つの年次OOSウィンドウに基づくものであり、将来成績を保証するものではありません。
+      最大ドローダウンは月末系列ベースであり、月中リスクは反映されません。
+      Walk-Forwardは<strong>7ウィンドウ（2019〜2025）</strong>であり、統計的検定力には限界があります。
+      OOS期間には強気相場が多く含まれており、ストレス環境での検証は限定的です。
+      本結果は将来成績を保証するものではありません。
     </div>
   </div>
 </section>
