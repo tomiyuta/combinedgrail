@@ -256,35 +256,6 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
   </div>
 </section>
 
-<!-- ═══ C5 守備強化センサーバナー ═══ -->
-<div id="c5Banner" style="display:none;margin-bottom:16px;border-radius:12px;
-  padding:12px 18px;display:flex;align-items:flex-start;gap:14px;
-  border:1.5px solid var(--c5-border,rgba(184,151,90,.35));
-  background:var(--c5-bg,rgba(184,151,90,.06));transition:all .3s">
-  <div style="margin-top:2px;flex-shrink:0">
-    <div id="c5Dot" style="width:11px;height:11px;border-radius:50%;
-      background:var(--c5-dot,#B8975A);
-      box-shadow:0 0 0 3px var(--c5-glow,rgba(184,151,90,.2))"></div>
-  </div>
-  <div style="flex:1;min-width:0">
-    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:4px">
-      <span id="c5Label" style="font-size:.8rem;font-weight:600;
-        color:var(--c5-text,#9B7D3A)">守備強化センサー（C5）— 待機中</span>
-      <span id="c5ModeBadge" style="font-size:.62rem;padding:2px 8px;border-radius:10px;
-        background:var(--c5-badge-bg,rgba(184,151,90,.12));
-        color:var(--c5-badge-text,#9B7D3A);font-weight:600;
-        border:1px solid var(--c5-border,rgba(184,151,90,.3))">NEUTRAL</span>
-      <span id="c5RatesBadge" style="display:none;font-size:.62rem;padding:2px 8px;
-        border-radius:10px;background:rgba(220,60,60,.12);
-        color:#C04040;font-weight:600;border:1px solid rgba(220,60,60,.3)">
-        ⚡ 急性金利リスク
-      </span>
-    </div>
-    <div id="c5Desc" style="font-size:.72rem;color:var(--g500,#5F5E5A);line-height:1.55">
-      ETF M4の守備強化オーバーレイは標準状態です。
-    </div>
-  </div>
-</div>
 
 <!-- ═══ SECTION 1.5: 配分カスタマイズ + 戦略指標 ═══ -->
 <section id="alloc-stats" style="margin-bottom:32px">
@@ -791,58 +762,6 @@ function renderC5Banner(etfSig){
   }
 }
 
-function renderC5Banner(etfSig){
-  const banner = document.getElementById('c5Banner');
-  if(!banner || !etfSig) return;
-  banner.style.display = 'flex';
-
-  const c5On     = !!etfSig.c5_active;
-  const rateAcute = !!etfSig.rates_acute;
-  const mode     = etfSig.mode || '';
-
-  // ── 点灯状態に応じて CSS 変数を切り替え ─────────────────────────
-  if(c5On){
-    // 点灯: オレンジ警告
-    banner.style.setProperty('--c5-bg',    'rgba(220,100,40,.10)');
-    banner.style.setProperty('--c5-border','rgba(220,100,40,.45)');
-    banner.style.setProperty('--c5-dot',   '#E06030');
-    banner.style.setProperty('--c5-glow',  'rgba(220,100,40,.30)');
-    banner.style.setProperty('--c5-text',  '#D05020');
-    banner.style.setProperty('--c5-badge-bg',  'rgba(220,100,40,.15)');
-    banner.style.setProperty('--c5-badge-text','#D05020');
-  } else {
-    // 消灯: ゴールドグレー（待機）
-    banner.style.setProperty('--c5-bg',    'rgba(184,151,90,.06)');
-    banner.style.setProperty('--c5-border','rgba(212,175,90,.30)');
-    banner.style.setProperty('--c5-dot',   '#B8975A');
-    banner.style.setProperty('--c5-glow',  'rgba(184,151,90,.20)');
-    banner.style.setProperty('--c5-text',  '#B8975A');
-    banner.style.setProperty('--c5-badge-bg',  'rgba(184,151,90,.12)');
-    banner.style.setProperty('--c5-badge-text','#B8975A');
-  }
-
-  // ── ラベル & 説明文 ──────────────────────────────────────────────
-  const dotEl   = document.getElementById('c5Dot');
-  const labelEl = document.getElementById('c5Label');
-  const descEl  = document.getElementById('c5Desc');
-  const modeEl  = document.getElementById('c5ModeBadge');
-  const rateEl  = document.getElementById('c5RatesBadge');
-
-  if(c5On){
-    if(dotEl){
-      dotEl.style.animation = 'c5pulse 1.4s ease-in-out infinite';
-    }
-    if(labelEl) labelEl.textContent = '守備強化センサー（C5）★ 点灯中';
-    if(descEl)  descEl.textContent  = 'VIX上昇・信用スプレッド拡大・金利カーブ逆転のうち複数が基準超過。ETF M4は守備配分を自動強化しています。';
-  } else {
-    if(dotEl) dotEl.style.animation = '';
-    if(labelEl) labelEl.textContent = '守備強化センサー（C5）— 待機';
-    if(descEl)  descEl.textContent  = 'VIX・信用スプレッド・金利傾きが通常範囲です。ETF M4は標準配分を維持します。';
-  }
-
-  if(modeEl) modeEl.textContent = mode || '—';
-  if(rateEl) rateEl.style.display = rateAcute ? 'inline-flex' : 'none';
-}
 
 function renderETFLabel(regime){
   const el = document.getElementById('etfRegimeLabel');
