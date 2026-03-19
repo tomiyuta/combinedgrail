@@ -134,6 +134,7 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
     <a onclick="scrollToId('rebalance')">リバランス</a>
     <a onclick="scrollToId('chart')">チャート</a>
     <a onclick="scrollToId('perf')">パフォーマンス</a>
+    <a onclick="scrollToId('wf')">WF検証</a>
   </nav>
   <div class="header-right" id="headerDate">—</div>
 </header>
@@ -587,6 +588,140 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
   </div>
 </section>
 
+
+<!-- ═══ SECTION 8: Walk-Forward 検証 ═══ -->
+<section id="wf" style="margin-bottom:32px">
+  <div class="sec-label">Walk-Forward Analysis（Out-of-Sample Validation）</div>
+  <div class="card" id="wfCard">
+
+    <!-- ① リード文 -->
+    <div style="font-size:.82rem;color:var(--navy);line-height:1.75;margin-bottom:18px;
+      padding:12px 16px;background:rgba(10,37,64,.04);border-radius:8px;border-left:3px solid var(--navy)">
+      全11配分比率で OOS Sharpe &gt; IS Sharpe を確認。これは構造的な頑健性を示唆する一方、
+      OOSサンプルは7年分に限られ、2022年以外の本格ストレス局面が少ないため、解釈には留保が必要です。
+    </div>
+
+    <!-- ② Test Design -->
+    <div style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:18px">
+      <div style="flex:1;min-width:200px;background:var(--off);border-radius:8px;padding:12px 14px">
+        <div style="font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+          color:var(--g400);margin-bottom:6px">Test Design</div>
+        <div style="font-size:.72rem;color:var(--g600);line-height:1.75">
+          Method: <strong>Expanding Window</strong><br>
+          Train / Test / Step: 36M min → 12M → 12M<br>
+          OOS Windows: <strong>7回</strong>（2019〜2025年）<br>
+          Metrics: INVESTMENT_METRICS_REFERENCE.md 準拠
+        </div>
+      </div>
+      <div style="flex:1;min-width:200px;background:var(--off);border-radius:8px;padding:12px 14px">
+        <div style="font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+          color:var(--g400);margin-bottom:6px">Aggregate Result（r40_60 推奨バランス）</div>
+        <div style="font-size:.72rem;color:var(--g600);line-height:1.75">
+          IS Sharpe: <strong>2.162</strong> → OOS Sharpe: <strong>2.285</strong><br>
+          OOS CAGR平均: <strong style="color:var(--green)">39.2%</strong><br>
+          OOS MaxDD平均: <strong style="color:var(--red)">-5.1%</strong><br>
+          全7窓で正リターンを維持
+        </div>
+      </div>
+    </div>
+
+    <!-- ③ IS vs OOS 全11比率テーブル -->
+    <div style="font-size:.72rem;font-weight:600;color:var(--navy);margin-bottom:8px">
+      全11配分比率 — IS vs OOS Sharpe 比較
+    </div>
+    <div style="overflow-x:auto;margin-bottom:18px">
+    <table style="width:100%;border-collapse:collapse;min-width:560px" id="wfTable">
+      <thead>
+        <tr style="border-bottom:2px solid var(--g100)">
+          <th style="text-align:left;padding:7px 10px;font-size:.6rem;font-weight:600;color:var(--g400);text-transform:uppercase">配分タイプ</th>
+          <th style="text-align:center;padding:7px 6px;font-size:.6rem;color:var(--green)">ETF</th>
+          <th style="text-align:center;padding:7px 6px;font-size:.6rem;color:var(--gold)">防御型</th>
+          <th style="text-align:right;padding:7px 8px;font-size:.6rem;color:var(--g400)">IS Sharpe</th>
+          <th style="text-align:right;padding:7px 8px;font-size:.6rem;color:var(--g400)">OOS Sharpe<br><span style="font-weight:400;font-size:.55rem">（7窓平均）</span></th>
+          <th style="text-align:right;padding:7px 8px;font-size:.6rem;color:var(--g400)">IS→OOS差</th>
+          <th style="text-align:right;padding:7px 8px;font-size:.6rem;color:var(--g400)">OOS CAGR</th>
+          <th style="text-align:right;padding:7px 8px;font-size:.6rem;color:var(--g400)">OOS MaxDD</th>
+        </tr>
+      </thead>
+      <tbody id="wfBody">
+        <tr><td colspan="8" style="padding:14px;text-align:center;color:var(--g400)">読込中...</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <!-- ④ r40_60 ウィンドウ別詳細 -->
+    <div style="font-size:.72rem;font-weight:600;color:var(--navy);margin-bottom:8px">
+      推奨バランス（r40_60）— ウィンドウ別 OOS 詳細
+    </div>
+    <div style="overflow-x:auto;margin-bottom:18px">
+    <table style="width:100%;border-collapse:collapse;min-width:480px" id="wfDetailTable">
+      <thead>
+        <tr style="border-bottom:2px solid var(--g100)">
+          <th style="text-align:left;padding:7px 10px;font-size:.6rem;color:var(--g400)">訓練月数</th>
+          <th style="text-align:left;padding:7px 10px;font-size:.6rem;color:var(--g400)">テスト期間</th>
+          <th style="text-align:right;padding:7px 8px;font-size:.6rem;color:var(--g400)">CAGR</th>
+          <th style="text-align:right;padding:7px 8px;font-size:.6rem;color:var(--g400)">Sharpe</th>
+          <th style="text-align:right;padding:7px 8px;font-size:.6rem;color:var(--g400)">Sortino</th>
+          <th style="text-align:right;padding:7px 8px;font-size:.6rem;color:var(--g400)">MaxDD</th>
+        </tr>
+      </thead>
+      <tbody id="wfDetailBody">
+        <tr><td colspan="6" style="padding:14px;text-align:center;color:var(--g400)">読込中...</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <!-- ⑤ Interpretation + Devil's Advocate -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">
+      <div style="background:rgba(45,125,70,.06);border:1px solid rgba(45,125,70,.2);
+        border-radius:10px;padding:14px 16px">
+        <div style="font-size:.7rem;font-weight:700;color:var(--green);margin-bottom:8px">
+          ✅ Interpretation
+        </div>
+        <ul style="font-size:.7rem;color:var(--g600);line-height:1.85;padding-left:14px;margin:0">
+          <li>全11配分比率で <strong>OOS Sharpe &gt; IS Sharpe</strong><br>
+            単一パラメータへの過剰依存ではなく、戦略構造全体の優位を示唆</li>
+          <li>2019〜2025の全7ウィンドウで明確な破綻なし</li>
+          <li>2022年（唯一の強い下落局面）でも r40_60 は<strong>CAGR +1.1%</strong> を確保<br>
+            （SPY −18.3%と対比）</li>
+        </ul>
+      </div>
+      <div style="background:rgba(184,151,90,.06);border:1px solid rgba(184,151,90,.25);
+        border-radius:10px;padding:14px 16px">
+        <div style="font-size:.7rem;font-weight:700;color:#8B6914;margin-bottom:8px">
+          ⚠️ Devil's Advocate / Limitations
+        </div>
+        <ul style="font-size:.7rem;color:var(--g600);line-height:1.85;padding-left:14px;margin:0">
+          <li>7窓中6つが<strong>強気相場</strong> — ベア相場耐性の検証は限定的</li>
+          <li>OOS &gt; IS は2023〜2025の高リターン期間がOOS平均を押し上げている可能性あり。
+            <strong>「過学習なしの証明」と直ちに解釈するのは早計</strong></li>
+          <li>2022年 r40_60: Sharpe 0.155 — 破綻はしていないが強い優位とも言いにくい水準</li>
+          <li>ウィンドウ数7回では<strong>統計的検定力に限界</strong>があります</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ⑥ Practical Reading -->
+    <div style="background:rgba(10,37,64,.04);border-radius:8px;padding:12px 16px;
+      font-size:.72rem;color:var(--g600);line-height:1.75;margin-bottom:12px">
+      <strong style="color:var(--navy)">Practical Reading —</strong>
+      本結果は「この戦略はOOSで直ちに崩壊するタイプではない」ことを示す一方、
+      「あらゆる市場環境で再現性が高い」とまではまだ言えません。
+      有望な頑健性シグナルとして参照してください。
+    </div>
+
+    <!-- ⑦ 注記 -->
+    <div style="font-size:.67rem;color:var(--g400);line-height:1.7;border-top:1px solid var(--g100);padding-top:10px">
+      <strong>注記：</strong>
+      指標はすべて月次リターンベースで算出。
+      売買コスト・スリッページ・信託報酬・税金は未反映。
+      最大ドローダウンは月末系列ベースであり、月中リスクを過小評価する可能性あり。
+      Walk-Forward結果は2019〜2025の7つの年次OOSウィンドウに基づくものであり、将来成績を保証するものではありません。
+    </div>
+  </div>
+</section>
+
+
 <footer>
   <p><strong>Combined Grail</strong> — HolyETF M4 × OG防御型 &nbsp;·&nbsp; 推奨配分: ETF 40% + 防御型 60%</p>
   <p style="margin-top:4px">シグナルは毎月1日JST06:30に自動更新・株価は毎日JST06:30に更新 &nbsp;·&nbsp; 過去の成績は将来を保証しません</p>
@@ -597,6 +732,7 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
 let signalData  = null;
 let cumData     = null;
 let dsrData     = null;
+let wfData      = null;
 let priceData   = null;
 let currentCurrency = 'USD';
 let useGLDM = false;
@@ -644,6 +780,10 @@ async function loadAll(){
     const r4 = await fetch('output/dsr_results.json?t='+Date.now());
     if(r4.ok) dsrData = await r4.json();
   }catch(e){}
+  try{
+    const r5 = await fetch('output/wf_results.json?t='+Date.now());
+    if(r5.ok) wfData = await r5.json();
+  }catch(e){}
   renderAll();
 }
 
@@ -655,7 +795,7 @@ async function renderAll(){
   renderPerfTable();
   renderAnnual();
   initCumChart();
-  updateStatsDisplay(); renderDSR();
+  updateStatsDisplay(); renderDSR(); renderWF();
   const d=signalData.date; if(d){
     const parts=d.split('-'); const y=parts[0]; const m=parseInt(parts[1],10);
     const pmEl=document.getElementById('portfolioMonthText');
@@ -1196,6 +1336,68 @@ function setCumScale(mode, btn){
     b.style.color = b.textContent.toLowerCase()===mode?'#fff':'rgba(255,255,255,.5)';
   }});
   if(cumChartInst){ cumChartInst.options.scales.y.type=cumLogScale?'logarithmic':'linear'; cumChartInst.update(); }
+}
+
+
+// ── Walk-Forward 検証テーブル ─────────────────────────────────────
+const WF_RATIO_LABELS = {
+  'r0_100':'防御型単体','r10_90':'超安全型+','r20_80':'超安全型',
+  'r30_70':'安全寄り','r40_60':'推奨バランス','r50_50':'中間',
+  'r60_40':'成長寄り','r70_30':'成長重視','r80_20':'成長強化',
+  'r90_10':'成長優先+','r100_0':'ETF単体',
+};
+const WF_RATIO_ETF = {
+  'r0_100':0,'r10_90':10,'r20_80':20,'r30_70':30,'r40_60':40,'r50_50':50,
+  'r60_40':60,'r70_30':70,'r80_20':80,'r90_10':90,'r100_0':100,
+};
+
+function renderWF(){
+  if(!wfData) return;
+  const ratios = wfData.ratios || {};
+  const wfBodyEl    = document.getElementById('wfBody');
+  const wfDetailEl  = document.getElementById('wfDetailBody');
+  if(!wfBodyEl) return;
+
+  // IS vs OOS 全比率テーブル
+  wfBodyEl.innerHTML = Object.entries(ratios).map(([key, d])=>{
+    const isRec = key === 'r40_60';
+    const bg    = isRec ? 'background:rgba(0,114,178,.05)' : '';
+    const fw    = isRec ? '700' : '400';
+    const mark  = isRec ? '★ ' : '';
+    const gap   = d.gap_sharpe;
+    const gapClr = gap > 0 ? 'color:var(--green)' : 'color:var(--red)';
+    const etfPct = WF_RATIO_ETF[key] || 0;
+    return `<tr style="border-bottom:1px solid var(--g100);${bg}">
+      <td style="padding:7px 10px;font-size:.78rem;font-weight:${fw}">${mark}${WF_RATIO_LABELS[key]||key}</td>
+      <td style="padding:7px 6px;text-align:center;font-family:'DM Mono',monospace;font-size:.75rem;color:var(--green)">${etfPct}%</td>
+      <td style="padding:7px 6px;text-align:center;font-family:'DM Mono',monospace;font-size:.75rem;color:var(--gold)">${100-etfPct}%</td>
+      <td style="padding:7px 8px;text-align:right;font-family:'DM Mono',monospace;font-size:.78rem">${d.is_sharpe.toFixed(3)}</td>
+      <td style="padding:7px 8px;text-align:right;font-family:'DM Mono',monospace;font-size:.78rem;font-weight:${fw}">${d.oos_sharpe_avg.toFixed(3)}</td>
+      <td style="padding:7px 8px;text-align:right;font-family:'DM Mono',monospace;font-size:.78rem;${gapClr}">${gap>=0?'+':''}${gap.toFixed(3)}</td>
+      <td style="padding:7px 8px;text-align:right;font-family:'DM Mono',monospace;font-size:.78rem;color:var(--green)">${(d.oos_cagr_avg*100).toFixed(1)}%</td>
+      <td style="padding:7px 8px;text-align:right;font-family:'DM Mono',monospace;font-size:.78rem;color:var(--red)">${(d.oos_maxdd_avg*100).toFixed(1)}%</td>
+    </tr>`;
+  }).join('');
+
+  // r40_60 ウィンドウ別詳細
+  const r40 = ratios['r40_60'];
+  if(r40 && wfDetailEl){
+    wfDetailEl.innerHTML = r40.windows.map(w=>{
+      const isWorst = w.sharpe < 0.5;
+      const bg = isWorst ? 'background:rgba(192,57,43,.04)' : '';
+      const warn = isWorst ? '⚠️ ' : '';
+      const clrC = w.cagr>=0?'color:var(--green)':'color:var(--red)';
+      const year = w.test.slice(0,4);
+      return `<tr style="border-bottom:1px solid var(--g100);${bg}">
+        <td style="padding:7px 10px;font-family:'DM Mono',monospace;font-size:.75rem;color:var(--g600)">${w.train_n}M</td>
+        <td style="padding:7px 10px;font-family:'DM Mono',monospace;font-size:.75rem">${warn}${year}年</td>
+        <td style="padding:7px 8px;text-align:right;font-family:'DM Mono',monospace;font-size:.78rem;${clrC}">${(w.cagr*100).toFixed(1)}%</td>
+        <td style="padding:7px 8px;text-align:right;font-family:'DM Mono',monospace;font-size:.78rem">${w.sharpe.toFixed(3)}</td>
+        <td style="padding:7px 8px;text-align:right;font-family:'DM Mono',monospace;font-size:.78rem">${w.sortino.toFixed(2)}</td>
+        <td style="padding:7px 8px;text-align:right;font-family:'DM Mono',monospace;font-size:.78rem;color:var(--red)">${(w.maxdd*100).toFixed(1)}%</td>
+      </tr>`;
+    }).join('');
+  }
 }
 
 loadAll();
