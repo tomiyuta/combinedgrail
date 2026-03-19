@@ -144,63 +144,88 @@ def compute_m4_returns(start='2016-01'):
 # Step 2: OG防御型 月次リターン計算（yfinanceから直接取得）
 # ════════════════════════════════════════════════════════════════
 def compute_ogdef_returns(dates_m4):
-    logging.info("[2/3] OG防御型 月次リターン計算...")
-    start_dt = dates_m4[0]    # e.g. '2016-01'
+    """
+    OG防御型バックテスト — generate_signal_def.py / opengrail generate_signal.py と完全同一方式
+    - データ: 日次 interval='1d'（月次ではなく日次で6Mモメンタム計算）
+    - ユニバース: OG_ETFS 14銘柄（SPY含む）
+    - 選択: Top4 + InvVol加重（日次リターン90日stdで計算）
+    - generate_signal.py の select_portfolio と同一ロジック
+    """
+    logging.info("[2/3] OG防御型 月次リターン計算（日次データ・generate_signal同一方式）...")
+    start_dt = dates_m4[0]
     end_dt   = dates_m4[-1]
 
-    # 月次価格取得（yfinance）
-    start_yf = f"{start_dt}-01"
-    raw = yf.download(OG_ETFS, start='2015-01-01', end=f"{end_dt[:4]}-{int(end_dt[5:])+1 if int(end_dt[5:])<12 else 12}-01",
-                      interval='1mo', auto_adjust=True, progress=False)
+    # 日次価格取得（2015-01-01から: 6Mモメンタム計算に必要なバッファ込み）
+    raw = yf.download(OG_ETFS, start='2015-01-01',
+                      end=f"{end_dt[:4]}-{min(int(end_dt[5:])+2, 12):02d}-01",
+                      interval='1d', auto_adjust=True, progress=False)
     if isinstance(raw.columns, pd.MultiIndex):
-        prices = raw['Close'] if 'Close' in raw.columns.get_level_values(0) \
-                 else raw.xs('Close', axis=1, level=1)
+        prices_d = raw['Close'] if 'Close' in raw.columns.get_level_values(0)                    else raw.xs('Close', axis=1, level=1)
     else:
-        prices = raw[['Close']] if 'Close' in raw.columns else raw
-    prices.index = pd.to_datetime(prices.index).to_period('M')
-    ret_m  = prices.pct_change()
+        prices_d = raw
 
-    # 各月: Top4 選択 + InvVol加重 → リターン
+    prices_d.index = pd.to_datetime(prices_d.index)
+
     def_rets = {}
     for period_str in dates_m4:
-        period = pd.Period(period_str)
-        if period not in prices.index:
+        yr, mo = int(period_str[:4]), int(period_str[5:7])
+        # 月末の日次データを取得
+        month_end = prices_d[prices_d.index.year==yr][prices_d[prices_d.index.year==yr].index.month==mo]
+        if month_end.empty:
             def_rets[period_str] = 0.0
             continue
-        # 6Mモメンタム（126取引日≈6ヶ月前）→ 月次で近似: iloc[-7]
-        slice_end = prices.index.get_loc(period)
-        if slice_end < 7:
+        last_idx = prices_d.index.get_loc(month_end.index[-1])
+
+        # ── 6Mモメンタム（日次126取引日前）── generate_signal.py と同一
+        if last_idx < 126:
             def_rets[period_str] = 0.0
             continue
-        p_now = prices.iloc[slice_end]
-        p_6m  = prices.iloc[slice_end - 6]
-        mom   = {}
+        p_now = prices_d.iloc[last_idx]
+        p_6m  = prices_d.iloc[last_idx - 126]
+        mom = {}
         for t in OG_ETFS:
             if t in p_now.index and t in p_6m.index:
-                if p_6m[t] > 0 and not np.isnan(p_now[t]) and not np.isnan(p_6m[t]):
-                    mom[t] = float(p_now[t] / p_6m[t] - 1)
-        top4 = sorted(mom.items(), key=lambda x: -x[1])[:OG_TOP_N]
-        selected = [t for t, _ in top4]
-        # InvVol加重（月次リターンの標準偏差）
+                pn, p6 = float(p_now[t]), float(p_6m[t])
+                if p6 > 0 and not np.isnan(pn) and not np.isnan(p6):
+                    mom[t] = (pn - p6) / p6
+
+        top_n_sel = sorted(mom.items(), key=lambda x: -x[1])[:OG_TOP_N]
+        selected  = [t for t, _ in top_n_sel]
+        if not selected:
+            def_rets[period_str] = 0.0
+            continue
+
+        # ── InvVol加重（日次リターン直近90日・年率換算）── generate_signal.py と同一
         vols = {}
         for t in selected:
-            if t in prices.columns:
-                r_hist = ret_m.iloc[max(0, slice_end-12):slice_end][t].dropna()
-                if len(r_hist) >= 3:
-                    v = float(r_hist.std())
+            if t in prices_d.columns:
+                r_hist = prices_d[t].iloc[max(0, last_idx-90):last_idx].pct_change().dropna()
+                if len(r_hist) >= 10:
+                    v = float(r_hist.std() * np.sqrt(252))
                     if v > 0: vols[t] = v
         if vols:
             ti = sum(1/v for v in vols.values())
             weights = {t: (1/v)/ti for t, v in vols.items()}
         else:
             weights = {t: 1/len(selected) for t in selected}
-        # 当月リターン
-        if period in ret_m.index:
-            r_now = ret_m.loc[period]
-            def_rets[period_str] = round(
-                float(sum(weights.get(t,0) * r_now.get(t, 0) for t in selected)), 6)
-        else:
+
+        # ── 当月リターン（月末→翌月末の価格変化）──
+        # 翌月末を取得
+        next_yr, next_mo = (yr, mo+1) if mo < 12 else (yr+1, 1)
+        next_month = prices_d[(prices_d.index.year==next_yr) & (prices_d.index.month==next_mo)]
+        if next_month.empty:
             def_rets[period_str] = 0.0
+            continue
+        next_idx = prices_d.index.get_loc(next_month.index[-1])
+        p_end = prices_d.iloc[next_idx]
+
+        month_ret = 0.0
+        for t in selected:
+            if t in p_now.index and t in p_end.index:
+                p0, p1 = float(p_now[t]), float(p_end[t])
+                if p0 > 0 and not np.isnan(p0) and not np.isnan(p1):
+                    month_ret += weights.get(t, 0) * (p1 - p0) / p0
+        def_rets[period_str] = round(month_ret, 6)
 
     result = [def_rets.get(d, 0.0) for d in dates_m4]
     logging.info(f"  OG防御型: {dates_m4[0]} ~ {dates_m4[-1]} ({len(result)}ヶ月)")
