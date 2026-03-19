@@ -23,7 +23,9 @@ def stats(rets):
     if len(r) < 6: return {}
     cagr    = float((1+r).prod()**(12/len(r))-1)
     sh      = float(r.mean()/r.std()*12**0.5) if r.std()>0 else 0
-    neg=r[r<0]; ds=float(neg.std()*12**0.5) if len(neg)>1 else 0
+    # 半分散Sortino（holyetf.vercel.appと同一方式）
+    semi    = np.where(r < 0, r, 0)
+    ds      = float(np.sqrt(np.mean(semi**2)) * 12**0.5)
     sortino = float(r.mean()*12/ds) if ds>0 else 0
     cum=(1+r).cumprod(); md=float(((cum-cum.cummax())/cum.cummax()).min())
     calmar  = abs(cagr/md) if md!=0 else 0
