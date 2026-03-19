@@ -1,11 +1,11 @@
 {
   "date": "2026-03",
-  "generated": "2026-03-19T05:21:18Z",
+  "generated": "2026-03-19T06:29:08Z",
   "etf_weight": 0.4,
   "def_weight": 0.6,
   "etf_signal": {
     "date": "2026-03",
-    "generated": "2026-03-19T05:21:16Z",
+    "generated": "2026-03-19T06:29:06Z",
     "regime": "STRESS",
     "regime_label": "警戒（防御型）",
     "sensors": {
@@ -73,7 +73,7 @@
   },
   "def_signal": {
     "date": "2026-03",
-    "generated": "2026-03-19T05:21:18Z",
+    "generated": "2026-03-19T06:29:08Z",
     "strategy": "OG防御型",
     "top_n": 4,
     "holdings": [
