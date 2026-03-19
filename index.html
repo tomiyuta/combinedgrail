@@ -181,7 +181,7 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
         <div id="allocRecBadge" style="display:inline-flex;align-items:center;gap:4px;
           background:rgba(212,175,90,.2);border:1px solid rgba(212,175,90,.5);
           border-radius:20px;padding:2px 8px">
-          <span style="font-size:.6rem;color:#D4AF5A;font-weight:700">★ 推奨バランス</span>
+          <span style="font-size:.6rem;color:#D4AF5A;font-weight:700">★ 最高効率型</span>
         </div>
       </div>
       <div id="allocationRow" style="display:flex;gap:16px;align-items:center">
@@ -620,7 +620,7 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
       </div>
       <div style="flex:1;min-width:200px;background:var(--off);border-radius:8px;padding:12px 14px">
         <div style="font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
-          color:var(--g400);margin-bottom:6px">Aggregate Result（r40_60 推奨バランス）</div>
+          color:var(--g400);margin-bottom:6px">Aggregate Result（r30_70 最高効率型）</div>
         <div style="font-size:.72rem;color:var(--g600);line-height:1.75">
           IS Sharpe: <strong>2.011</strong> → OOS Sharpe: <strong>2.194</strong><br>
           OOS CAGR平均: <strong style="color:var(--green)">28.3%</strong><br>
@@ -656,7 +656,7 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
 
     <!-- ④ r40_60 ウィンドウ別詳細 -->
     <div style="font-size:.72rem;font-weight:600;color:var(--navy);margin-bottom:8px">
-      推奨バランス（r40_60）— ウィンドウ別 OOS 詳細
+      高効率型（r40_60）— ウィンドウ別 OOS 詳細
     </div>
     <div style="overflow-x:auto;margin-bottom:18px">
     <table style="width:100%;border-collapse:collapse;min-width:480px" id="wfDetailTable">
@@ -749,17 +749,17 @@ let cumPeriod   = 'ALL';
 const hiddenSeries = new Set();
 
 const PERF_ROWS = [
-  {key:'r0_100', type:'防御型単体',  etf:0,  def:100},
-  {key:'r10_90', type:'超安全型+',  etf:10, def:90},
-  {key:'r20_80', type:'超安全型',   etf:20, def:80},
-  {key:'r30_70', type:'安全寄り',   etf:30, def:70},
-  {key:'r40_60', type:'推奨バランス', etf:40, def:60, recommend:true},
-  {key:'r50_50', type:'中間',       etf:50, def:50},
-  {key:'r60_40', type:'成長寄り',   etf:60, def:40},
-  {key:'r70_30', type:'成長重視',   etf:70, def:30},
-  {key:'r80_20', type:'成長強化',   etf:80, def:20},
-  {key:'r90_10', type:'成長優先+',  etf:90, def:10},
-  {key:'r100_0', type:'ETF単体',    etf:100,def:0},
+  {key:'r0_100', type:'防御型単体',   etf:0,  def:100},
+  {key:'r10_90', type:'守備重視型',   etf:10, def:90},
+  {key:'r20_80', type:'低DD効率型',   etf:20, def:80},
+  {key:'r30_70', type:'最高効率型',   etf:30, def:70, recommend:true},
+  {key:'r40_60', type:'高効率型',     etf:40, def:60},
+  {key:'r50_50', type:'均等型',       etf:50, def:50},
+  {key:'r60_40', type:'成長型',       etf:60, def:40},
+  {key:'r70_30', type:'積極成長型',   etf:70, def:30},
+  {key:'r80_20', type:'高成長型',     etf:80, def:20},
+  {key:'r90_10', type:'攻撃型',       etf:90, def:10},
+  {key:'r100_0', type:'ETF単体',      etf:100,def:0},
 ];
 
 function scrollToId(id){ document.getElementById(id)?.scrollIntoView({behavior:'smooth',block:'start'}); }
@@ -954,12 +954,12 @@ function onSlider(v){
   document.getElementById('defPct').textContent  = 100-v;
   document.getElementById('etfWeightBadge').textContent = v+'%';
   document.getElementById('defWeightBadge').textContent = (100-v)+'%';
-  // 推奨バランス(40:60)かどうかでバッジを切り替え
+  // 最高効率型(30:70)かどうかでバッジを切り替え
   const recBadge = document.getElementById('allocRecBadge');
   if(recBadge){
-    const isRec = (parseInt(v)===40);
+    const isRec = (parseInt(v)===30);
     recBadge.innerHTML = isRec
-      ? '<span style="font-size:.6rem;color:#D4AF5A;font-weight:700">★ 推奨バランス</span>'
+      ? '<span style="font-size:.6rem;color:#D4AF5A;font-weight:700">★ 最高効率型</span>'
       : '<span style="font-size:.6rem;color:rgba(255,255,255,.5);font-weight:600">カスタム配分</span>';
     recBadge.style.background    = isRec ? 'rgba(212,175,90,.2)' : 'rgba(255,255,255,.08)';
     recBadge.style.borderColor   = isRec ? 'rgba(212,175,90,.5)' : 'rgba(255,255,255,.2)';
@@ -1141,15 +1141,15 @@ function getSelectedKey(){
 // ── DSR検定テーブル ──────────────────────────────────────────
 const DSR_TYPE_LABELS = {
   'r0_100':  '防御型単体',
-  'r10_90':  '超安全型+',
-  'r20_80':  '超安全型',
-  'r30_70':  '安全寄り',
-  'r40_60':  '推奨バランス',
-  'r50_50':  '中間',
-  'r60_40':  '成長寄り',
-  'r70_30':  '成長重視',
-  'r80_20':  '成長強化',
-  'r90_10':  '成長優先+',
+  'r10_90':  '守備重視型',
+  'r20_80':  '低DD効率型',
+  'r30_70':  '最高効率型',
+  'r40_60':  '高効率型',
+  'r50_50':  '均等型',
+  'r60_40':  '成長型',
+  'r70_30':  '積極成長型',
+  'r80_20':  '高成長型',
+  'r90_10':  '攻撃型',
   'r100_0':  'ETF単体',
 };
 
@@ -1355,10 +1355,10 @@ function setCumScale(mode, btn){
 
 // ── Walk-Forward 検証テーブル ─────────────────────────────────────
 const WF_RATIO_LABELS = {
-  'r0_100':'防御型単体','r10_90':'超安全型+','r20_80':'超安全型',
-  'r30_70':'安全寄り','r40_60':'推奨バランス','r50_50':'中間',
-  'r60_40':'成長寄り','r70_30':'成長重視','r80_20':'成長強化',
-  'r90_10':'成長優先+','r100_0':'ETF単体',
+  'r0_100':'防御型単体','r10_90':'守備重視型','r20_80':'低DD効率型',
+  'r30_70':'最高効率型','r40_60':'高効率型','r50_50':'均等型',
+  'r60_40':'成長型','r70_30':'積極成長型','r80_20':'高成長型',
+  'r90_10':'攻撃型','r100_0':'ETF単体',
 };
 const WF_RATIO_ETF = {
   'r0_100':0,'r10_90':10,'r20_80':20,'r30_70':30,'r40_60':40,'r50_50':50,
@@ -1374,7 +1374,7 @@ function renderWF(){
 
   // IS vs OOS 全比率テーブル
   wfBodyEl.innerHTML = Object.entries(ratios).map(([key, d])=>{
-    const isRec = key === 'r40_60';
+    const isRec = key === 'r30_70';  // 最高効率型
     const bg    = isRec ? 'background:rgba(0,114,178,.05)' : '';
     const fw    = isRec ? '700' : '400';
     const mark  = isRec ? '★ ' : '';
@@ -1394,7 +1394,7 @@ function renderWF(){
   }).join('');
 
   // r40_60 ウィンドウ別詳細
-  const r40 = ratios['r40_60'];
+  const r40 = ratios['r30_70'];  // 最高効率型(r30_70)を表示
   if(r40 && wfDetailEl){
     wfDetailEl.innerHTML = r40.windows.map(w=>{
       const isWorst = w.sharpe < 0.5;
