@@ -575,14 +575,17 @@ let cumPeriod   = 'ALL';
 const hiddenSeries = new Set();
 
 const PERF_ROWS = [
-  {key:'r20_80', type:'超安全型',  etf:20, def:80},
-  {key:'r30_70', type:'安全寄り',  etf:30, def:70},
-  {key:'r40_60', type:'推奨バランス', etf:40, def:60},
-  {key:'r50_50', type:'中間',      etf:50, def:50},
-  {key:'r60_40', type:'成長寄り',  etf:60, def:40},
-  {key:'r70_30', type:'成長重視',  etf:70, def:30},
-  {key:'r100_0', type:'ETF単体',   etf:100,def:0},
-  {key:'r0_100', type:'防御型単体',etf:0,  def:100},
+  {key:'r0_100', type:'防御型単体',  etf:0,  def:100},
+  {key:'r10_90', type:'超安全型+',  etf:10, def:90},
+  {key:'r20_80', type:'超安全型',   etf:20, def:80},
+  {key:'r30_70', type:'安全寄り',   etf:30, def:70},
+  {key:'r40_60', type:'推奨バランス', etf:40, def:60, recommend:true},
+  {key:'r50_50', type:'中間',       etf:50, def:50},
+  {key:'r60_40', type:'成長寄り',   etf:60, def:40},
+  {key:'r70_30', type:'成長重視',   etf:70, def:30},
+  {key:'r80_20', type:'成長強化',   etf:80, def:20},
+  {key:'r90_10', type:'成長優先+',  etf:90, def:10},
+  {key:'r100_0', type:'ETF単体',    etf:100,def:0},
 ];
 
 function scrollToId(id){ document.getElementById(id)?.scrollIntoView({behavior:'smooth',block:'start'}); }
