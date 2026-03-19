@@ -30,6 +30,9 @@ jobs:
       - name: Generate cumulative returns (standalone — no external deps)
         run: python3 scripts/gen_cumulative.py
 
+      - name: Generate DSR + Walk-Forward (auto-regenerate after cumulative)
+        run: python3 scripts/gen_dsr_wf.py
+
       - name: Commit and push
         run: |
           git config user.name "tomiyuta"
