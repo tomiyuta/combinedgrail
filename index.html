@@ -624,9 +624,9 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
       </div>
       <div style="flex:1;min-width:200px;background:var(--off);border-radius:8px;padding:12px 14px">
         <div style="font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
-          color:var(--g400);margin-bottom:6px">Aggregate Result（r30_70 最高効率型）</div>
+          color:var(--g400);margin-bottom:6px">Aggregate Result（r40_60 推奨バランス）</div>
         <div style="font-size:.72rem;color:var(--g600);line-height:1.75">
-          IS Sharpe: <strong>2.011</strong> → OOS Sharpe: <strong>2.194</strong><br>
+          IS Sharpe: <strong>2.0106</strong> → OOS Sharpe: <strong>2.1943</strong><br>
           OOS CAGR平均: <strong style="color:var(--green)">28.3%</strong><br>
           OOS MaxDD平均: <strong style="color:var(--red)">-4.7%</strong><br>
           全7窓で正リターンを維持
@@ -660,7 +660,7 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
 
     <!-- ④ r40_60 ウィンドウ別詳細 -->
     <div style="font-size:.72rem;font-weight:600;color:var(--navy);margin-bottom:8px">
-      高効率型（r40_60）— ウィンドウ別 OOS 詳細
+      推奨バランス（r40_60）— ウィンドウ別 OOS 詳細
     </div>
     <div style="overflow-x:auto;margin-bottom:18px">
     <table style="width:100%;border-collapse:collapse;min-width:480px" id="wfDetailTable">
@@ -1173,7 +1173,7 @@ const DSR_TYPE_LABELS = {
   'r10_90':  '守備重視型',
   'r20_80':  '低DD効率型',
   'r30_70':  '最高効率型',
-  'r40_60':  '高効率型',
+  'r40_60':  '推奨バランス',
   'r50_50':  '均等型',
   'r60_40':  '成長型',
   'r70_30':  '積極成長型',
@@ -1385,7 +1385,7 @@ function setCumScale(mode, btn){
 // ── Walk-Forward 検証テーブル ─────────────────────────────────────
 const WF_RATIO_LABELS = {
   'r0_100':'防御型単体','r10_90':'守備重視型','r20_80':'低DD効率型',
-  'r30_70':'最高効率型','r40_60':'高効率型','r50_50':'均等型',
+  'r30_70':'最高効率型','r40_60':'推奨バランス','r50_50':'均等型',
   'r60_40':'成長型','r70_30':'積極成長型','r80_20':'高成長型',
   'r90_10':'攻撃型','r100_0':'ETF単体',
 };
@@ -1403,7 +1403,7 @@ function renderWF(){
 
   // IS vs OOS 全比率テーブル
   wfBodyEl.innerHTML = Object.entries(ratios).map(([key, d])=>{
-    const isRec = key === 'r30_70';  // 最高効率型
+    const isRec = key === 'r40_60';  // 推奨バランス
     const bg    = isRec ? 'background:rgba(0,114,178,.05)' : '';
     const fw    = isRec ? '700' : '400';
     const mark  = isRec ? '★ ' : '';
