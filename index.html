@@ -425,7 +425,8 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
           oninput="calcRebalance()">
         <span style="font-size:.72rem;color:var(--g400)">円/ドル</span>
         <button onclick="fetchRate()" style="font-size:.72rem;padding:5px 10px;border:1px solid var(--g200);
-          border-radius:6px;cursor:pointer;background:var(--white);color:var(--navy)">現在レート取得</button>
+          border-radius:6px;cursor:pointer;background:var(--white);color:var(--navy)">レート取得</button>
+        <span id="rateStatus" style="font-size:.65rem;color:var(--g400)">（自動取得）</span>
         <button id="btnGLDM" onclick="toggleGLDM()" style="font-size:.72rem;padding:5px 10px;
           border:1px solid var(--g200);border-radius:6px;cursor:pointer;
           background:var(--white);color:var(--g600);font-weight:500">GLD → GLDM代替</button>
@@ -792,6 +793,8 @@ async function renderAll(){
   renderSignal();
   renderPortfolio();
   calcRebalance();
+  // USD/JPY リアルタイム自動取得（prices_latest.jsonより最新値）
+  fetchRate(true);
   renderPerfTable();
   renderAnnual();
   initCumChart();
@@ -1035,13 +1038,20 @@ function toggleGLDM(){
   calcRebalance();
 }
 
-async function fetchRate(){
+async function fetchRate(silent=false){
   try{
     const r=await fetch('https://open.er-api.com/v6/latest/USD');
     const d=await r.json();
-    document.getElementById('usdjpy').value=d.rates.JPY.toFixed(2);
+    const rate = parseFloat(d.rates.JPY.toFixed(2));
+    document.getElementById('usdjpy').value=rate;
     calcRebalance();
-  }catch(e){ alert('レート取得失敗'); }
+    if(!silent){
+      const el = document.getElementById('rateStatus');
+      if(el){ el.textContent='✓ 取得済み '+new Date().toLocaleTimeString('ja-JP',{hour:'2-digit',minute:'2-digit'}); el.style.color='#2D7D46'; }
+    }
+  }catch(e){
+    if(!silent) alert('レート取得失敗');
+  }
 }
 
 // ── パフォーマンス表 ──────────────────────────────────

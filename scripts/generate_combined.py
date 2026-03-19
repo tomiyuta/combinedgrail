@@ -40,6 +40,10 @@ def main():
     etf_sig = json.load(open(OUTPUT / 'signal_etf_latest.json'))
     def_sig = json.load(open(OUTPUT / 'signal_def_latest.json'))
 
+    # prices_latest.jsonから価格を取得（存在しない場合は空dict）
+    prices_path = OUTPUT / 'prices_latest.json'
+    prices = json.load(open(prices_path)).get('prices', {}) if prices_path.exists() else {}
+
     date_str = etf_sig['date']
 
     # 統合銘柄リスト（比率調整後）
@@ -50,20 +54,20 @@ def main():
             'strategy': 'ETF M4',
             'weight_in_strategy': h['weight'],
             'weight_in_portfolio': round(h['weight'] * ETF_WEIGHT, 4),
-            'price':    h.get('price', 0),
+            'price':    prices.get(h['ticker'], h.get('price', 0)),  # fix: prices_latestから取得
         })
     for h in def_sig['holdings']:
         combined_holdings.append({
             'ticker':   h['ticker'],
             'name':     h.get('name', h['ticker']),
             'strategy': 'OG防御型',
-            'momentum_6m': h.get('momentum_6m', 0),
+            'momentum_6m': h.get('momentum', h.get('momentum_6m', 0)),  # fix: momentum_6m→momentum
             'weight_in_strategy': h['weight'],
             'weight_in_portfolio': round(h['weight'] * DEF_WEIGHT, 4),
-            'price':    h.get('price', 0),
+            'price':    prices.get(h['ticker'], h.get('price', 0)),  # fix: prices_latestから取得
         })
 
-    # 価格更新（for rebalance calc）
+    # 重みでソート
     combined_holdings.sort(key=lambda x: -x['weight_in_portfolio'])
 
     signal = {
