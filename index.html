@@ -690,8 +690,8 @@ function renderPortfolio(){
     <tr style="border-bottom:1px solid var(--g100)">
       <td style="padding:8px 0;font-family:'DM Mono',monospace;font-size:.88rem;font-weight:600">${h.ticker}</td>
       <td style="padding:8px 0;text-align:right;font-family:'DM Mono',monospace;font-size:.82rem;
-        color:${(h.momentum_6m||0)>=0?'var(--green)':'var(--red)'}">
-        ${((h.momentum_6m||0)*100).toFixed(1)}%</td>
+        color:${(h.momentum||0)>=0?'var(--green)':'var(--red)'}">
+        ${((h.momentum||0)*100).toFixed(1)}%</td>
       <td style="padding:8px 0;text-align:right;font-family:'DM Mono',monospace;font-size:.82rem;color:var(--gold)">
         ${(h.weight*defWeight*100).toFixed(1)}%</td>
     </tr>`).join('');
