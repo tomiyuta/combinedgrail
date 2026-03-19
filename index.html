@@ -1423,7 +1423,7 @@ function renderWF(){
   }).join('');
 
   // r40_60 ウィンドウ別詳細
-  const r40 = ratios['r30_70'];  // 最高効率型(r30_70)を表示
+  const r40 = ratios['r40_60'];  // 推奨バランス(r40_60)を表示
   if(r40 && wfDetailEl){
     wfDetailEl.innerHTML = r40.windows.map(w=>{
       const isWorst = w.sharpe < 0.5;
