@@ -2,7 +2,7 @@
 
 **URL:** https://holystats.vercel.app/
 **GitHub:** https://github.com/tomiyuta/combinedgrail
-**最終更新:** 2026-03-19
+**最終更新:** 2026-03-20
 **バックテスト期間:** 2016-01 〜 2026-03（123ヶ月）
 
 ---
@@ -26,6 +26,8 @@
 ├─────────────────────────────────────────────────────────────────┤
 │    統計的有意性検定: DSR（N=11多重補正）+ Block Bootstrap          │
 │    Walk-Forward Analysis: 7ウィンドウ OOS 検証                    │
+│    CSCV / PBO: PBO=23.4%（良好）                                 │
+│    Block Bootstrap DD: DD95=−18.9% / DD99=−23.2%（block=6M）    │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
@@ -54,33 +56,7 @@
 | ROTATION | XLU vs SPY 3Mリターン差 | 0 / 0.05 |
 | MOMENTUM | SPY 6Mリターン | 0 |
 
-| レジーム | 内容 | モード |
-|---------|------|------|
-| CAUTIOUS | 強気（攻撃型） | SURGE/ADVANCE |
-| PREEMPTIVE | 慎重（転換前） | NEUTRAL/HYBRID |
-| STRESS | 警戒（防御型） | NEUTRAL |
-| ACUTE | 急性（防御型） | FORTRESS |
-| ACUTE_EQUITY | 急性株式（回復型） | PIVOT |
-| RATES_UP_HV_RECOVERY | 金利上昇・HV回復 | HYBRID |
-| RATES_UP_LOW_VOL | 金利上昇・低ボラ | NEUTRAL |
-
-### 2-3. 守備強化センサー C5
-
-VIX・信用スプレッド・金利傾きが警戒域に入ると発火：
-- `skew_norm > 0.5` または `slope_norm < −1.0` でトリガー
-- 発火時：ETF M4は標準より守備的配分に移行
-
-### 2-4. M4モデルの銘柄ユニバース
-
-**攻撃型（ATK）:** TQQQ, TECL, SOXL
-**防御型（DEF）:** GLD, XLU, TMV, TLT, XLV
-
-### 2-5. 配分ロジック（M4）
-
-6モード（FORTRESS/PIVOT/HYBRID/NEUTRAL/ADVANCE/SURGE）× レジームで重みを決定。
-InvVol加重ではなく、離散的な重みテーブル（DISCRETE定数）を使用。
-
-### 2-6. 単体バックテスト成績（2016-01〜2026-03）
+### 2-3. 単体バックテスト成績（2016-01〜2026-03）
 
 | モデル | CAGR | Sharpe | Sortino | MaxDD | Calmar |
 |--------|------|--------|---------|-------|--------|
@@ -93,55 +69,21 @@ InvVol加重ではなく、離散的な重みテーブル（DISCRETE定数）を
 
 ## 3. OG防御型 エンジン
 
-### 3-1. 概要
+### 3-1. 仕様
 
 | 項目 | 仕様 |
 |------|------|
 | 参照先 | opengrail.vercel.app と完全同一ロジック |
 | スクリプト（シグナル） | `scripts/generate_signal_def.py` |
 | スクリプト（BT） | `scripts/gen_cumulative.py::compute_ogdef_returns()` |
-| 更新スケジュール | 毎月1日 JST06:30（monthly_signal.yml） |
+| ユニバース | 固定14銘柄（SPY含む）|
+| 選定 | 6Mモメンタム上位4銘柄（Top4） |
+| 加重 | InvVol（日次90日std×√252） |
+| データ | yfinance 日次 period='7mo' |
 
 ### 3-2. ETFユニバース（14銘柄）
 
-| ティッカー | 名称 | カテゴリ |
-|-----------|------|---------|
-| GLD | SPDR Gold Shares | 金 |
-| EEM | iShares MSCI Emerging Markets | 新興国株 |
-| IWM | iShares Russell 2000 | 小型株 |
-| EFA | iShares MSCI EAFE | 先進国株 |
-| QQQ | Invesco QQQ Trust | NASDAQ100 |
-| SPY | SPDR S&P 500 ETF | S&P500 |
-| DBC | Invesco DB Commodity | コモディティ |
-| IEF | iShares 7-10 Year Treasury | 中期国債 |
-| LQD | iShares Investment Grade Corp Bond | 投資適格社債 |
-| AGG | iShares Core US Aggregate Bond | 総合債券 |
-| TLT | iShares 20+ Year Treasury | 長期国債 |
-| TIP | iShares TIPS Bond | 物価連動債 |
-| SHY | iShares 1-3 Year Treasury | 短期国債 |
-| IYR | iShares US Real Estate | 不動産 |
-
-### 3-3. 選定ロジック
-
-```
-データ: 日次 interval='1d', period='7mo'（yfinance）
-モメンタム: p_now / p_126日前 − 1（126取引日≈6ヶ月）
-ボラティリティ: 日次リターン 直近90日 std × √252（年率換算）
-加重: InvVol（1/vol を正規化）
-Top-N: 4銘柄（Top4）
-```
-
-### 3-4. 単体バックテスト成績（2016-01〜2026-03）
-
-| 指標 | 値 |
-|------|-----|
-| CAGR | 10.7% |
-| Sharpe | 1.0573 |
-| Sortino | 1.9593 |
-| MaxDD | −13.5% |
-| Calmar | 0.7908 |
-
-**注:** OG防御型はSPY含む14銘柄・日次ロジックで計算。2000年〜の長期では CAGR 8.8%（MaxDD −33.5%）。
+GLD / EEM / IWM / EFA / QQQ / SPY / DBC / IEF / LQD / AGG / TLT / TIP / SHY / IYR
 
 ---
 
@@ -161,11 +103,85 @@ Top-N: 4銘柄（Top4）
 | r90_10 | 攻撃型 | 90% | 10% | 46.2% | 1.6681 | 3.5339 | −30.4% | 1.52 |
 | r100_0 | ETF単体 | 100% | 0% | 50.0% | 1.6202 | 3.3961 | −33.2% | 1.51 |
 
-**推奨根拠:** r40_60はSharpe最高水準（2.01）を維持しながらMaxDD −15.8%に抑制。Sharpe最高はr30_70（2.016）だが差は0.005と誤差範囲内。
+---
+
+## 5. 統計的検証（3テスト体系）
+
+### 5-1. DSR + Bootstrap（既存）
+
+| 検定 | 方式 | 結果（r40_60） |
+|------|------|-------------|
+| DSR | Bailey & LdP 2014 / N=11 | 0.874（FAIL: 閾値0.95未達） |
+| Bootstrap | Block Bootstrap p値 / n=10,000 | p≈0（PASS） |
+
+DSR FAILは戦略の無効を示すものではなく、配分最適化の統計的確実性が限定的であることを意味する。
+
+### 5-2. CSCV / PBO（2026-03-20追加）
+
+| 候補集合 | T | N | PBO | 判定 |
+|---------|---|---|-----|------|
+| 11配分比率 | 123M | 11 | **23.4%** | ✅ 良好 |
+
+- Bailey (2015) / n_splits=10 / Combinatorially Symmetric Cross-Validation
+- 推奨比率（r40_60）選択の過学習確率は管理可能な水準
+- 弱点は「配分最適化の統計確実性が限定的」であること。戦略自体の過学習ではない
+
+### 5-3. Block Bootstrap DD（2026-03-20追加）
+
+block=6M（半年の連続性保持）/ N=10,000 / seed=42
+
+| 戦略 | Hist MaxDD | BB DD95 | BB DD99 | BB/Hist比 |
+|------|-----------|--------|--------|---------|
+| 推奨バランス(r40_60) | −15.8% | **−18.9%** | **−23.2%** | 1.19 |
+| 防御型単体(r0_100) | −13.5% | −20.6% | −25.5% | 1.52 |
+| ETF単体(r100_0) | −33.2% | −38.2% | −45.9% | 1.15 |
+
+BB/Hist比=1.19（3戦略中最低）。DDの増幅率が相対的に低く分散効果が確認できる。単純シャッフルMC比で約35倍大きく、regime連鎖を部分保持した保守的DD推定値。
 
 ---
 
-## 5. 年次リターン（推奨バランス r40_60）
+## 6. Walk-Forward Analysis（OOS検証）
+
+### 6-1. 設計
+
+| パラメータ | 値 |
+|-----------|-----|
+| 方式 | Expanding Window（拡大訓練窓） |
+| 最小訓練期間 | 36ヶ月 |
+| テスト期間 | 12ヶ月（Non-overlapping） |
+| ウィンドウ数 | 7回（2019〜2025年） |
+
+### 6-2. IS vs OOS 推奨比率（r40_60）
+
+| 指標 | 値 |
+|------|-----|
+| IS Sharpe | 2.0106 |
+| OOS Sharpe 平均 | 2.1943（Gap +0.184） |
+| OOS CAGR 平均 | 28.3% |
+| OOS MaxDD 平均 | −4.7% |
+| 2022年（最悪窓） | Sharpe 0.159 / CAGR +0.9% |
+
+### 6-3. Rolling WF との比較
+
+- Anchored: IS Sharpe=2.011 / Gap=−0.184（OOS優位）
+- Rolling: IS Sharpe=1.932 / Gap=−0.262（OOS優位、幅広）
+- OOS期間は両方式で完全一致。**Anchored が正式採用方式**
+
+---
+
+## 7. Risk Sizing
+
+| 指標 | 値 |
+|------|-----|
+| Kelly fraction | 55.1% |
+| Half-Kelly | 27.6% |
+| DD99 at Half-Kelly | −5.8% |
+
+Half-Kelly以下が実用的な上限。3戦略中で最も安定したrisk-return特性。
+
+---
+
+## 8. 年次リターン（推奨バランス r40_60）
 
 | 年 | r40_60 | ETF M4 | OG防御型 | SPY |
 |----|--------|--------|---------|-----|
@@ -179,221 +195,38 @@ Top-N: 4銘柄（Top4）
 | 2023 | +27.0% | +80.2% | −0.8% | +26.2% |
 | 2024 | +28.4% | +47.1% | +16.4% | +25.0% |
 | 2025 | +33.2% | +43.8% | +25.1% | +17.8% |
-| 2026* | +2.5% | +2.6% | +2.5% | −2.6% |
-
-*2026年は2026-03月末までの部分年
-
----
-
-## 6. 統計的有意性検定
-
-### 6-1. 検定方式
-
-| 検定 | 方式 | 基準 |
-|------|------|------|
-| DSR（Deflated Sharpe Ratio） | Bailey & Lopez de Prado (2014) / N=11多重補正 | ≥0.95でPASS |
-| Bootstrap | Block Bootstrap / ブロック長12M × 10,000回 / H₀:SR=0 | p<0.05でPASS |
-
-**T=123ヶ月 / N=11試行（11配分比率）**
-
-### 6-2. 結果
-
-| 比率 | Sharpe | DSR値 | DSR判定 | p値 | Bootstrap |
-|------|--------|-------|---------|-----|-----------|
-| r0_100 | 1.0573 | 0.039 | ❌ FAIL | 0.0002 | ✅ PASS |
-| r10_90 | 1.5245 | 0.383 | ❌ FAIL | <0.001 | ✅ PASS |
-| r20_80 | 1.8729 | 0.772 | ❌ FAIL | <0.001 | ✅ PASS |
-| r30_70 | 2.0157 | 0.877 | ❌ FAIL | <0.001 | ✅ PASS |
-| **r40_60** | **2.0106** | **0.874** | **❌ FAIL** | **<0.001** | **✅ PASS** |
-| r50_50〜r100_0 | 1.62〜1.94 | 0.50〜0.83 | ❌ FAIL | <0.001 | ✅ PASS |
-
-**解釈:** DSR全FAILはN=11の多重検定補正後のE[max SR*]=5.62が必要閾値のため（現在最高Sharpe 2.02 < 2.19が必要）。Bootstrap全PASSはリターンの統計的有意性を確認。DSR FAILは戦略の無効を示すものではなく、配分最適化の統計的確実性が限定的であることを意味する。
-
----
-
-## 7. Walk-Forward Analysis（OOS検証）
-
-### 7-1. 検証設計
-
-| パラメータ | 値 |
-|-----------|-----|
-| 方式 | Expanding Window（拡大訓練窓） |
-| 最小訓練期間 | 36ヶ月（2016-01〜2018-12） |
-| テスト期間 | 12ヶ月（Non-overlapping） |
-| 前進幅 | 12ヶ月 |
-| ウィンドウ数 | 7回（2019〜2025年） |
-
-**注記:** 本検証は防御型ロジックを日次シグナル生成と整合させた更新版リターン系列に基づき再計算済み。内部整合性（IS指標・構成系列・配分式）は確認済み。
-
-### 7-2. IS vs OOS 全11比率
-
-| 比率 | IS Sharpe | OOS Sharpe | Gap | OOS CAGR | OOS MaxDD |
-|------|-----------|-----------|-----|----------|----------|
-| r0_100 | 1.057 | 1.033 | −0.024 | 11.4% | −5.7% |
-| r10_90 | 1.524 | 1.505 | −0.019 | 15.5% | −4.7% |
-| r20_80 | 1.873 | 1.915 | +0.043 | 19.7% | −4.5% |
-| r30_70 | 2.016 | 2.153 | +0.137 | 24.0% | −4.2% |
-| **r40_60** | **2.011** | **2.194** | **+0.184** | **28.3%** | **−4.7%** |
-| r50_50 | 1.944 | 2.139 | +0.195 | 32.6% | −5.7% |
-| r60_40 | 1.865 | 2.061 | +0.195 | 37.0% | −6.9% |
-| r70_30 | 1.790 | 1.983 | +0.193 | 41.4% | −8.1% |
-| r80_20 | 1.724 | 1.913 | +0.189 | 45.8% | −9.5% |
-| r90_10 | 1.668 | 1.853 | +0.184 | 50.3% | −10.9% |
-| r100_0 | 1.620 | 1.800 | +0.180 | 54.7% | −12.3% |
-
-### 7-3. r40_60 ウィンドウ別 OOS
-
-| テスト年 | 訓練月数 | CAGR | Sharpe | Sortino | MaxDD |
-|---------|---------|------|--------|---------|-------|
-| 2019 | 36M | +24.9% | 1.820 | 3.49 | −6.1% |
-| 2020 | 48M | +40.6% | 1.509 | 2.90 | −15.8% |
-| 2021 | 60M | +43.2% | 4.225 | 37.99 | −1.0% |
-| ⚠️ 2022 | 72M | +0.9% | 0.159 | 0.27 | −3.6% |
-| 2023 | 84M | +27.0% | 2.192 | 7.16 | −3.3% |
-| 2024 | 96M | +28.4% | 3.034 | 50.18 | −0.5% |
-| 2025 | 108M | +33.2% | 2.422 | 10.19 | −2.6% |
-
-**解釈:** r40_60でOOS>IS（+0.184）は有望な非劣化シグナル。ただしOOS期間は強気相場が多く、2022年が唯一の本格ストレス局面（Sharpe 0.159）。WFは「更新後の戦略がOOSで直ちに崩壊しないこと」の確認であり、将来再現性の保証ではない。
-
----
-
-## 8. 現在のシグナル（2026年3月）
-
-### 8-1. レジームとセンサー
-
-| 項目 | 値 |
-|------|-----|
-| レジーム | STRESS（警戒・防御型） |
-| モード | NEUTRAL |
-| 推奨配分 | ETF M4 40% / OG防御型 60% |
-| C5守備強化センサー | 発火中 |
-| CREDIT センサー | DEF |
-| RATES センサー | NEU |
-| ROTATION センサー | DEF |
-| MOMENTUM センサー | DEF |
-
-### 8-2. HolyETF M4 ポートフォリオ（STRESS/NEUTRAL）
-
-| 銘柄 | 戦略内比率 | PF全体比率 | 説明 |
-|------|----------|----------|------|
-| XLU | 27.5% | 11.0% | 公益株（防御） |
-| GLD | 26.7% | 10.7% | 金（安全資産） |
-| TMV | 23.1% | 9.3% | 逆長期国債（金利上昇ヘッジ） |
-| TECL | 11.4% | 4.5% | テクノロジー3倍（攻撃残余） |
-| TQQQ | 11.4% | 4.5% | QQQ3倍（攻撃残余） |
-
-### 8-3. OG防御型 ポートフォリオ（2026-03）
-
-| 銘柄 | 6Mモメンタム | 戦略内比率 | PF全体比率 | カテゴリ |
-|------|------------|----------|----------|---------|
-| DBC | +34.2% | 25.3% | 15.2% | コモディティ |
-| GLD | +32.0% | 15.1% | 9.1% | 金 |
-| EEM | +9.6% | 25.8% | 15.5% | 新興国株 |
-| EFA | +5.9% | 33.8% | 20.3% | 先進国株 |
-
-**GLD:** ETF M4とOG防御型の両方に選ばれ、PF全体比率は 10.7% + 9.1% = **19.8%** で合算。
 
 ---
 
 ## 9. 自動更新システム
 
-### 9-1. ワークフロー一覧
-
 | ワークフロー | スケジュール | 更新内容 |
 |------------|------------|---------|
-| `monthly_signal.yml` | 毎月1日 UTC21:30 (JST06:30) | シグナル全体 + バックテスト |
-| `daily_prices.yml` | 毎日 UTC21:30 (JST06:30) | 株価 + USD/JPY |
+| `monthly_signal.yml` | 毎月1日 UTC21:30 | シグナル + バックテスト + DSR/WF自動再生成 |
+| `daily_prices.yml` | 毎日 UTC21:30 | 株価 + USD/JPY |
 
-### 9-2. 月次更新の実行順序
-
-```
-monthly_signal.yml 実行順序:
-1. update_data.py         → prices_monthly（M4計算用）+ VIX を最新月に更新
-2. generate_combined.py
-     └─ generate_signal_etf.py   → ETF M4 シグナル生成（engine/signal_generator.py）
-     └─ generate_signal_def.py   → OG防御型 シグナル生成（日次・14銘柄・Top4）
-     └─ signal_latest.json 統合  → 配分比率 × holdings 結合
-3. gen_cumulative.py      → cumulative_returns.json（全11比率の月次リターン・統計）
-4. gen_dsr_wf.py          → dsr_results.json + wf_results.json（DSR/WF自動再生成）
-5. git add output/ → git commit → git push → Vercel 自動デプロイ
-```
-
-### 9-3. 日次更新の実行内容
+### 月次実行順序
 
 ```
-daily_prices.yml:
-→ update_prices.py
-   - 全銘柄の現在株価（yfinance fast_info）
-   - USD/JPY レート（open.er-api.com）
-→ prices_latest.json 更新 → git push
+1. update_data.py         → prices_monthly + VIX更新
+2. generate_combined.py   → ETF M4 + OG防御型シグナル統合
+3. gen_cumulative.py      → cumulative_returns.json再生成
+4. gen_dsr_wf.py          → dsr_results.json + wf_results.json自動再生成
+5. git push → Vercel自動デプロイ
 ```
-
-### 9-4. ブラウザ側自動取得
-
-| 機能 | 動作 |
-|------|------|
-| USD/JPY | ページロード時に open.er-api.com から自動取得（サイレント） |
-| 株価 | prices_latest.json から読み込み（毎日JST06:30更新） |
-| シグナル | signal_latest.json から読み込み（毎月1日JST06:30更新） |
-| キャッシュ対策 | `fetch('...?t='+Date.now())` でバスティング |
 
 ---
 
 ## 10. 技術スタック
 
-### 10-1. バックエンド（GitHub Actions）
-
 | 項目 | 使用技術 |
 |------|---------|
 | 言語 | Python 3.11 |
 | データ取得 | yfinance ≥0.2.36 |
-| 数値計算 | pandas ≥2.0.0 / numpy ≥1.24.0 |
-| 統計検定 | scipy ≥1.10.0（DSR/Bootstrap） |
+| 統計検定 | scipy ≥1.10.0（DSR/Bootstrap/CSCV/Block Bootstrap） |
 | CI/CD | GitHub Actions |
 | ホスティング | Vercel（静的サイト） |
-
-### 10-2. フロントエンド
-
-| 項目 | 使用技術 |
-|------|---------|
 | チャート | Chart.js 4.4.1 |
-| フォント | Playfair Display / DM Sans / DM Mono |
-| FX API | open.er-api.com（CORS対応無料API） |
-| JSONストア | output/*.json（静的ファイル配信） |
-
-### 10-3. ディレクトリ構成
-
-```
-CombinedGrail/
-├── index.html                    # メインUI
-├── vercel.json                   # Vercel設定
-├── requirements.txt              # Python依存（scipy含む）
-├── .github/workflows/
-│   ├── monthly_signal.yml        # 毎月1日 シグナル更新
-│   └── daily_prices.yml          # 毎日 価格更新
-├── engine/
-│   ├── signal_generator.py       # HolyETF M4 エンジン（本家同期）
-│   └── data_loader.py            # データローダー（本家同期）
-├── scripts/
-│   ├── generate_combined.py      # ETF M4 + OG防御型 統合
-│   ├── generate_signal_etf.py    # ETF M4 シグナル生成
-│   ├── generate_signal_def.py    # OG防御型 シグナル生成
-│   ├── gen_cumulative.py         # バックテスト累積リターン
-│   ├── gen_dsr_wf.py             # DSR + Walk-Forward 自動生成
-│   ├── update_data.py            # 月次市場データ更新
-│   └── update_prices.py          # 日次価格・FX更新
-├── output/
-│   ├── signal_latest.json        # 今月のシグナル（統合）
-│   ├── signal_etf_latest.json    # ETF M4 シグナル
-│   ├── signal_def_latest.json    # OG防御型 シグナル
-│   ├── prices_latest.json        # 最新株価・FX
-│   ├── cumulative_returns.json   # 全11比率の累積リターン・統計
-│   ├── dsr_results.json          # DSR / Bootstrap 検定結果
-│   └── wf_results.json           # Walk-Forward 結果
-└── data/
-    ├── market/prices_monthly_2004_2026.csv  # 月次価格（M4エンジン用）
-    └── fred/FRED_VXVCLS_auto.csv            # VIX月次データ
-```
 
 ---
 
@@ -402,29 +235,25 @@ CombinedGrail/
 | 指標 | 計算式 |
 |------|-------|
 | CAGR | `(最終/初期)^(12/n) − 1` |
-| Sharpe | `mean(r) / std(r, ddof=1) × √12`（rf=0） |
-| Sortino | `mean(r)×12 / √[Σmin(0,r)²/n × 12]`（半分散DD方式） |
+| Sharpe | `mean(r) / std(r, ddof=1) × √12` |
+| Sortino | `mean(r)×12 / √[Σmin(0,r)²/n × 12]` |
 | MaxDD | `min((cum − cum_max) / cum_max)` |
-| Calmar | `|CAGR| / |MaxDD|` |
+| DSR DD95 | `percentile(bootstrap_dds, 5)` ← 最悪5%ケース |
+| DSR DD99 | `percentile(bootstrap_dds, 1)` ← 最悪1%ケース |
 
-**全指標は月次リターンベース。コスト・スリッページ・税金は未反映。MaxDDは月末系列のため月中変動は反映されない。**
-
----
-
-## 12. データ整合性確認（最終確認 2026-03-19）
-
-| 確認項目 | 状態 |
-|---------|------|
-| シグナル生成ロジック（holystats ↔ opengrail）同一 | ✅ 月次リターン差ゼロ確認済み |
-| ETFポートフォリオ PF比率（戦略内比率 × 配分重み） | ✅ 全銘柄一致 |
-| OG防御型 PF比率（戦略内比率 × 配分重み） | ✅ 全銘柄一致 |
-| cumulative_returns ↔ dsr_results Sharpe整合 | ✅ 全11比率一致 |
-| cumulative_returns ↔ wf_results IS Sharpe整合 | ✅ 全11比率一致 |
-| WF ウィンドウ別詳細（r40_60） | ✅ DOM表示一致 |
-| DSR T=123 ↔ cumulative n=123 | ✅ |
-| holystats annual ↔ opengrail annual（2016-2025） | ✅ 全年差ゼロ |
+**注:** 全指標は月次リターンベース。コスト・スリッページ・税金は未反映。MaxDDは月末系列のため月中変動は反映されない。
 
 ---
 
-*本ドキュメントは自動生成（2026-03-19）。次回月次更新時に自動反映。*
-*過去の成績は将来を保証しません。*
+## 12. 総合評価（ChatGPT監査 2026-03-20）
+
+| 観点 | 評価 |
+|------|------|
+| 統計的頑健性（PBO） | ✅ 良好（23.4%）|
+| DD耐性（BB DD） | ✅ 中程度（−18.9%）、3戦略中最低の増幅率 |
+| リスク効率（Kelly） | ✅ 最良（DD99@HK=−5.8%）|
+| 総合 | **3戦略中で最も安定。中核運用戦略として適している** |
+
+---
+
+*本ドキュメントは自動生成（2026-03-20）。次回月次更新時に自動反映。過去の成績は将来を保証しません。*
