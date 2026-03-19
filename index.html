@@ -181,7 +181,7 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
         <div id="allocRecBadge" style="display:inline-flex;align-items:center;gap:4px;
           background:rgba(212,175,90,.2);border:1px solid rgba(212,175,90,.5);
           border-radius:20px;padding:2px 8px">
-          <span style="font-size:.6rem;color:#D4AF5A;font-weight:700">★ 最高効率型</span>
+          <span style="font-size:.6rem;color:#D4AF5A;font-weight:700">★ 推奨バランス</span>
         </div>
       </div>
       <div id="allocationRow" style="display:flex;gap:16px;align-items:center">
@@ -752,8 +752,8 @@ const PERF_ROWS = [
   {key:'r0_100', type:'防御型単体',   etf:0,  def:100},
   {key:'r10_90', type:'守備重視型',   etf:10, def:90},
   {key:'r20_80', type:'低DD効率型',   etf:20, def:80},
-  {key:'r30_70', type:'最高効率型',   etf:30, def:70, recommend:true},
-  {key:'r40_60', type:'高効率型',     etf:40, def:60},
+  {key:'r30_70', type:'最高効率型',   etf:30, def:70},
+  {key:'r40_60', type:'推奨バランス', etf:40, def:60, recommend:true},
   {key:'r50_50', type:'均等型',       etf:50, def:50},
   {key:'r60_40', type:'成長型',       etf:60, def:40},
   {key:'r70_30', type:'積極成長型',   etf:70, def:30},
@@ -832,6 +832,19 @@ function renderSignal(){
   if(edEl) edEl.textContent = recEtf+'%';
   if(ddEl) ddEl.textContent = recDef+'%';
   if(abEl) abEl.style.width = recEtf+'%';
+  // allocRecBadge: シグナルの推奨配分比率のタイプ名を反映
+  const sigRecBadge = document.getElementById('allocRecBadge');
+  if(sigRecBadge){
+    const sigKey  = 'r'+recEtf+'_'+recDef;
+    const sigRow  = PERF_ROWS.find(r => r.key === sigKey);
+    const sigType = sigRow ? sigRow.type : (recEtf+'% : '+recDef+'%');
+    const sigRec  = !!sigRow?.recommend;
+    sigRecBadge.innerHTML = sigRec
+      ? `<span style="font-size:.6rem;color:#D4AF5A;font-weight:700">★ ${sigType}</span>`
+      : `<span style="font-size:.6rem;color:rgba(255,255,255,.5);font-weight:600">${sigType}</span>`;
+    sigRecBadge.style.background  = sigRec ? 'rgba(212,175,90,.2)' : 'rgba(255,255,255,.08)';
+    sigRecBadge.style.borderColor = sigRec ? 'rgba(212,175,90,.5)' : 'rgba(255,255,255,.2)';
+  }
   // センサー
   const sensors = d.etf_signal?.sensors || {};
   ['credit','rates','rotation','momentum'].forEach(k=>{
@@ -954,15 +967,25 @@ function onSlider(v){
   document.getElementById('defPct').textContent  = 100-v;
   document.getElementById('etfWeightBadge').textContent = v+'%';
   document.getElementById('defWeightBadge').textContent = (100-v)+'%';
-  // 最高効率型(30:70)かどうかでバッジを切り替え
+  // ヒーロー内の大きな%数字も連動
+  const edEl = document.getElementById('etfWeightDisp');
+  const ddEl = document.getElementById('defWeightDisp');
+  if(edEl) edEl.textContent = v+'%';
+  if(ddEl) ddEl.textContent = (100-v)+'%';
+  const abEl = document.getElementById('allocationBar');
+  if(abEl) abEl.style.width = v+'%';
+  // allocRecBadge: 選択中の比率の PERF_ROWS.type を動的に反映
   const recBadge = document.getElementById('allocRecBadge');
   if(recBadge){
-    const isRec = (parseInt(v)===30);
+    const curKey = 'r'+parseInt(v)+'_'+(100-parseInt(v));
+    const row    = PERF_ROWS.find(r => r.key === curKey);
+    const typeName = row ? row.type : 'カスタム配分';
+    const isRec    = !!row?.recommend;
     recBadge.innerHTML = isRec
-      ? '<span style="font-size:.6rem;color:#D4AF5A;font-weight:700">★ 最高効率型</span>'
-      : '<span style="font-size:.6rem;color:rgba(255,255,255,.5);font-weight:600">カスタム配分</span>';
-    recBadge.style.background    = isRec ? 'rgba(212,175,90,.2)' : 'rgba(255,255,255,.08)';
-    recBadge.style.borderColor   = isRec ? 'rgba(212,175,90,.5)' : 'rgba(255,255,255,.2)';
+      ? `<span style="font-size:.6rem;color:#D4AF5A;font-weight:700">★ ${typeName}</span>`
+      : `<span style="font-size:.6rem;color:rgba(255,255,255,.5);font-weight:600">${typeName}</span>`;
+    recBadge.style.background  = isRec ? 'rgba(212,175,90,.2)' : 'rgba(255,255,255,.08)';
+    recBadge.style.borderColor = isRec ? 'rgba(212,175,90,.5)' : 'rgba(255,255,255,.2)';
   }
   renderPortfolio(); calcRebalance(); updateStatsDisplay(); updateCumChart();
 }
