@@ -1,13 +1,22 @@
 #!/usr/bin/env python3
 """
 Combined Grail — OG防御型 Signal Generator
-ETF14銘柄の6Mモメンタム Top4 + InvVol加重
+OpenGrail (opengrail.vercel.app) の generate_signal.py と完全同一ロジック
+
+同一仕様:
+  - ETFユニバース: DEFENSIVE_ETFS 14銘柄（SPY含む）
+  - データ取得: 日次 interval='1d', period='7mo'
+  - モメンタム: 日次 126取引日前 (≈6ヶ月)
+  - ボラティリティ: 日次リターン 直近90日 年率換算
+  - 加重: InvVol (1/vol正規化)
+  - Top N: 4銘柄
 """
 import sys, json, warnings
+warnings.filterwarnings('ignore')
 from pathlib import Path
 from datetime import datetime, date
-import numpy as np, pandas as pd
-warnings.filterwarnings('ignore')
+import numpy as np
+import pandas as pd
 
 try:
     import yfinance as yf
@@ -18,99 +27,135 @@ ROOT   = Path(__file__).parent.parent
 OUTPUT = ROOT / 'output'
 OUTPUT.mkdir(exist_ok=True)
 
-ETFS = ['GLD','EEM','IWM','EFA','QQQ','AGG','TLT','IEF','SHY','DBC','TIP','IYR','LQD']
-ETF_NAMES = {
-    'GLD':'SPDR Gold Shares','EEM':'iShares MSCI Emerging Markets',
-    'IWM':'iShares Russell 2000','EFA':'iShares MSCI EAFE',
-    'QQQ':'Invesco QQQ','AGG':'iShares Core US Aggregate Bond',
-    'TLT':'iShares 20+ Year Treasury','IEF':'iShares 7-10 Year Treasury',
-    'SHY':'iShares 1-3 Year Treasury','DBC':'Invesco DB Commodity',
-    'TIP':'iShares TIPS Bond','IYR':'iShares US Real Estate','LQD':'iShares iBoxx Investment Grade',
-}
-TOP_N = 4
+# ── ETFユニバース（OpenGrailと完全同一・14銘柄） ──────────
+DEFENSIVE_ETFS = [
+    {"symbol":"GLD",  "name":"SPDR Gold Shares",                   "category":"金"},
+    {"symbol":"EEM",  "name":"iShares MSCI Emerging Markets",       "category":"新興国株"},
+    {"symbol":"IWM",  "name":"iShares Russell 2000",                "category":"小型株"},
+    {"symbol":"EFA",  "name":"iShares MSCI EAFE",                   "category":"先進国株"},
+    {"symbol":"QQQ",  "name":"Invesco QQQ Trust",                   "category":"NASDAQ100"},
+    {"symbol":"SPY",  "name":"SPDR S&P 500 ETF",                   "category":"S&P500"},
+    {"symbol":"DBC",  "name":"Invesco DB Commodity",                "category":"コモディティ"},
+    {"symbol":"IEF",  "name":"iShares 7-10 Year Treasury",         "category":"中期国債"},
+    {"symbol":"LQD",  "name":"iShares Investment Grade Corp Bond",  "category":"投資適格社債"},
+    {"symbol":"AGG",  "name":"iShares Core US Aggregate Bond",      "category":"総合債券"},
+    {"symbol":"TLT",  "name":"iShares 20+ Year Treasury",          "category":"長期国債"},
+    {"symbol":"TIP",  "name":"iShares TIPS Bond",                   "category":"物価連動債"},
+    {"symbol":"SHY",  "name":"iShares 1-3 Year Treasury",          "category":"短期国債"},
+    {"symbol":"IYR",  "name":"iShares US Real Estate",              "category":"不動産"},
+]
+
+TOP_N = 4  # OpenGrailと同一
+
+# ── ユーティリティ関数（OpenGrailと完全同一） ──────────────
+
+def get_multi_daily(tickers: list, period: str = '7mo') -> dict:
+    """バッチ取得でAPIコールを削減 — OpenGrail generate_signal.py と同一"""
+    try:
+        raw = yf.download(tickers, period=period, interval='1d',
+                          auto_adjust=True, progress=False, group_by='ticker')
+        result = {}
+        if isinstance(raw.columns, pd.MultiIndex):
+            for t in tickers:
+                try:
+                    s = raw[t]['Close'].dropna()
+                    if len(s) >= 20:
+                        result[t] = s.to_frame('close')
+                except:
+                    pass
+        else:
+            if len(tickers) == 1 and 'Close' in raw.columns:
+                s = raw['Close'].dropna()
+                if len(s) >= 20:
+                    result[tickers[0]] = s.to_frame('close')
+        return result
+    except Exception as e:
+        print(f"  batch error: {e}")
+        return {}
+
+def calc_momentum_6m(df: pd.DataFrame) -> float:
+    """日次126取引日前 (≈6ヶ月) モメンタム — OpenGrail と同一"""
+    if len(df) < 100: return float('-inf')
+    p_now = float(df['close'].iloc[-1])
+    p_6m  = float(df['close'].iloc[-126]) if len(df) >= 126 else float(df['close'].iloc[0])
+    if p_6m == 0: return float('-inf')
+    return (p_now - p_6m) / p_6m
+
+def calc_annvol(df: pd.DataFrame) -> float:
+    """日次リターン直近90日・年率換算 — OpenGrail と同一"""
+    if len(df) < 20: return 0.0
+    rets = df['close'].pct_change().dropna().iloc[-90:]
+    if len(rets) < 5: return 0.0
+    return float(rets.std() * np.sqrt(252))
+
+def invvol_weights(items: list) -> list:
+    """InvVol加重 — OpenGrail と同一"""
+    valid = [x for x in items if x.get('risk', 0) > 0]
+    if not valid: return items
+    total_inv = sum(1/x['risk'] for x in valid)
+    for x in valid:
+        x['weight'] = round((1/x['risk']) / total_inv, 4)
+    return valid
+
+def select_portfolio(data_map: dict, name_map: dict, top_n: int,
+                     category_map: dict = None) -> list:
+    """モメンタム上位Top-N選択 + InvVol加重 — OpenGrail と同一"""
+    metrics = []
+    for ticker, df in data_map.items():
+        mom = calc_momentum_6m(df)
+        vol = calc_annvol(df)
+        if mom == float('-inf') or vol <= 0: continue
+        item = {
+            'ticker':   ticker,
+            'name':     name_map.get(ticker, ticker),
+            'momentum': round(mom, 4),
+            'risk':     round(vol, 4),
+        }
+        if category_map:
+            item['category'] = category_map.get(ticker, '')
+        metrics.append(item)
+
+    metrics.sort(key=lambda x: x['momentum'], reverse=True)
+    selected = metrics[:top_n]
+    selected = invvol_weights(selected)
+    for x in selected:
+        x.pop('risk', None)
+    return selected
+
 
 def main():
     today    = date.today()
     sig_date = f"{today.year}-{today.month:02d}"
-    print(f"OG防御型 Signal — {sig_date}")
+    print(f"OG防御型 Signal (OpenGrail同一ロジック) — {sig_date}")
 
-    print(f"  {len(ETFS)}銘柄の価格取得中...")
-    raw = yf.download(ETFS, period='9mo', interval='1mo',
-                      auto_adjust=True, progress=False)
-    if isinstance(raw.columns, pd.MultiIndex):
-        if 'Close' in raw.columns.get_level_values(0):
-            prices = raw['Close']
-        elif 'Close' in raw.columns.get_level_values(1):
-            prices = raw.xs('Close', axis=1, level=1)
-        else:
-            prices = raw.xs(raw.columns.get_level_values(0)[0], axis=1, level=0)
-    else:
-        prices = raw[['Close']] if 'Close' in raw.columns else raw
-    prices.index = pd.to_datetime(prices.index)
+    # ── データ取得（OpenGrailと同一: 日次 period='7mo'） ──
+    def_symbols  = [e['symbol']   for e in DEFENSIVE_ETFS]
+    def_name_map = {e['symbol']: e['name']     for e in DEFENSIVE_ETFS}
+    def_cat_map  = {e['symbol']: e['category'] for e in DEFENSIVE_ETFS}
 
-    # 6Mモメンタム
-    mom = {}
-    for t in ETFS:
-        if t not in prices.columns: continue
-        ps = prices[t].dropna()
-        if len(ps) < 7: continue
-        mom[t] = float(ps.iloc[-1]/ps.iloc[-7] - 1)
+    print(f"  {len(def_symbols)}銘柄の日次価格取得中 (period=7mo)...")
+    def_data = get_multi_daily(def_symbols, period='7mo')
+    print(f"  fetched {len(def_data)} ETFs")
 
-    top4 = sorted(mom.items(), key=lambda x: -x[1])[:TOP_N]
-    selected = [t for t,_ in top4]
-    print(f"  Top4: {selected}")
-
-    # InvVol加重（日次90日）
-    daily = yf.download(selected, period='6mo', interval='1d',
-                        auto_adjust=True, progress=False)
-    if isinstance(daily.columns, pd.MultiIndex):
-        if 'Close' in daily.columns.get_level_values(0):
-            dp = daily['Close']
-        elif 'Close' in daily.columns.get_level_values(1):
-            dp = daily.xs('Close', axis=1, level=1)
-        else:
-            dp = daily.xs(daily.columns.get_level_values(0)[0], axis=1, level=0)
-    else:
-        dp = daily[['Close']] if 'Close' in daily.columns else daily
-
-    vols = {}
-    for t in selected:
-        if t not in dp.columns: continue
-        rets = dp[t].dropna().pct_change().dropna().iloc[-63:]
-        if len(rets) >= 10:
-            v = float(rets.std() * (252**0.5))
-            if v > 0: vols[t] = v
-
-    if vols:
-        ti = sum(1/v for v in vols.values())
-        weights = {t: (1/v)/ti for t,v in vols.items()}
-    else:
-        weights = {t: 1/len(selected) for t in selected}
-
-    # 現在価格
-    prices_now = {}
-    for t in selected:
-        try: prices_now[t] = round(float(yf.Ticker(t).fast_info.last_price), 2)
-        except: prices_now[t] = 0.0
+    # ── Top4選択 + InvVol加重（OpenGrailと同一） ──────────
+    defensive = select_portfolio(def_data, def_name_map, top_n=TOP_N,
+                                 category_map=def_cat_map)
+    print(f"  selected: {[x['ticker'] for x in defensive]}")
 
     signal = {
-        'date': sig_date,
+        'date':      sig_date,
         'generated': datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ'),
-        'strategy': 'OG防御型',
-        'top_n': TOP_N,
-        'holdings': [
-            {'ticker': t, 'name': ETF_NAMES.get(t,t),
-             'momentum_6m': round(mom.get(t,0),4),
-             'weight': round(weights.get(t,0),4),
-             'price': prices_now.get(t,0)}
-            for t in selected
-        ],
+        'strategy':  'OG防御型',
+        'top_n':     TOP_N,
+        'holdings':  defensive,
     }
 
     path = OUTPUT / 'signal_def_latest.json'
-    with open(path,'w') as f: json.dump(signal,f,indent=2,ensure_ascii=False)
+    with open(path, 'w') as f:
+        json.dump(signal, f, indent=2, ensure_ascii=False)
     print(f"✅ {path}")
     return signal
+
 
 if __name__ == '__main__':
     main()
