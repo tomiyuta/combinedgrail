@@ -596,51 +596,35 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
     </div>
   </div>
 
-  <!-- 統計的検証パネル（CSCV/PBO + Block Bootstrap DD + Risk Sizing） -->
-  <div style="margin-top:18px;border:1.5px solid var(--g100);border-radius:12px;padding:18px 22px;background:rgba(10,37,64,.025)">
-    <div style="font-size:.75rem;font-weight:700;color:var(--navy);letter-spacing:.06em;text-transform:uppercase;margin-bottom:12px">戦略評価 — 統計的検証とリスク特性（推奨バランス r40_60）</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px">
-      <div style="background:var(--off);border-radius:8px;padding:12px 14px">
-        <div style="font-size:.72rem;font-weight:600;color:var(--navy);margin-bottom:6px">CSCV / PBO（Bailey 2015）</div>
-        <div style="font-size:.68rem;color:var(--g600);line-height:1.65">
-          候補集合（11配分比率）での過学習確率：<br>
-          <span style="font-size:.85rem;font-weight:700;color:var(--green)">PBO = 23.4%</span>
-          <span style="font-size:.6rem;background:rgba(45,125,70,.1);color:var(--green);border-radius:4px;padding:1px 5px;margin-left:3px">✅ 良好</span><br>
-          Bootstrap検定（p≈0）で有意性を確認。DSRは多重検定補正により閾値未達だが、
-          <strong>戦略構造の過学習リスクは管理可能な水準。</strong><br>
-          <span style="color:var(--g400)">弱点は「配分最適化の統計確実性が限定的」であること。戦略自体の過学習ではない。</span>
-        </div>
-      </div>
-      <div style="background:var(--off);border-radius:8px;padding:12px 14px">
-        <div style="font-size:.72rem;font-weight:600;color:var(--navy);margin-bottom:6px">Block Bootstrap DD（block=6M）</div>
-        <div style="font-size:.68rem;color:var(--g600);line-height:1.65">
-          順序依存を部分保持した保守的DD推定：
-          <table style="width:100%;margin-top:6px;border-collapse:collapse">
-            <tr><td style="color:var(--g400);padding:1px 4px">Hist MaxDD</td><td style="font-family:'DM Mono',monospace;text-align:right;color:var(--red)">−15.8%</td></tr>
-            <tr><td style="color:var(--g400);padding:1px 4px">BB DD95</td><td style="font-family:'DM Mono',monospace;text-align:right;font-weight:700;color:var(--red)">−18.9%</td></tr>
-            <tr><td style="color:var(--g400);padding:1px 4px">BB DD99</td><td style="font-family:'DM Mono',monospace;text-align:right;font-weight:700;color:var(--red)">−23.2%</td></tr>
-          </table>
-          <span style="color:var(--g400);font-size:.63rem">BB/Hist比=1.19（3戦略中最低）。DDの増幅率が相対的に低く、分散効果が確認できる</span>
-        </div>
-      </div>
-      <div style="background:var(--off);border-radius:8px;padding:12px 14px">
-        <div style="font-size:.72rem;font-weight:600;color:var(--navy);margin-bottom:6px">資金管理（Risk Sizing）</div>
-        <div style="font-size:.68rem;color:var(--g600);line-height:1.65">
-          <table style="width:100%;margin-top:4px;border-collapse:collapse">
-            <tr><td style="color:var(--g400);padding:1px 4px">Kelly fraction</td><td style="font-family:'DM Mono',monospace;text-align:right">55.1%</td></tr>
-            <tr><td style="color:var(--g400);padding:1px 4px">Half-Kelly</td><td style="font-family:'DM Mono',monospace;text-align:right">27.6%</td></tr>
-            <tr><td style="color:var(--g400);padding:1px 4px">DD99 at Half-Kelly</td><td style="font-family:'DM Mono',monospace;text-align:right;color:var(--red)">−5.8%</td></tr>
-          </table>
-          <span style="color:var(--g400);font-size:.63rem">3戦略中で最も安定したrisk-return特性。DD99@HK=−5.8%は最も低い。</span>
-        </div>
-      </div>
+  <!-- 統計的検証パネル（B+C デザイン） -->
+<div style="border:1px solid var(--color-border-tertiary);border-radius:14px;overflow:hidden;margin-top:18px;">
+  <div style="padding:18px 24px;display:flex;align-items:center;gap:18px;border-bottom:1px solid var(--color-border-tertiary);">
+    <div style="flex-shrink:0;width:72px;height:72px;border-radius:12px;background:#EAF3DE;border:1.5px solid #C0DD97;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;">
+      <div style="font-size:28px;font-weight:500;color:#27500A;line-height:1;">A</div>
+      <div style="font-size:10px;font-weight:500;color:#3B6D11;letter-spacing:.05em;">最安定</div>
     </div>
-    <div style="margin-top:10px;padding:8px 12px;background:rgba(45,125,70,.05);border-left:3px solid var(--green);border-radius:0 6px 6px 0;font-size:.68rem;color:var(--g600);line-height:1.6">
-      <strong style="color:var(--green)">総合評価：</strong>
-      統計的頑健性・収益性・リスクのバランスにおいて3戦略中で最も安定。
-      現時点での中核運用戦略として適している。
-      <strong>ただし順序依存によるDD拡大リスク（BB DD99 −23.2%）は存在し、資金管理の制約下で運用すること。</strong>
+    <div style="flex:1;">
+      <div style="font-size:17px;font-weight:500;color:var(--color-text-primary);margin-bottom:5px;">戦略評価 — 統計的検証とリスク特性</div>
+      <div style="font-size:13px;color:var(--color-text-secondary);">推奨バランス r40_60　／　T=123M　／　CSCV + Block Bootstrap + Risk Sizing</div>
     </div>
+    <div style="text-align:right;flex-shrink:0;">
+      <div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:2px;">DSR / Bootstrap</div>
+      <div style="font-size:13px;font-weight:500;"><span style="color:#e05252">FAIL</span> / <span style="color:#3B6D11">PASS</span></div>
+    </div>
+  </div>
+  <div style="padding:22px 24px;display:flex;flex-direction:column;gap:18px;">
+    <div style="display:grid;grid-template-columns:200px 1fr 110px;align-items:center;gap:16px;"><div><div style="font-size:15px;color:var(--color-text-primary);font-weight:500;">過学習確率（PBO）</div><div style="font-size:11px;color:var(--color-text-secondary);margin-top:2px;">CSCV / Bailey 2015</div></div><div style="position:relative;height:12px;border-radius:6px;background:var(--color-background-secondary);overflow:hidden;"><div style="width:23.4%;height:100%;background:#639922;border-radius:6px;"></div><div style="position:absolute;top:0;left:50%;width:1px;height:100%;background:var(--color-border-tertiary);"></div></div><div style="text-align:right;"><span style="font-family:var(--font-mono,monospace);font-size:21px;font-weight:500;color:#27500A;">23.4%</span><div style="font-size:11px;color:var(--color-text-secondary);margin-top:2px;">✓ 良好</div></div></div>
+    <div style="display:grid;grid-template-columns:200px 1fr 110px;align-items:center;gap:16px;"><div><div style="font-size:15px;color:var(--color-text-primary);font-weight:500;">BB DD95（最悪5%）</div><div style="font-size:11px;color:var(--color-text-secondary);margin-top:2px;">Block Bootstrap / block=6M</div></div><div style="position:relative;height:12px;border-radius:6px;background:var(--color-background-secondary);overflow:hidden;"><div style="width:18.9%;height:100%;background:#E24B4A;border-radius:6px;"></div><div style="position:absolute;top:0;left:50%;width:1px;height:100%;background:var(--color-border-tertiary);"></div></div><div style="text-align:right;"><span style="font-family:var(--font-mono,monospace);font-size:21px;font-weight:500;color:#A32D2D;">−18.9%</span><div style="font-size:11px;color:var(--color-text-secondary);margin-top:2px;">Hist −15.8%</div></div></div>
+    <div style="display:grid;grid-template-columns:200px 1fr 110px;align-items:center;gap:16px;"><div><div style="font-size:15px;color:var(--color-text-primary);font-weight:500;">BB DD99（最悪1%）</div><div style="font-size:11px;color:var(--color-text-secondary);margin-top:2px;">tail risk / BB/Hist比 1.19×</div></div><div style="position:relative;height:12px;border-radius:6px;background:var(--color-background-secondary);overflow:hidden;"><div style="width:23.2%;height:100%;background:#A32D2D;border-radius:6px;"></div><div style="position:absolute;top:0;left:50%;width:1px;height:100%;background:var(--color-border-tertiary);"></div></div><div style="text-align:right;"><span style="font-family:var(--font-mono,monospace);font-size:21px;font-weight:500;color:#791F1F;">−23.2%</span><div style="font-size:11px;color:var(--color-text-secondary);margin-top:2px;">参考値</div></div></div>
+    <div style="border-top:0.5px solid var(--color-border-tertiary);"></div>
+    <div style="display:grid;grid-template-columns:200px 1fr 110px;align-items:center;gap:16px;"><div><div style="font-size:15px;color:var(--color-text-primary);font-weight:500;">Half-Kelly</div><div style="font-size:11px;color:var(--color-text-secondary);margin-top:2px;">推奨ポジションサイズ上限</div></div><div style="position:relative;height:12px;border-radius:6px;background:var(--color-background-secondary);overflow:hidden;"><div style="width:27.6%;height:100%;background:#639922;border-radius:6px;"></div><div style="position:absolute;top:0;left:50%;width:1px;height:100%;background:var(--color-border-tertiary);"></div></div><div style="text-align:right;"><span style="font-family:var(--font-mono,monospace);font-size:21px;font-weight:500;color:var(--color-text-primary);">27.6%</span><div style="font-size:11px;color:var(--color-text-secondary);margin-top:2px;">Kelly 55.1%</div></div></div>
+    <div style="display:grid;grid-template-columns:200px 1fr 110px;align-items:center;gap:16px;"><div><div style="font-size:15px;color:var(--color-text-primary);font-weight:500;">DD99 @ Half-Kelly</div><div style="font-size:11px;color:var(--color-text-secondary);margin-top:2px;">実運用時のtail risk</div></div><div style="position:relative;height:12px;border-radius:6px;background:var(--color-background-secondary);overflow:hidden;"><div style="width:5.8%;height:100%;background:#E24B4A;border-radius:6px;"></div><div style="position:absolute;top:0;left:50%;width:1px;height:100%;background:var(--color-border-tertiary);"></div></div><div style="text-align:right;"><span style="font-family:var(--font-mono,monospace);font-size:21px;font-weight:500;color:#27500A;">−5.8%</span><div style="font-size:11px;color:var(--color-text-secondary);margin-top:2px;">3戦略中最低</div></div></div>
+  </div>
+  <div style="padding:14px 24px;background:#EAF3DE;border-top:1px solid #C0DD97;">
+    <div style="font-size:13px;color:#27500A;line-height:1.65;"><strong>総合評価：</strong>統計的頑健性・収益性・リスクのバランスで3戦略中最も安定。中核運用戦略として適している。ただしBB DD99 −23.2%の順序依存リスクは存在し、資金管理の制約下で運用すること。</div>
+  </div>
+</div>
+<!-- /統計的検証パネル --></div>
   </div>
 
 </section>
