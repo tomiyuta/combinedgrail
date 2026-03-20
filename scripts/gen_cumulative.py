@@ -44,13 +44,15 @@ M4_ETFS  = ['GLD', 'XLU', 'TMV', 'TECL', 'TQQQ', 'SOXL', 'XLV']
 # ユーティリティ
 # ════════════════════════════════════════════════════════════════
 def stats(rets):
-    """半分散Sortino方式 — holyetf.vercel.appと統一"""
+    """半分散Sortino — 負リターン月のみで半分散計算（INVESTMENT_METRICS_REFERENCE.md準拠）
+    Fix 2026-03-21: np.where方式（全月N割り）→ r[r<0]方式（負月のみ）に修正
+    """
     r = pd.Series([float(x) for x in rets]).dropna()
     if len(r) < 6: return {}
     cagr    = float((1+r).prod()**(12/len(r))-1)
-    sh      = float(r.mean()/r.std()*12**0.5) if r.std()>0 else 0
-    semi    = np.where(r < 0, r, 0)
-    ds      = float(np.sqrt(np.mean(semi**2)) * 12**0.5)
+    sh      = float(r.mean()/r.std(ddof=1)*12**0.5) if r.std()>0 else 0
+    neg     = r[r < 0]
+    ds      = float(np.sqrt((neg**2).mean()) * 12**0.5) if len(neg) > 0 else 0
     sortino = float(r.mean()*12/ds) if ds>0 else 0
     cum     = (1+r).cumprod()
     md      = float(((cum-cum.cummax())/cum.cummax()).min())
@@ -121,15 +123,17 @@ def compute_m4_returns(start='2016-01'):
     for period in g.index:
         row  = g.loc[period]
         sig  = generate_signal(row.to_dict())
-        if period not in ret_m.index:
+        # Fix 2026-03-21: look-ahead bias修正 — 当月末シグナル→翌月リターン
+        next_period = period + 1
+        if next_period not in ret_m.index:
             continue
-        r_now = ret_m.loc[period]
+        r_now = ret_m.loc[next_period]
 
         def portfolio_ret(weights):
             return float(sum(weights.get(etf, 0) * r_now.get(etf, 0)
                              for etf in weights))
 
-        dates_out.append(str(period))
+        dates_out.append(str(period))   # シグナル生成月をラベルに使用
         ret_m1_list.append(round(portfolio_ret(sig['weights_M1']), 6))
         ret_m3_list.append(round(portfolio_ret(sig['weights_M3']), 6))
         ret_m4_list.append(round(portfolio_ret(sig['weights_M4']), 6))

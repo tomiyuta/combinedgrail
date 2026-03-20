@@ -29,8 +29,9 @@ def calc_stats(rets):
     if n < 6: return {}
     cagr    = float((1+r).prod()**(12/n)-1)
     sharpe  = float(r.mean()/r.std(ddof=1)*np.sqrt(12)) if r.std(ddof=1)>0 else 0
-    semi    = np.where(r<0, r, 0)
-    ds      = float(np.sqrt(np.mean(semi**2))*np.sqrt(12))
+    # Fix 2026-03-21: 半分散Sortino — 負リターン月のみ（r[r<0]）で計算
+    neg     = r[r < 0]
+    ds      = float(np.sqrt((neg**2).mean())*np.sqrt(12)) if len(neg)>0 else 0
     sortino = float(r.mean()*12/ds) if ds>0 else 0
     cum     = (1+r).cumprod()
     maxdd   = float(((cum-cum.cummax())/cum.cummax()).min())
