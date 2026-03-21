@@ -78,8 +78,8 @@ def cum_from_rets(rets):
 # ════════════════════════════════════════════════════════════════
 # Step 1: M4 月次リターン計算（CombinedGrail/engine + data）
 # ════════════════════════════════════════════════════════════════
-def compute_m4_returns(start='2016-01'):
-    logging.info("[1/3] M4月次リターン計算...")
+def compute_m4_returns(start='2010-03'):
+    # Fix 2026-03-21: BT開始 2016-01 → 2010-03 延長（Norgate CSV更新済み）
     today     = date.today()
     end_label = f"{today.year}-{today.month:02d}"
 
@@ -122,7 +122,8 @@ def compute_m4_returns(start='2016-01'):
 
     for period in g.index:
         row  = g.loc[period]
-        sig  = generate_signal(row.to_dict())
+        # NaN安全化: TQQQ/SOXL上場初期のNaN特徴量を0補完
+        sig  = generate_signal(row.fillna(0).to_dict())
         # Fix 2026-03-21: look-ahead bias修正 — 当月末シグナル→翌月リターン
         next_period = period + 1
         if next_period not in ret_m.index:
@@ -159,8 +160,8 @@ def compute_ogdef_returns(dates_m4):
     start_dt = dates_m4[0]
     end_dt   = dates_m4[-1]
 
-    # 日次価格取得（2015-01-01から: 6Mモメンタム計算に必要なバッファ込み）
-    raw = yf.download(OG_ETFS, start='2015-01-01',
+    # 日次価格取得（2009-01-01から: 2010-03開始の6Mモメンタム計算に必要なバッファ込み）
+    raw = yf.download(OG_ETFS, start='2009-01-01',
                       end=f"{end_dt[:4]}-{min(int(end_dt[5:])+2, 12):02d}-01",
                       interval='1d', auto_adjust=True, progress=False)
     if isinstance(raw.columns, pd.MultiIndex):

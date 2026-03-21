@@ -605,7 +605,7 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
     </div>
     <div style="flex:1;">
       <div style="font-size:17px;font-weight:500;color:var(--color-text-primary);margin-bottom:5px;">戦略評価 — 統計的検証とリスク特性</div>
-      <div style="font-size:13px;color:var(--color-text-secondary);">推奨バランス r40_60　／　T=122M　／　CSCV + Block Bootstrap + Risk Sizing</div>
+      <div style="font-size:13px;color:var(--color-text-secondary);">Sharpe最高型 r20_80　／　T=192M　／　CSCV + Block Bootstrap + Risk Sizing</div>
     </div>
     <div style="text-align:right;flex-shrink:0;">
       <div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:2px;">DSR / Bootstrap</div>
@@ -613,15 +613,15 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
     </div>
   </div>
   <div style="padding:22px 24px;display:flex;flex-direction:column;gap:18px;">
-    <div style="display:grid;grid-template-columns:200px 1fr 110px;align-items:center;gap:16px;"><div><div style="font-size:15px;color:var(--color-text-primary);font-weight:500;">過学習確率（PBO）</div><div style="font-size:11px;color:var(--color-text-secondary);margin-top:2px;">CSCV / Bailey 2015</div></div><div style="position:relative;height:12px;border-radius:6px;background:var(--color-background-secondary);overflow:hidden;"><div style="width:53.1%;height:100%;background:#E24B4A;border-radius:6px;"></div><div style="position:absolute;top:0;left:50%;width:1px;height:100%;background:var(--color-border-tertiary);"></div></div><div style="text-align:right;"><span style="font-family:var(--font-mono,monospace);font-size:21px;font-weight:500;color:#A32D2D;">53.1%</span><div style="font-size:11px;color:var(--color-text-secondary);margin-top:2px;">⚠ 要注意</div></div></div>
-    <div style="display:grid;grid-template-columns:200px 1fr 110px;align-items:center;gap:16px;"><div><div style="font-size:15px;color:var(--color-text-primary);font-weight:500;">BB DD95（最悪5%）</div><div style="font-size:11px;color:var(--color-text-secondary);margin-top:2px;">Block Bootstrap / block=6M</div></div><div style="position:relative;height:12px;border-radius:6px;background:var(--color-background-secondary);overflow:hidden;"><div style="width:30.8%;height:100%;background:#E24B4A;border-radius:6px;"></div><div style="position:absolute;top:0;left:50%;width:1px;height:100%;background:var(--color-border-tertiary);"></div></div><div style="text-align:right;"><span style="font-family:var(--font-mono,monospace);font-size:21px;font-weight:500;color:#A32D2D;">−30.8%</span><div style="font-size:11px;color:var(--color-text-secondary);margin-top:2px;">Hist −23.0%</div></div></div>
-    <div style="display:grid;grid-template-columns:200px 1fr 110px;align-items:center;gap:16px;"><div><div style="font-size:15px;color:var(--color-text-primary);font-weight:500;">BB DD99（最悪1%）</div><div style="font-size:11px;color:var(--color-text-secondary);margin-top:2px;">tail risk / BB/Hist比 1.63×</div></div><div style="position:relative;height:12px;border-radius:6px;background:var(--color-background-secondary);overflow:hidden;"><div style="width:37.5%;height:100%;background:#A32D2D;border-radius:6px;"></div><div style="position:absolute;top:0;left:50%;width:1px;height:100%;background:var(--color-border-tertiary);"></div></div><div style="text-align:right;"><span style="font-family:var(--font-mono,monospace);font-size:21px;font-weight:500;color:#791F1F;">−37.5%</span><div style="font-size:11px;color:var(--color-text-secondary);margin-top:2px;">参考値</div></div></div>
+    <div style="display:grid;grid-template-columns:200px 1fr 110px;align-items:center;gap:16px;"><div><div style="font-size:15px;color:var(--color-text-primary);font-weight:500;">過学習確率（PBO）</div><div style="font-size:11px;color:var(--color-text-secondary);margin-top:2px;">CSCV / Bailey 2015</div></div><div style="position:relative;height:12px;border-radius:6px;background:var(--color-background-secondary);overflow:hidden;"><div style="width:32.3%;height:100%;background:#639922;border-radius:6px;"></div><div style="position:absolute;top:0;left:50%;width:1px;height:100%;background:var(--color-border-tertiary);"></div></div><div style="text-align:right;"><span style="font-family:var(--font-mono,monospace);font-size:21px;font-weight:500;color:#27500A;">32.3%</span><div style="font-size:11px;color:var(--color-text-secondary);margin-top:2px;">✓ 良好</div></div></div>
+    <div style="display:grid;grid-template-columns:200px 1fr 110px;align-items:center;gap:16px;"><div><div style="font-size:15px;color:var(--color-text-primary);font-weight:500;">BB DD95（最悪5%）</div><div style="font-size:11px;color:var(--color-text-secondary);margin-top:2px;">Block Bootstrap / block=6M</div></div><div style="position:relative;height:12px;border-radius:6px;background:var(--color-background-secondary);overflow:hidden;"><div style="width:23.3%;height:100%;background:#E24B4A;border-radius:6px;"></div><div style="position:absolute;top:0;left:50%;width:1px;height:100%;background:var(--color-border-tertiary);"></div></div><div style="text-align:right;"><span style="font-family:var(--font-mono,monospace);font-size:21px;font-weight:500;color:#A32D2D;">−23.3%</span><div style="font-size:11px;color:var(--color-text-secondary);margin-top:2px;">Hist −15.5%</div></div></div>
+    <div style="display:grid;grid-template-columns:200px 1fr 110px;align-items:center;gap:16px;"><div><div style="font-size:15px;color:var(--color-text-primary);font-weight:500;">BB DD99（最悪1%）</div><div style="font-size:11px;color:var(--color-text-secondary);margin-top:2px;">tail risk / BB/Hist比 1.79×</div></div><div style="position:relative;height:12px;border-radius:6px;background:var(--color-background-secondary);overflow:hidden;"><div style="width:27.8%;height:100%;background:#A32D2D;border-radius:6px;"></div><div style="position:absolute;top:0;left:50%;width:1px;height:100%;background:var(--color-border-tertiary);"></div></div><div style="text-align:right;"><span style="font-family:var(--font-mono,monospace);font-size:21px;font-weight:500;color:#791F1F;">−27.8%</span><div style="font-size:11px;color:var(--color-text-secondary);margin-top:2px;">参考値</div></div></div>
     <div style="border-top:0.5px solid var(--color-border-tertiary);"></div>
-    <div style="display:grid;grid-template-columns:200px 1fr 110px;align-items:center;gap:16px;"><div><div style="font-size:15px;color:var(--color-text-primary);font-weight:500;">Half-Kelly</div><div style="font-size:11px;color:var(--color-text-secondary);margin-top:2px;">推奨ポジションサイズ上限</div></div><div style="position:relative;height:12px;border-radius:6px;background:var(--color-background-secondary);overflow:hidden;"><div style="width:39.7%;height:100%;background:#639922;border-radius:6px;"></div><div style="position:absolute;top:0;left:50%;width:1px;height:100%;background:var(--color-border-tertiary);"></div></div><div style="text-align:right;"><span style="font-family:var(--font-mono,monospace);font-size:21px;font-weight:500;color:var(--color-text-primary);">39.7%</span><div style="font-size:11px;color:var(--color-text-secondary);margin-top:2px;">Kelly 79.5% (Sharpe²/2近似)</div></div></div>
-    <div style="display:grid;grid-template-columns:200px 1fr 110px;align-items:center;gap:16px;"><div><div style="font-size:15px;color:var(--color-text-primary);font-weight:500;">DD99 @ Half-Kelly</div><div style="font-size:11px;color:var(--color-text-secondary);margin-top:2px;">実運用時のtail risk</div></div><div style="position:relative;height:12px;border-radius:6px;background:var(--color-background-secondary);overflow:hidden;"><div style="width:14.9%;height:100%;background:#E24B4A;border-radius:6px;"></div><div style="position:absolute;top:0;left:50%;width:1px;height:100%;background:var(--color-border-tertiary);"></div></div><div style="text-align:right;"><span style="font-family:var(--font-mono,monospace);font-size:21px;font-weight:500;color:#A32D2D;">−14.9%</span><div style="font-size:11px;color:var(--color-text-secondary);margin-top:2px;">参考値</div></div></div>
+    <div style="display:grid;grid-template-columns:200px 1fr 110px;align-items:center;gap:16px;"><div><div style="font-size:15px;color:var(--color-text-primary);font-weight:500;">Half-Kelly</div><div style="font-size:11px;color:var(--color-text-secondary);margin-top:2px;">推奨ポジションサイズ上限</div></div><div style="position:relative;height:12px;border-radius:6px;background:var(--color-background-secondary);overflow:hidden;"><div style="width:32.1%;height:100%;background:#639922;border-radius:6px;"></div><div style="position:absolute;top:0;left:50%;width:1px;height:100%;background:var(--color-border-tertiary);"></div></div><div style="text-align:right;"><span style="font-family:var(--font-mono,monospace);font-size:21px;font-weight:500;color:var(--color-text-primary);">32.1%</span><div style="font-size:11px;color:var(--color-text-secondary);margin-top:2px;">Kelly 64.2% (Sharpe²/2近似)</div></div></div>
+    <div style="display:grid;grid-template-columns:200px 1fr 110px;align-items:center;gap:16px;"><div><div style="font-size:15px;color:var(--color-text-primary);font-weight:500;">DD99 @ Half-Kelly</div><div style="font-size:11px;color:var(--color-text-secondary);margin-top:2px;">実運用時のtail risk</div></div><div style="position:relative;height:12px;border-radius:6px;background:var(--color-background-secondary);overflow:hidden;"><div style="width:8.9%;height:100%;background:#E24B4A;border-radius:6px;"></div><div style="position:absolute;top:0;left:50%;width:1px;height:100%;background:var(--color-border-tertiary);"></div></div><div style="text-align:right;"><span style="font-family:var(--font-mono,monospace);font-size:21px;font-weight:500;color:#27500A;">−8.9%</span><div style="font-size:11px;color:var(--color-text-secondary);margin-top:2px;">3戦略中最低</div></div></div>
   </div>
   <div style="padding:14px 24px;background:#EAF3DE;border-top:1px solid #C0DD97;">
-    <div style="font-size:13px;color:#412402;line-height:1.65;"><strong>総合評価：</strong>正しいバックテスト（look-ahead修正済）でr40_60 CAGR 19.9%/Sharpe 1.261。PBO 53.1%（過学習リスク要注意）・BB DD99 −37.5%のリスクを内包。統計的有意性（Bootstrap p≈0）は確認されるが、配分比率選択の優位性は保証されない。<strong>資金管理・ポジションサイズの保守的設定が必須。</strong></div>
+    <div style="font-size:13px;color:#27500A;line-height:1.65;"><strong>総合評価：</strong>BT延長（2010-03〜 N=192ヶ月）でr20_80 CAGR 13.2%/Sharpe 1.133・PBO 32.3%（✓良好）。WF OOS Sharpe 1.244（IS比+0.110の優位）。MaxDD -15.5%（BB DD99 −27.8%）。Bootstrap p≈0で統計的有意性確認。<strong>3戦略中で最も安定したリスク効率。資金管理を厳守の上で運用すること。</strong></div>
   </div>
 </div>
 <!-- /統計的検証パネル --></div>
@@ -656,7 +656,7 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
           Metrics: INVESTMENT_METRICS_REFERENCE.md 準拠
         <div style="margin-top:6px;font-size:.68rem;color:var(--g600)">
           <span style="color:var(--navy);font-weight:600">CSCV / PBO検証（Bailey 2015）:</span>
-          推奨バランス(r40_60) <strong style="color:var(--red)">PBO = 53.1%</strong>（⚠ 要注意）
+          Sharpe最高型(r20_80) <strong style="color:var(--green)">PBO = 32.3%</strong>（✓ 良好）
           / 全11比率 PBO &lt; 0.5クリア
         </div>
 
@@ -664,10 +664,10 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
       </div>
       <div style="flex:1;min-width:200px;background:var(--off);border-radius:8px;padding:12px 14px">
         <div style="font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
-          color:var(--g400);margin-bottom:6px">Aggregate Result（r40_60 推奨バランス）</div>
+          color:var(--g400);margin-bottom:6px">Aggregate Result（r20_80 Sharpe最高型）</div>
         <div style="font-size:.72rem;color:var(--g600);line-height:1.75">
-          IS Sharpe: <strong>1.2607</strong> → OOS Sharpe: <strong>1.3971</strong><br>
-          OOS CAGR平均: <strong style="color:var(--green)">21.3%</strong><br>
+          IS Sharpe: <strong>1.1332</strong> → OOS Sharpe: <strong>1.2436</strong><br>
+          OOS CAGR平均: <strong style="color:var(--green)">15.1%</strong><br>
           OOS MaxDD平均: <strong style="color:var(--red)">-4.7%</strong><br>
           全7窓で正リターンを維持
         </div>
@@ -698,9 +698,9 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
     </table>
     </div>
 
-    <!-- ④ r40_60 ウィンドウ別詳細 -->
+    <!-- ④ r20_80 ウィンドウ別詳細 -->
     <div style="font-size:.72rem;font-weight:600;color:var(--navy);margin-bottom:8px">
-      推奨バランス（r40_60）— ウィンドウ別 OOS 詳細
+      Sharpe最高型（r20_80）— ウィンドウ別 OOS 詳細
     </div>
     <div style="overflow-x:auto;margin-bottom:18px">
     <table style="width:100%;border-collapse:collapse;min-width:480px" id="wfDetailTable">
@@ -731,7 +731,7 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
           <li>全11配分比率で <strong>OOS Sharpe &gt; IS Sharpe</strong><br>
             戦略が即崩壊するタイプではないことを示す、有望な非劣化シグナル</li>
           <li>2019〜2025の全7ウィンドウで明確な破綻なし</li>
-          <li>2022年（最も厳しい局面）でも r40_60 は<strong>CAGR +5.8%</strong> を確保<br>
+          <li>2022年（最も厳しい局面）でも r20_80 は<strong>CAGR +2.2%</strong> を確保<br>
             （SPY −8.2%と対比）</li>
         </ul>
       </div>
@@ -745,7 +745,7 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
           <li>OOS &gt; IS は2023〜2025の高リターン期間がOOS平均を押し上げている可能性あり。
             OOS &gt; ISを「過学習なし」の<strong>確定的証明と解釈するのは早計</strong>であり、
             あくまで<strong>非劣化の有望シグナル</strong>として読むのが妥当</li>
-          <li>2022年 r40_60: Sharpe 0.596 — 低下はしているが正値を維持。最悪窓でもCAGR +5.8%</li>
+          <li>2022年 r20_80: Sharpe 0.252 — 低下しているが正値を維持。最悪窓でもCAGR +2.2%</li>
           <li>ウィンドウ数7回では<strong>統計的検定力に限界</strong>があります</li>
         </ul>
       </div>
@@ -787,14 +787,14 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
       <div style="display:flex;gap:8px;"><span style="flex-shrink:0;color:var(--color-text-warning);">⚠</span><span>二重継承バイアス: HolyGrail ETF（2016年〜）とopengrail（1999年〜）を合成。ETF側の開始日制約によりバックテストは2016年以降のみ有効。2016-2025は強気相場中心のため成績は楽観寄り。</span></div>
       <div style="display:flex;gap:8px;"><span style="flex-shrink:0;color:var(--color-text-warning);">⚠</span><span>レバレッジETF継承: HolyGrail ETFのM4成分（TQQQ/TECL等）を含むため、レバレッジETF特有のリスク（月中急落・Volatility Decay）を継承する。</span></div>
       <div style="display:flex;gap:8px;"><span style="flex-shrink:0;color:var(--color-text-warning);">⚠</span><span>取引コスト: opengrail側にTC=10bps/月を適用済み。ETF側はTC未考慮。</span></div>
-      <div style="display:flex;gap:8px;"><span style="flex-shrink:0;color:var(--color-text-warning);">ℹ</span><span>事後配分選択: r40_60を推奨としているが、11配分のCSCV検証（PBO=53.1%）は過学習リスクを示す。配分選択の優位性は統計的に確認されていない。</span></div>
+      <div style="display:flex;gap:8px;"><span style="flex-shrink:0;color:var(--color-text-warning);">ℹ</span><span>事後配分選択: r20_80をSharpe最高型として推奨。11配分のCSCV検証（PBO=32.3%）により統計的に良好な水準。ただしPBO50%以下でも配分選択の過学習は否定できない。</span></div>
       <div style="display:flex;gap:8px;"><span style="flex-shrink:0;color:var(--color-text-warning);">ℹ</span><span>DSRテスト: opengrail側FAIL / Bootstrap PASS。holyetf側 N/A（期間不足）。</span></div>
     </div>
   </div>
 </section>
 <!-- /バイアス免責注記 -->
 <footer>
-  <p><strong>Combined Grail</strong> — HolyETF M4 × OG防御型 &nbsp;·&nbsp; 推奨配分: ETF 40% + 防御型 60%</p>
+  <p><strong>Combined Grail</strong> — HolyETF M4 × OG防御型 &nbsp;·&nbsp; 推奨配分: ETF 20% + 防御型 80%（Sharpe最高型 r20_80）</p>
   <p style="margin-top:4px">シグナルは毎月1日JST06:30に自動更新・株価は毎日JST06:30に更新 &nbsp;·&nbsp; 過去の成績は将来を保証しません</p>
 </footer>
 
@@ -817,9 +817,9 @@ const hiddenSeries = new Set();
 const PERF_ROWS = [
   {key:'r0_100', type:'防御型単体',   etf:0,  def:100},
   {key:'r10_90', type:'守備重視型',   etf:10, def:90},
-  {key:'r20_80', type:'低DD効率型',   etf:20, def:80},
-  {key:'r30_70', type:'最高効率型',   etf:30, def:70},
-  {key:'r40_60', type:'推奨バランス', etf:40, def:60, recommend:true},
+  {key:'r20_80', type:'Sharpe最高型', etf:20, def:80, recommend:true},
+  {key:'r30_70', type:'高効率均衡型', etf:30, def:70},
+  {key:'r40_60', type:'成長均衡型',   etf:40, def:60},
   {key:'r50_50', type:'均等型',       etf:50, def:50},
   {key:'r60_40', type:'成長型',       etf:60, def:40},
   {key:'r70_30', type:'積極成長型',   etf:70, def:30},
@@ -1173,7 +1173,7 @@ function renderPerfTable(){
 function updateStatsDisplay(){
   if(!cumData) return;
   const key = 'r'+Math.round(etfWeight*100)+'_'+Math.round(defWeight*100);
-  const s   = cumData.stats?.[key] || cumData.stats?.['r40_60'];
+  const s   = cumData.stats?.[key] || cumData.stats?.['r20_80'];
   if(!s) return;
   document.getElementById('statCagr').textContent    = (s.cagr*100).toFixed(1)+'%';
   document.getElementById('statSharpe').textContent  = s.sharpe.toFixed(2);
@@ -1231,9 +1231,9 @@ function getSelectedKey(){
 const DSR_TYPE_LABELS = {
   'r0_100':  '防御型単体',
   'r10_90':  '守備重視型',
-  'r20_80':  '低DD効率型',
-  'r30_70':  '最高効率型',
-  'r40_60':  '推奨バランス',
+  'r20_80':  'Sharpe最高型',
+  'r30_70':  '高効率均衡型',
+  'r40_60':  '成長均衡型',
   'r50_50':  '均等型',
   'r60_40':  '成長型',
   'r70_30':  '積極成長型',
@@ -1247,7 +1247,7 @@ function renderDSR(){
   const rows = dsrData.results || [];
   let html = '';
   rows.forEach(r => {
-    const isRec = r.key === 'r40_60';
+    const isRec = r.key === 'r20_80';
     const bg = isRec ? 'background:rgba(10,37,64,.04)' : '';
     const dsr_ok  = r.DSR_pass;
     const boot_ok = r.Boot_pass;
@@ -1277,7 +1277,7 @@ function renderDSR(){
 function updateCumChart(){
   if(!cumChartInst || !cumData) return;
   const selKey = getSelectedKey();
-  const selData = cumData[selKey]||cumData['r40_60']||[];
+  const selData = cumData[selKey]||cumData['r20_80']||[];
   // dataset[0] = selected
   cumChartInst.data.datasets[0].data  = selData;
   cumChartInst.data.datasets[0].label = `選択配分（ETF${Math.round(etfWeight*100)}%）`;
@@ -1292,7 +1292,7 @@ function initCumChart(){
   // 選択配分のデータ
   const selKey = getSelectedKey();
   const series = {
-    selected: cumData[selKey]||cumData['r40_60']||[],
+    selected: cumData[selKey]||cumData['r20_80']||[],
     etf:      cumData['r100_0']||[],
     def:      cumData['r0_100']||[],
     spy:      cumData['SPY']||[],
@@ -1371,7 +1371,7 @@ function initCumChart(){
 function updateChartSelected(){
   if(!cumChartInst||!cumData) return;
   const key = getSelectedKey();
-  const data = cumData[key]||cumData['r40_60']||[];
+  const data = cumData[key]||cumData['r20_80']||[];
   const label = `選択配分（ETF${Math.round(etfWeight*100)}%）`;
   const ds = cumChartInst.data.datasets[0];
   if(ds){ ds.data=data; ds.label=label; }
@@ -1383,7 +1383,7 @@ function updateChartSelected(){
 function renderAnnualWithKey(selKey){
   if(!cumData) return;
   const dates  = cumData.dates||[];
-  const retSel = cumData['ret_'+selKey]||cumData['ret_r40_60']||[];
+  const retSel = cumData['ret_'+selKey]||cumData['ret_r20_80']||[];
   const retETF = cumData['ret_r100_0']||[];
   const retDEF = cumData['ret_r0_100']||[];
   const retSPY = cumData['ret_SPY']||[];
@@ -1444,8 +1444,8 @@ function setCumScale(mode, btn){
 
 // ── Walk-Forward 検証テーブル ─────────────────────────────────────
 const WF_RATIO_LABELS = {
-  'r0_100':'防御型単体','r10_90':'守備重視型','r20_80':'低DD効率型',
-  'r30_70':'最高効率型','r40_60':'推奨バランス','r50_50':'均等型',
+  'r0_100':'防御型単体','r10_90':'守備重視型','r20_80':'Sharpe最高型',
+  'r30_70':'高効率均衡型','r40_60':'成長均衡型','r50_50':'均等型',
   'r60_40':'成長型','r70_30':'積極成長型','r80_20':'高成長型',
   'r90_10':'攻撃型','r100_0':'ETF単体',
 };
@@ -1463,7 +1463,7 @@ function renderWF(){
 
   // IS vs OOS 全比率テーブル
   wfBodyEl.innerHTML = Object.entries(ratios).map(([key, d])=>{
-    const isRec = key === 'r40_60';  // 推奨バランス
+    const isRec = key === 'r20_80';  // Sharpe最高型
     const bg    = isRec ? 'background:rgba(0,114,178,.05)' : '';
     const fw    = isRec ? '700' : '400';
     const mark  = isRec ? '★ ' : '';
@@ -1482,8 +1482,8 @@ function renderWF(){
     </tr>`;
   }).join('');
 
-  // r40_60 ウィンドウ別詳細
-  const r40 = ratios['r40_60'];  // 推奨バランス(r40_60)を表示
+  // r20_80 ウィンドウ別詳細
+  const r40 = ratios['r20_80'];  // Sharpe最高型(r20_80)を表示
   if(r40 && wfDetailEl){
     wfDetailEl.innerHTML = r40.windows.map(w=>{
       const isWorst = w.sharpe < 0.5;
