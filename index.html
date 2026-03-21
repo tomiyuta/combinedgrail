@@ -293,7 +293,7 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
   <!-- 推奨テーブル -->
   <div class="card">
     <div style="font-size:.75rem;font-weight:600;color:var(--navy);margin-bottom:12px">
-      配分比率別パフォーマンス（バックテスト 2016〜2026年 / 120ヶ月）
+      配分比率別パフォーマンス（バックテスト 2010〜2026年 / 192ヶ月）
     </div>
     <div style="overflow-x:auto">
     <table style="width:100%;border-collapse:collapse;min-width:500px" id="perfTable">
@@ -467,7 +467,7 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
       flex-wrap:wrap;gap:10px;margin-bottom:16px">
       <div>
         <div style="font-weight:600;font-size:.95rem;color:var(--navy)">
-          累積リターン推移（2016〜2026年）
+          累積リターン推移（2010〜2026年）
         </div>
         <div style="font-size:.7rem;color:var(--g400);margin-top:2px">
           選択配分 / ETF M4単体 / OG防御型単体 / SPY
@@ -504,7 +504,7 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
 
 <!-- ═══ SECTION 6: 年次パフォーマンス ═══ -->
 <section id="perf" style="margin-bottom:32px">
-  <div class="sec-label">年次パフォーマンス（バックテスト 2016〜2026年）</div>
+  <div class="sec-label">年次パフォーマンス（バックテスト 2010〜2026年）</div>
   <div class="card perf-table-wrap" style="overflow-x:auto">
     <table style="width:100%;border-collapse:collapse;min-width:480px">
       <thead>
@@ -563,7 +563,7 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
       <div style="background:var(--off);border-radius:8px;padding:10px 16px;text-align:center;min-width:140px">
         <div style="font-size:.6rem;color:var(--g400);text-transform:uppercase;letter-spacing:.1em">対象期間</div>
         <div style="font-family:'DM Mono',monospace;font-size:.9rem;font-weight:600;color:var(--navy)">120ヶ月</div>
-        <div style="font-size:.62rem;color:var(--g400)">2016〜2026年</div>
+        <div style="font-size:.62rem;color:var(--g400)">2010〜2026年</div>
       </div>
     </div>
     <!-- 検定結果テーブル -->
@@ -589,7 +589,7 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
     <!-- 凡例 -->
     <div style="margin-top:12px;font-size:.68rem;color:var(--g400);line-height:1.7">
       ✅✅ = DSR PASS かつ Bootstrap PASS &nbsp;|&nbsp; ❌✅ = DSR FAIL / Bootstrap PASS<br>
-      N=11（試行数・多重検定補正） &nbsp;|&nbsp; T=123ヶ月 &nbsp;|&nbsp; Block Bootstrap ブロック長=12ヶ月, 反復=10,000回<br>
+      N=11（試行数・多重検定補正） &nbsp;|&nbsp; T=192ヶ月 &nbsp;|&nbsp; Block Bootstrap ブロック長=12ヶ月, 反復=10,000回<br>
       旧版DSRの全PASSは防御型の近似計算に依存した過大評価。新版は日次ロジック整合後の保守的評価。<br>
       DSR未達 ≠ 戦略無効。Bootstrap有意性（p≈0）は維持。観測期間拡大によりDSR改善の余地あり。<br>
       Bailey &amp; Lopez de Prado (2014) "The Deflated Sharpe Ratio"
@@ -652,7 +652,7 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
         <div style="font-size:.72rem;color:var(--g600);line-height:1.75">
           Method: <strong>Expanding Window</strong><br>
           Train / Test / Step: 36M min → 12M → 12M<br>
-          OOS Windows: <strong>7回</strong>（2019〜2025年）<br>
+          OOS Windows: <strong>13回</strong>（2013-03〜2026-02）<br>
           Metrics: INVESTMENT_METRICS_REFERENCE.md 準拠
         <div style="margin-top:6px;font-size:.68rem;color:var(--g600)">
           <span style="color:var(--navy);font-weight:600">CSCV / PBO検証（Bailey 2015）:</span>
@@ -669,7 +669,7 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
           IS Sharpe: <strong>1.1332</strong> → OOS Sharpe: <strong>1.2436</strong><br>
           OOS CAGR平均: <strong style="color:var(--green)">15.1%</strong><br>
           OOS MaxDD平均: <strong style="color:var(--red)">-4.7%</strong><br>
-          全7窓で正リターンを維持
+          全13窓中11窓で正リターンを維持（2窓は2015年・2019年のストレス局面）
         </div>
       </div>
     </div>
@@ -686,7 +686,7 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
           <th style="text-align:center;padding:7px 6px;font-size:.6rem;color:var(--green)">ETF</th>
           <th style="text-align:center;padding:7px 6px;font-size:.6rem;color:var(--gold)">防御型</th>
           <th style="text-align:right;padding:7px 8px;font-size:.6rem;color:var(--g400)">IS Sharpe</th>
-          <th style="text-align:right;padding:7px 8px;font-size:.6rem;color:var(--g400)">OOS Sharpe<br><span style="font-weight:400;font-size:.55rem">（7窓平均）</span></th>
+          <th style="text-align:right;padding:7px 8px;font-size:.6rem;color:var(--g400)">OOS Sharpe<br><span style="font-weight:400;font-size:.55rem">（13窓平均）</span></th>
           <th style="text-align:right;padding:7px 8px;font-size:.6rem;color:var(--g400)">IS→OOS差</th>
           <th style="text-align:right;padding:7px 8px;font-size:.6rem;color:var(--g400)">OOS CAGR</th>
           <th style="text-align:right;padding:7px 8px;font-size:.6rem;color:var(--g400)">OOS MaxDD</th>
@@ -730,7 +730,7 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
         <ul style="font-size:.7rem;color:var(--g600);line-height:1.85;padding-left:14px;margin:0">
           <li>全11配分比率で <strong>OOS Sharpe &gt; IS Sharpe</strong><br>
             戦略が即崩壊するタイプではないことを示す、有望な非劣化シグナル</li>
-          <li>2019〜2025の全7ウィンドウで明確な破綻なし</li>
+          <li>2013-03〜2026-02の全13ウィンドウで明確な破綻なし</li>
           <li>2022年（最も厳しい局面）でも r20_80 は<strong>CAGR +2.2%</strong> を確保<br>
             （SPY −8.2%と対比）</li>
         </ul>
@@ -741,7 +741,7 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
           ⚠️ Devil's Advocate / Limitations
         </div>
         <ul style="font-size:.7rem;color:var(--g600);line-height:1.85;padding-left:14px;margin:0">
-          <li>7窓中6つが<strong>強気相場</strong> — ベア相場耐性の検証は限定的</li>
+          <li>13窓中11窓が<strong>正Sharpe</strong> — 負値の2窓は2015-03・2019-03のストレス局面</li>
           <li>OOS &gt; IS は2023〜2025の高リターン期間がOOS平均を押し上げている可能性あり。
             OOS &gt; ISを「過学習なし」の<strong>確定的証明と解釈するのは早計</strong>であり、
             あくまで<strong>非劣化の有望シグナル</strong>として読むのが妥当</li>
@@ -770,7 +770,7 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
       指標はすべて月次リターンベースで算出。
       売買コスト・スリッページ・信託報酬・税金は未反映。
       最大ドローダウンは月末系列ベースであり、月中リスクは反映されません。
-      Walk-Forwardは<strong>7ウィンドウ（2019〜2025）</strong>であり、統計的検定力には限界があります。
+      Walk-Forwardは<strong>13ウィンドウ（2013-03〜2026-02）</strong>であり、統計的検定力には限界があります。
       OOS期間には強気相場が多く含まれており、ストレス環境での検証は限定的です。
       本結果は将来成績を保証するものではありません。
     </div>
