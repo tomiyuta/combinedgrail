@@ -269,7 +269,7 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
           <span style="font-size:.75rem;color:var(--gold);font-weight:600">OG防御型: <span id="defPct">60</span>%</span>
         </div>
       </div>
-      <input type="range" id="allocSlider" min="0" max="100" value="40" step="10"
+      <input type="range" id="allocSlider" min="0" max="100" value="20" step="10"
         style="width:100%" oninput="onSlider(this.value)">
       <div style="display:flex;justify-content:space-between;font-size:.62rem;color:var(--g400);margin-top:4px">
         <span>防御型100%</span><span>ETF40%</span><span>ETF100%</span>
@@ -807,8 +807,8 @@ let wfData      = null;
 let priceData   = null;
 let currentCurrency = 'USD';
 let useGLDM = false;
-let etfWeight   = 0.40;
-let defWeight   = 0.60;
+let etfWeight   = 0.20;
+let defWeight   = 0.80;
 let cumChartInst    = null;
 let cumLogScale = false;
 let cumPeriod   = 'ALL';
