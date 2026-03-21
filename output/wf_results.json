@@ -1,10 +1,10 @@
 {
-  "generated": "2026-03-20T16:16:37Z",
+  "generated": "2026-03-21T08:08:04Z",
   "method": "Expanding Window",
   "train_min_months": 36,
   "test_months": 12,
   "step_months": 12,
-  "n_windows": 7,
+  "n_windows": 13,
   "ratios": {
     "r0_100": {
       "is_sharpe": 1.0281,

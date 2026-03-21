@@ -129,11 +129,14 @@ def main():
     print(f"✅ dsr_results.json saved (T={T})")
 
     # ── WF再生成 ─────────────────────────────────────────────────
-    print(f"WF計算中 (7 windows)...")
+    # 実際の窓数を計算して表示
+    _sample_wf = run_wf(list(cg.get('ret_r20_80',[])), cg['dates'])
+    _n_win = len(_sample_wf)
+    print(f"WF計算中 ({_n_win} windows)...")
     wf_out = {
         'generated': datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ'),
         'method': 'Expanding Window', 'train_min_months': 36,
-        'test_months': 12, 'step_months': 12, 'n_windows': 7,
+        'test_months': 12, 'step_months': 12, 'n_windows': _n_win,
         'ratios': {}
     }
     for key in RATIOS:
