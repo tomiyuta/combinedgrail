@@ -784,11 +784,11 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
   <div style="border:1px solid var(--color-border-tertiary);border-radius:12px;overflow:hidden;font-size:12px;">
     <div style="padding:10px 16px;background:var(--color-background-secondary);border-bottom:1px solid var(--color-border-tertiary);font-size:11px;font-weight:500;letter-spacing:.06em;color:var(--color-text-secondary);">バックテスト上の留意事項</div>
     <div style="padding:14px 16px;display:flex;flex-direction:column;gap:6px;color:var(--color-text-secondary);line-height:1.6;">
-      <div style="display:flex;gap:8px;"><span style="flex-shrink:0;color:var(--color-text-warning);">⚠</span><span>二重継承バイアス: HolyGrail ETF（2016年〜）とopengrail（1999年〜）を合成。ETF側の開始日制約によりバックテストは2016年以降のみ有効。2016-2025は強気相場中心のため成績は楽観寄り。</span></div>
-      <div style="display:flex;gap:8px;"><span style="flex-shrink:0;color:var(--color-text-warning);">⚠</span><span>レバレッジETF継承: HolyGrail ETFのM4成分（TQQQ/TECL等）を含むため、レバレッジETF特有のリスク（月中急落・Volatility Decay）を継承する。</span></div>
-      <div style="display:flex;gap:8px;"><span style="flex-shrink:0;color:var(--color-text-warning);">⚠</span><span>取引コスト: opengrail側にTC=10bps/月を適用済み。ETF側はTC未考慮。</span></div>
-      <div style="display:flex;gap:8px;"><span style="flex-shrink:0;color:var(--color-text-warning);">ℹ</span><span>事後配分選択: r20_80をSharpe最高型として推奨。11配分のCSCV検証（PBO=32.3%）により統計的に良好な水準。ただしPBO50%以下でも配分選択の過学習は否定できない。</span></div>
-      <div style="display:flex;gap:8px;"><span style="flex-shrink:0;color:var(--color-text-warning);">ℹ</span><span>DSRテスト: opengrail側FAIL / Bootstrap PASS。holyetf側 N/A（期間不足）。</span></div>
+      <div style="display:flex;gap:8px;"><span style="flex-shrink:0;color:var(--color-text-warning);">⚠</span><span>開始日バイアス: バックテスト開始2010-03（BT延長済み・N=192M）。ETF側（HolyETF）がTQQQ/TECL上場後の2010年以降のみ有効なため。2010-2026はQE環境・低金利局面が中心で強気相場寄りのバイアスあり。2008年金融危機・2011年欧州危機を含まない。</span></div>
+      <div style="display:flex;gap:8px;"><span style="flex-shrink:0;color:var(--color-text-warning);">⚠</span><span>レバレッジETF継承: HolyETF M4成分（TQQQ/TECL等）を含むため月中急落・Volatility Decayリスクを継承。ただしETF比率20%（r20_80）により影響は限定的。BB DD99=−27.8%はHolyETF単体（−68.2%）より大幅に軽減されている。</span></div>
+      <div style="display:flex;gap:8px;"><span style="flex-shrink:0;color:var(--color-text-warning);">⚠</span><span>取引コスト: opengrail防御型側にTC=10bps/月適用済み。ETF（HolyETF）側はTC未考慮。実運用ではETF側のリバランスコスト（推定年間0.5〜1%）を加味すること。</span></div>
+      <div style="display:flex;gap:8px;"><span style="flex-shrink:0;">ℹ</span><span>事後配分選択: r20_80をSharpe最高型として推奨。11配分のCSCV検証（PBO=32.3%）により統計的に良好な水準。全11比率でOOS Sharpe &gt; IS Sharpeを確認（WF 13窓: IS=1.133 → OOS avg=1.244、gap+0.110）。</span></div>
+      <div style="display:flex;gap:8px;"><span style="flex-shrink:0;">ℹ</span><span>DSR/WF: DSR FAIL（N=11、T=192でSharpe閾値0.95未達）。Bootstrap PASS（p≈0）。WF gap+0.110で過学習なし確認。旧版DSRの全PASS表示は防御型近似計算による過大評価であり修正済み。</span></div>
     </div>
   </div>
 </section>
