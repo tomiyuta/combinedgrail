@@ -861,6 +861,7 @@ async function loadAll(){
 async function renderAll(){
   if(!signalData){ document.getElementById('regimeJp').textContent='データ取得失敗'; return; }
   renderSignal();
+  onSlider(20);  // r20_80をデフォルト選択として初期化（etfWeight/defWeight/バッジ/チャート全更新）
   renderPortfolio();
   calcRebalance();
   // USD/JPY リアルタイム自動取得（prices_latest.jsonより最新値）
