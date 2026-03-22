@@ -358,7 +358,7 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
     <div class="card">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
         <div>
-          <div style="font-size:.6rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+          <div style="font-size:.6rem;font-weight:600;letter-spacing:.1em;
             color:var(--green);margin-bottom:4px">α</div>
           <div style="font-size:.82rem;color:var(--g600)" id="etfRegimeLabel">—</div>
         </div>
@@ -686,17 +686,17 @@ let cumPeriod   = 'ALL';
 const hiddenSeries = new Set();
 
 const PERF_ROWS = [
-  {key:'r0_100', type:'防御型単体',   etf:0,  def:100},
+  {key:'r0_100', type:'OG単体',       etf:0,  def:100},
   {key:'r10_90', type:'守備重視型',   etf:10, def:90},
+  {key:'r20_80', type:'安定型',       etf:20, def:80},
+  {key:'r30_70', type:'均衡型',       etf:30, def:70},
   {key:'r40_60', type:'Sharpe最高型', etf:40, def:60, recommend:true},
-  {key:'r30_70', type:'高効率均衡型', etf:30, def:70},
-  {key:'r40_60', type:'成長均衡型',   etf:40, def:60},
   {key:'r50_50', type:'均等型',       etf:50, def:50},
   {key:'r60_40', type:'成長型',       etf:60, def:40},
   {key:'r70_30', type:'積極成長型',   etf:70, def:30},
   {key:'r80_20', type:'高成長型',     etf:80, def:20},
   {key:'r90_10', type:'攻撃型',       etf:90, def:10},
-  {key:'r100_0', type:'ETF単体',      etf:100,def:0},
+  {key:'r100_0', type:'α単体',      etf:100,def:0},
 ];
 
 function scrollToId(id){ document.getElementById(id)?.scrollIntoView({behavior:'smooth',block:'start'}); }
@@ -1130,7 +1130,7 @@ const DSR_TYPE_LABELS = {
   'r70_30':  '積極成長型',
   'r80_20':  '高成長型',
   'r90_10':  '攻撃型',
-  'r100_0':  'ETF単体',
+  'r100_0':  'α単体',
 };
 
 function renderDSR(){
@@ -1338,7 +1338,7 @@ const WF_RATIO_LABELS = {
   'r0_100':'防御型単体','r10_90':'守備重視型','r40_60':'Sharpe最高型',
   'r30_70':'高効率均衡型','r40_60':'成長均衡型','r50_50':'均等型',
   'r60_40':'成長型','r70_30':'積極成長型','r80_20':'高成長型',
-  'r90_10':'攻撃型','r100_0':'ETF単体',
+  'r90_10':'攻撃型','r100_0':'α単体',
 };
 const WF_RATIO_ETF = {
   'r0_100':0,'r10_90':10,'r40_60':20,'r30_70':30,'r40_60':40,'r50_50':50,
