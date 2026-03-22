@@ -81,6 +81,14 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
 
   /* ── リバランス計算テーブル: 列を3列に絞る ── */
   .rebal-hide-mobile{ display:none !important; }
+  .rebal-show-mobile{ display:inline-flex !important; }
+  /* ティッカーセルを縦並びに */
+  #rebalMain td:nth-child(1){ display:table-cell; }
+  #rebalMain td:nth-child(1) > span.rebal-show-mobile{
+    display:flex !important;
+    flex-direction:column;
+    align-items:flex-start;
+  }
   #rebalMain th, #rebalMain td{
     font-size:.72rem !important;
     padding:7px 6px !important;
@@ -1028,7 +1036,12 @@ function calcRebalance(){
       :('¥'+(targetUSD*usdjpy).toFixed(0));
     rows+=`<tr style="border-bottom:1px solid var(--g100)">
       <td style="padding:9px 10px;font-family:'DM Mono',monospace;font-size:.85rem;font-weight:600">
-        ${t}${(useGLDM && h.ticker==='GLD')?'<span style="font-size:.62rem;color:var(--gold);margin-left:4px">GLDM</span>':''}</td>
+        ${t}${(useGLDM && h.ticker==='GLD')?'<span style="font-size:.62rem;color:var(--gold);margin-left:4px">GLDM</span>':''}
+        <span class="rebal-show-mobile" style="display:none;margin-top:2px">
+          <span style="font-size:.6rem;font-weight:600;color:${stratColor};background:${stratColor}18;
+            border-radius:4px;padding:1px 5px;letter-spacing:.02em">${stratLabel}</span>
+        </span>
+      </td>
       <td class="rebal-hide-mobile" style="padding:9px 10px;font-size:.72rem"><span style="color:${stratColor};font-weight:600">${stratLabel}</span></td>
       <td style="padding:9px 10px;text-align:right;font-family:'DM Mono',monospace;font-size:.78rem">
         ${(adjAlloc*100).toFixed(1)}%<br><span style="color:var(--g400)">${amtDisp}</span></td>
