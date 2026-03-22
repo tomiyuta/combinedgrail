@@ -798,14 +798,32 @@ function calcRebalance(){
   const raw    = parseFloat(document.getElementById('investAmt').value)||10000;
   const usdjpy = parseFloat(document.getElementById('usdjpy').value)||155;
   const totalUSD = currentCurrency==='USD' ? raw : raw/usdjpy;
-  const holdings = signalData.holdings||[];
   const prices   = priceData?.prices||{};
-  const alphaTickers = new Set((signalData.etf_signal?.holdings||[]).map(h=>h.ticker));
-  const defTickers   = new Set((signalData.def_signal?.holdings||[]).map(h=>h.ticker));
+
+  // ── スライダー比率から動的に配分を計算 ──────────────────────────
+  const etfHoldings = signalData.etf_signal?.holdings||[];
+  const defHoldings = signalData.def_signal?.holdings||[];
+  // tickers の和集合
+  const tickerSet = new Set([
+    ...etfHoldings.map(h=>h.ticker),
+    ...defHoldings.map(h=>h.ticker),
+  ]);
+  const etfMap = Object.fromEntries(etfHoldings.map(h=>[h.ticker, h.weight]));
+  const defMap = Object.fromEntries(defHoldings.map(h=>[h.ticker, h.weight]));
+
+  const dynamicHoldings = Array.from(tickerSet).map(ticker=>({
+    ticker,
+    adjAlloc: (etfMap[ticker]||0)*etfWeight + (defMap[ticker]||0)*defWeight,
+    inAlpha: !!etfMap[ticker],
+    inDef:   !!defMap[ticker],
+  })).filter(h=>h.adjAlloc>0).sort((a,b)=>b.adjAlloc-a.adjAlloc);
+
+  const alphaTickers = new Set(etfHoldings.map(h=>h.ticker));
+  const defTickers   = new Set(defHoldings.map(h=>h.ticker));
   let rows=''; let invested=0;
-  holdings.forEach(h=>{
+  dynamicHoldings.forEach(h=>{
     const t = useGLDM && h.ticker==='GLD' ? 'GLDM' : h.ticker;
-    const adjAlloc = h.weight;
+    const adjAlloc = h.adjAlloc;
     const targetUSD = totalUSD * adjAlloc;
     const price = (useGLDM && h.ticker==='GLD')
       ? (prices['GLDM']||0) : (prices[h.ticker]||0);
