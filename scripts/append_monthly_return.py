@@ -169,9 +169,9 @@ def main():
 
     # ── 既存JSONを読み込み ─────────────────────────────────────
     with open(CUM_JSON) as f: data = json.load(f)
-    last_date  = pd.Timestamp(data['dates'][-1] + '-01')
-    today      = pd.Timestamp.now().replace(day=1)
-    prev_month = today - pd.DateOffset(months=1)  # 前月 = 追記対象月
+    last_date  = pd.Timestamp(data['dates'][-1] + '-01').normalize()
+    today      = pd.Timestamp.now().normalize().replace(day=1)
+    prev_month = (today - pd.DateOffset(months=1)).normalize()
 
     if last_date >= prev_month:
         logging.info(f'  追記不要: last={last_date.strftime("%Y-%m")} '
