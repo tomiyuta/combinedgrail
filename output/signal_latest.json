@@ -1,15 +1,15 @@
 {
   "date": "2026-03",
-  "generated": "2026-03-22T11:01:13Z",
+  "generated": "2026-03-22T12:33:57Z",
   "etf_weight": 0.4,
   "def_weight": 0.6,
   "regime": "ATK",
-  "regime_label": "攻撃態勢（K-gate OPEN）",
+  "regime_label": "1st gate通過",
   "etf_signal": {
     "date": "2026-03",
-    "generated": "2026-03-22T11:01:13Z",
+    "generated": "2026-03-22T12:33:57Z",
     "regime": "ATK",
-    "regime_label": "攻撃態勢（K-gate OPEN）",
+    "regime_label": "1st gate通過",
     "sensors": {
       "A": "ATK",
       "B": "TMV",

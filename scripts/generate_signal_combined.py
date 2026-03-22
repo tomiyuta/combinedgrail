@@ -12,8 +12,8 @@ ROOT   = Path(__file__).parent.parent
 OUTPUT = ROOT / 'output'
 
 GATE_LABELS = {
-    'ATK': {'en':'ATK', 'ja':'攻撃態勢（K-gate OPEN）'},
-    'DEF': {'en':'DEF', 'ja':'守備態勢（K-gate CLOSE）'},
+    'ATK': {'en':'Attack',  'ja':'1st gate通過'},
+    'DEF': {'en':'Defence', 'ja':'1st gate閉鎖'},
 }
 LAYER_DESC = {
     'A': 'K-gate（LQD信用ゲート）',

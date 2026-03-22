@@ -160,8 +160,8 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
     <!-- レジーム -->
     <div style="padding-right:32px">
       <div style="font-size:.55rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
-        color:rgba(255,255,255,.35);margin-bottom:8px">レジーム / 状態</div>
-      <div id="regimeName" style="font-family:'Playfair Display',serif;font-size:2.2rem;
+        color:rgba(255,255,255,.35);margin-bottom:8px">Signal</div>
+      <div id="regimeName" style="font-family:'Playfair Display',serif;font-size:1.55rem;
         font-weight:700;color:#fff;line-height:1;margin-bottom:5px">—</div>
       <div id="regimeJp" style="font-size:.85rem;color:var(--gold-l);font-weight:500;margin-bottom:14px">読込中...</div>
       <div id="portfolioMonth" style="display:inline-flex;align-items:center;gap:6px;
@@ -762,8 +762,11 @@ async function renderAll(){
 function renderSignal(){
   const d = signalData;
   const regime = d.regime || '—';
-  const regimeLabel = d.regime_label || regime;
-  document.getElementById('regimeName').textContent = regime;
+  const gateLabel = regime === 'ATK' ? 'Attack'
+                  : regime === 'DEF' ? 'Defence' : regime;
+  const regimeLabel = regime === 'ATK' ? '1st gate通過'
+                    : regime === 'DEF' ? '1st gate閉鎖' : (d.regime_label || regime);
+  document.getElementById('regimeName').textContent = gateLabel;
   document.getElementById('regimeJp').textContent   = regimeLabel;
   // 推奨配分の固定表示（スライダーと独立）
   const recEtf = Math.round((d.etf_weight||0.4)*100);
