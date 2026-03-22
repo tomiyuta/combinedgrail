@@ -15,6 +15,7 @@
   --g400:#9B9990;--g600:#5C5A56;--sh-sm:0 1px 4px rgba(0,0,0,.08);
 }
 *{box-sizing:border-box;margin:0;padding:0}
+html,body{overflow-x:hidden}
 body{font-family:'DM Sans',sans-serif;background:var(--off);color:var(--navy);font-size:15px}
 .header{background:var(--white);border-bottom:1px solid var(--g100);padding:0 40px;height:52px;
   display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
@@ -113,6 +114,37 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
   #regimeHero>div:last-child{border-bottom:none!important}
   .perf-table-wrap{overflow-x:auto}
   .annual-font{font-size:.7rem!important}
+  /* ── regimeHero padding縮小 ── */
+  #regimeHero{padding:18px 16px!important}
+  /* ── regimeHero 内部のpadding削除 ── */
+  #regimeHero > div[style*="padding-right:32px"]{padding-right:12px!important}
+  #regimeHero > div[style*="padding:0 28px"]{padding:0 8px!important}
+  #regimeHero > div[style*="padding-left:8px"]{padding-left:4px!important}
+  /* ── ロバスト性グリッド：1カラム化 ── */
+  #robustness .card{padding:14px 14px!important}
+  /* ── statsCards 2列 ── */
+  #statsCards{grid-template-columns:1fr 1fr!important}
+  /* ── リバランス入力を縦並び ── */
+  #rebalance .card > div:first-child{flex-direction:column!important;align-items:flex-start!important;gap:8px!important}
+  /* ── テーブル min-width 上書き ── */
+  #rebalMain{min-width:0!important;width:100%!important}
+  #perfTable{min-width:0!important}
+  /* ── ロバスト性RoRグリッド縮小 ── */
+  #rb-ror-rows > div{grid-template-columns:55px 60px 55px 65px!important;font-size:.7rem!important}
+  /* ── Signal hero内センサーフォント縮小 ── */
+  #sensorGrid > div{padding:4px 5px!important}
+  #sensorGrid > div > div:first-child{font-size:.48rem!important}
+  #sensorGrid > div > div:last-child{font-size:.68rem!important}
+  /* ── ヒーロー配分数字縮小 ── */
+  #etfWeightDisp,#defWeightDisp{font-size:1.3rem!important}
+  /* ── スライダーインジケーター ── */
+  #sliderIndicator{font-size:.58rem!important}
+  /* ── ロバスト上部グリッド ── */
+  #robustness > div:first-of-type{grid-template-columns:1fr 1fr!important}
+  /* ── nav非表示 ── */
+  .nav{display:none!important}
+  /* ── 全体横スクロール禁止 ── */
+  body{overflow-x:hidden!important}
 }
 /* C5 守備強化センサー パルスアニメーション */
 @keyframes c5pulse {
@@ -318,7 +350,7 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
       配分比率別パフォーマンス（バックテスト 2016〜2026年 / 119ヶ月）
     </div>
     <div style="overflow-x:auto">
-    <table style="width:100%;border-collapse:collapse;min-width:500px" id="perfTable">
+    <table style="width:100%;border-collapse:collapse;min-width:460px" id="perfTable">
       <thead>
         <tr style="border-bottom:2px solid var(--g100)">
           <th style="text-align:left;padding:8px 10px;font-size:.62rem;font-weight:600;
@@ -455,7 +487,7 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
       </div>
     </div>
     <div id="rebalTable" style="overflow-x:auto">
-      <table style="width:100%;border-collapse:collapse;min-width:520px" id="rebalMain">
+      <table style="width:100%;border-collapse:collapse;min-width:460px" id="rebalMain">
         <thead>
           <tr style="border-bottom:2px solid var(--g100)">
             <th style="text-align:left;padding:8px 10px;font-size:.62rem;font-weight:600;
@@ -528,7 +560,7 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
 <section id="perf" style="margin-bottom:32px">
   <div class="sec-label">年次パフォーマンス（バックテスト 2016〜2026年）</div>
   <div class="card perf-table-wrap" style="overflow-x:auto">
-    <table style="width:100%;border-collapse:collapse;min-width:480px">
+    <table style="width:100%;border-collapse:collapse;min-width:440px">
       <thead>
         <tr style="border-bottom:2px solid var(--g100)">
           <th style="text-align:left;padding:9px 10px;font-size:.62rem;font-weight:600;
