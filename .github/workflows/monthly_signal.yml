@@ -1,4 +1,4 @@
-name: Monthly Signal — Combined Grail
+name: Monthly Signal — α-Grail (Web Complete)
 
 on:
   schedule:
@@ -21,22 +21,34 @@ jobs:
 
       - run: pip install -r requirements.txt
 
-      - name: Update market data
-        run: python3 scripts/update_data.py
+      # Step1: 日次株価更新（yfinance）
+      - name: Update daily prices
+        run: python3 scripts/update_prices.py
 
-      - name: Generate signals (ETF M4 + OG defense)
-        run: python3 scripts/generate_combined.py
+      # Step2: αシグナル生成（yfinance + FRED API）
+      - name: Generate alpha signal (web)
+        run: python3 scripts/generate_signal_alpha.py
 
-      - name: Generate cumulative returns (standalone — no external deps)
-        run: python3 scripts/gen_cumulative.py
+      # Step3: OG防御型シグナル生成（yfinance）
+      - name: Generate OG defense signal (yfinance)
+        run: python3 scripts/generate_signal_def.py
 
-      - name: Generate DSR + Walk-Forward (auto-regenerate after cumulative)
-        run: python3 scripts/gen_dsr_wf.py
+      # Step4: 統合シグナル生成（signal_latest.json）
+      - name: Combine signals
+        run: python3 scripts/generate_signal_combined.py
 
+      # Step5: 前月リターン追記（案B: 既存JSON末尾に1ヶ月追記）
+      - name: Append monthly return (web)
+        run: python3 scripts/append_monthly_return.py
+
+      # Step6: git push
       - name: Commit and push
         run: |
           git config user.name "tomiyuta"
           git config user.email "tomiyutaka@gmail.com"
-          git add output/ data/market/prices_monthly_2004_2026.csv data/fred/FRED_VXVCLS_auto.csv
-          if git diff --staged --quiet; then echo "No changes"
-          else git commit -m "📊 Monthly update $(date +'%Y-%m')" && git push; fi
+          git add output/
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "📊 Monthly update $(date +'%Y-%m') — web auto" && git push
+          fi
