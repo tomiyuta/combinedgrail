@@ -127,8 +127,13 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
   /* ── リバランス入力を縦並び ── */
   #rebalance .card > div:first-child{flex-direction:column!important;align-items:flex-start!important;gap:8px!important}
   /* ── テーブル min-width 上書き ── */
-  #rebalMain{min-width:0!important;width:100%!important}
-  #perfTable{min-width:0!important}
+  #rebalMain{min-width:0!important;width:100%!important;table-layout:fixed!important}
+  #perfTable{min-width:0!important;width:100%!important;table-layout:fixed!important}
+  /* ── rebalMain 列幅固定（4列: ticker/target/price/shares） ── */
+  #rebalMain th:nth-child(1),#rebalMain td:nth-child(1){width:52px!important}
+  #rebalMain th:nth-child(3),#rebalMain td:nth-child(3){width:100px!important;word-break:break-all}
+  #rebalMain th:nth-child(4),#rebalMain td:nth-child(4){width:72px!important}
+  #rebalMain th:nth-child(5),#rebalMain td:nth-child(5){width:auto!important}
   /* ── ロバスト性RoRグリッド縮小 ── */
   #rb-ror-rows > div{grid-template-columns:55px 60px 55px 65px!important;font-size:.7rem!important}
   /* ── Signal hero内センサーフォント縮小 ── */
