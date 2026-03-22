@@ -285,8 +285,16 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
       </div>
       <input type="range" id="allocSlider" min="0" max="100" value="40" step="10"
         style="width:100%" oninput="onSlider(this.value)">
-      <div style="display:flex;justify-content:space-between;font-size:.62rem;color:var(--g400);margin-top:4px">
-        <span>防御型100%</span><span>α40%</span><span>α100%</span>
+      <div style="position:relative;margin-top:4px;height:22px">
+        <!-- 固定ラベル -->
+        <span style="position:absolute;left:0;font-size:.62rem;color:var(--g400)">防御型100%</span>
+        <span style="position:absolute;right:0;font-size:.62rem;color:var(--g400)">α100%</span>
+        <!-- 動的インジケーター（スライダー値に追従） -->
+        <span id="sliderIndicator" style="position:absolute;left:40%;transform:translateX(-50%);
+          display:flex;flex-direction:column;align-items:center;gap:0px;transition:left .3s ease">
+          <span style="font-size:.6rem;color:var(--green);font-weight:700;white-space:nowrap" id="sliderLabel">α40%</span>
+          <span style="color:var(--green);font-size:.65rem;line-height:1">▲</span>
+        </span>
       </div>
     </div>
 
@@ -902,6 +910,11 @@ function onSlider(v){
   etfWeight = v/100; defWeight = 1-etfWeight;
   document.getElementById('etfPct').textContent  = v;
   document.getElementById('defPct').textContent  = 100-v;
+  // スライダーインジケーター更新
+  const indEl   = document.getElementById('sliderIndicator');
+  const lblEl   = document.getElementById('sliderLabel');
+  if(indEl) indEl.style.left = v+'%';
+  if(lblEl) lblEl.textContent = v==0 ? '防御型100%' : 'α'+v+'%';
   document.getElementById('etfWeightBadge').textContent = v+'%';
   document.getElementById('defWeightBadge').textContent = (100-v)+'%';
   // ヒーロー内の大きな%数字も連動
