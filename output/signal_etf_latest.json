@@ -1,68 +1,42 @@
 {
   "date": "2026-03",
-  "generated": "2026-03-19T06:29:06Z",
-  "regime": "STRESS",
-  "regime_label": "警戒（防御型）",
-  "sensors": {
-    "CREDIT": "DEF",
-    "RATES": "NEU",
-    "ROTATION": "DEF",
-    "MOMENTUM": "DEF"
+  "generated": "2026-03-22T11:01:13Z",
+  "strategy": "α（BAM劇薬DM）",
+  "gate": "ATK",
+  "sz": 1.0,
+  "layers": {
+    "A": "ATK",
+    "B": "TMV",
+    "C": "XLU",
+    "D": "TQQQ"
   },
-  "mode": "NEUTRAL",
-  "c5_active": true,
-  "rates_acute": false,
-  "weights_M1": {
-    "GLD": 0.2899,
-    "XLU": 0.2585,
-    "TMV": 0.2475,
-    "TECL": 0.1021,
-    "TQQQ": 0.1021
-  },
-  "weights_M3": {
-    "GLD": 0.2667,
-    "XLU": 0.2747,
-    "TMV": 0.2314,
-    "TECL": 0.1136,
-    "TQQQ": 0.1136
-  },
-  "weights_M4": {
-    "GLD": 0.2667,
-    "XLU": 0.2747,
-    "TMV": 0.2314,
-    "TECL": 0.1136,
-    "TQQQ": 0.1136
+  "alloc": {
+    "XLU": 50.0,
+    "TQQQ": 50.0
   },
   "holdings": [
     {
       "ticker": "XLU",
-      "weight": 0.2747,
-      "strategy": "ETF M4",
-      "weight_in_strategy": 0.2747
-    },
-    {
-      "ticker": "GLD",
-      "weight": 0.2667,
-      "strategy": "ETF M4",
-      "weight_in_strategy": 0.2667
-    },
-    {
-      "ticker": "TMV",
-      "weight": 0.2314,
-      "strategy": "ETF M4",
-      "weight_in_strategy": 0.2314
-    },
-    {
-      "ticker": "TECL",
-      "weight": 0.1136,
-      "strategy": "ETF M4",
-      "weight_in_strategy": 0.1136
+      "name": "公益セクター（守備）",
+      "weight": 0.5,
+      "color": "#34D399"
     },
     {
       "ticker": "TQQQ",
-      "weight": 0.1136,
-      "strategy": "ETF M4",
-      "weight_in_strategy": 0.1136
+      "name": "NASDAQ 3倍レバレッジ",
+      "weight": 0.5,
+      "color": "#60A5FA"
     }
-  ]
+  ],
+  "alert": true,
+  "boundary_LQD": false,
+  "boundary_tech": true,
+  "features": {
+    "LQD_ex": 0.03,
+    "LQD_12m": 0.0659,
+    "rel_TQ_12m": 0.0425,
+    "mom4m_TMV": -0.0214,
+    "XLU_12m": 0.2394,
+    "HY_spread_pct": 3.12
+  }
 }

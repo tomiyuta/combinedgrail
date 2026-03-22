@@ -1,75 +1,53 @@
 {
   "date": "2026-03",
-  "generated": "2026-03-19T09:02:19Z",
+  "generated": "2026-03-22T11:01:13Z",
   "etf_weight": 0.4,
   "def_weight": 0.6,
+  "regime": "ATK",
+  "regime_label": "攻撃態勢（K-gate OPEN）",
   "etf_signal": {
     "date": "2026-03",
-    "generated": "2026-03-19T09:02:17Z",
-    "regime": "STRESS",
-    "regime_label": "警戒（防御型）",
+    "generated": "2026-03-22T11:01:13Z",
+    "regime": "ATK",
+    "regime_label": "攻撃態勢（K-gate OPEN）",
     "sensors": {
-      "CREDIT": "DEF",
-      "RATES": "NEU",
-      "ROTATION": "DEF",
-      "MOMENTUM": "DEF"
+      "A": "ATK",
+      "B": "TMV",
+      "C": "XLU",
+      "D": "TQQQ"
     },
-    "mode": "NEUTRAL",
+    "mode": "sz=1.00",
     "c5_active": true,
     "rates_acute": false,
-    "weights_M1": {
-      "GLD": 0.2899,
-      "XLU": 0.2585,
-      "TMV": 0.2475,
-      "TECL": 0.1021,
-      "TQQQ": 0.1021
-    },
-    "weights_M3": {
-      "GLD": 0.2667,
-      "XLU": 0.2747,
-      "TMV": 0.2314,
-      "TECL": 0.1136,
-      "TQQQ": 0.1136
-    },
-    "weights_M4": {
-      "GLD": 0.2667,
-      "XLU": 0.2747,
-      "TMV": 0.2314,
-      "TECL": 0.1136,
-      "TQQQ": 0.1136
-    },
     "holdings": [
       {
         "ticker": "XLU",
-        "weight": 0.2747,
-        "strategy": "ETF M4",
-        "weight_in_strategy": 0.2747
-      },
-      {
-        "ticker": "GLD",
-        "weight": 0.2667,
-        "strategy": "ETF M4",
-        "weight_in_strategy": 0.2667
-      },
-      {
-        "ticker": "TMV",
-        "weight": 0.2314,
-        "strategy": "ETF M4",
-        "weight_in_strategy": 0.2314
-      },
-      {
-        "ticker": "TECL",
-        "weight": 0.1136,
-        "strategy": "ETF M4",
-        "weight_in_strategy": 0.1136
+        "name": "公益セクター（守備）",
+        "weight": 0.5,
+        "color": "#34D399"
       },
       {
         "ticker": "TQQQ",
-        "weight": 0.1136,
-        "strategy": "ETF M4",
-        "weight_in_strategy": 0.1136
+        "name": "NASDAQ 3倍レバレッジ",
+        "weight": 0.5,
+        "color": "#60A5FA"
       }
-    ]
+    ],
+    "weights_M4": {
+      "XLU": 0.5,
+      "TQQQ": 0.5
+    },
+    "features": {
+      "LQD_ex": 0.03,
+      "LQD_12m": 0.0659,
+      "rel_TQ_12m": 0.0425,
+      "mom4m_TMV": -0.0214,
+      "XLU_12m": 0.2394,
+      "HY_spread_pct": 3.12
+    },
+    "boundary_LQD": false,
+    "boundary_tech": true,
+    "sz": 1.0
   },
   "def_signal": {
     "date": "2026-03",
@@ -110,76 +88,40 @@
   "holdings": [
     {
       "ticker": "EFA",
-      "name": "iShares MSCI EAFE",
-      "strategy": "OG防御型",
-      "momentum_6m": 0.0585,
-      "weight_in_strategy": 0.3384,
-      "weight_in_portfolio": 0.203,
-      "price": 96.69
-    },
-    {
-      "ticker": "EEM",
-      "name": "iShares MSCI Emerging Markets",
-      "strategy": "OG防御型",
-      "momentum_6m": 0.0962,
-      "weight_in_strategy": 0.258,
-      "weight_in_portfolio": 0.1548,
-      "price": 57.56
-    },
-    {
-      "ticker": "DBC",
-      "name": "Invesco DB Commodity",
-      "strategy": "OG防御型",
-      "momentum_6m": 0.3423,
-      "weight_in_strategy": 0.2525,
-      "weight_in_portfolio": 0.1515,
-      "price": 29.27
+      "weight": 0.203
     },
     {
       "ticker": "XLU",
-      "strategy": "ETF M4",
-      "weight_in_strategy": 0.2747,
-      "weight_in_portfolio": 0.1099,
-      "price": 46.73
-    },
-    {
-      "ticker": "GLD",
-      "strategy": "ETF M4",
-      "weight_in_strategy": 0.2667,
-      "weight_in_portfolio": 0.1067,
-      "price": 444.74
-    },
-    {
-      "ticker": "TMV",
-      "strategy": "ETF M4",
-      "weight_in_strategy": 0.2314,
-      "weight_in_portfolio": 0.0926,
-      "price": 37.37
-    },
-    {
-      "ticker": "GLD",
-      "name": "SPDR Gold Shares",
-      "strategy": "OG防御型",
-      "momentum_6m": 0.3198,
-      "weight_in_strategy": 0.1511,
-      "weight_in_portfolio": 0.0907,
-      "price": 444.74
-    },
-    {
-      "ticker": "TECL",
-      "strategy": "ETF M4",
-      "weight_in_strategy": 0.1136,
-      "weight_in_portfolio": 0.0454,
-      "price": 98.14
+      "weight": 0.2
     },
     {
       "ticker": "TQQQ",
-      "strategy": "ETF M4",
-      "weight_in_strategy": 0.1136,
-      "weight_in_portfolio": 0.0454,
-      "price": 46.1
+      "weight": 0.2
+    },
+    {
+      "ticker": "EEM",
+      "weight": 0.1548
+    },
+    {
+      "ticker": "DBC",
+      "weight": 0.1515
+    },
+    {
+      "ticker": "GLD",
+      "weight": 0.0907
     }
   ],
-  "regime": "STRESS",
-  "regime_label": "ストレス（守備型）"
+  "alpha_gate": "ATK",
+  "alpha_sz": 1.0,
+  "alpha_layers": {
+    "A": "ATK",
+    "B": "TMV",
+    "C": "XLU",
+    "D": "TQQQ"
+  },
+  "alpha_alloc": {
+    "XLU": 50.0,
+    "TQQQ": 50.0
+  },
+  "alert": true
 }

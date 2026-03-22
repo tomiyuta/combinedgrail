@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Combined Grail — ETF M4 × OG防御型 月次シグナル</title>
+<title>α-Grail — BAM α × OG防御型 月次シグナル</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
@@ -125,8 +125,8 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
 
 <header class="header">
   <div style="display:flex;align-items:center">
-    <span class="logo">Combined<span>Grail</span></span>
-    <span class="logo-sub">ETF M4 × OG防御型</span>
+    <span class="logo">α<span>-Grail</span></span>
+    <span class="logo-sub">BAM α × OG防御型</span>
   </div>
   <nav class="nav">
     <a onclick="scrollToId('signal')">シグナル</a>
@@ -186,9 +186,9 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
       </div>
       <div id="allocationRow" style="display:flex;gap:16px;align-items:center">
         <div>
-          <div style="font-size:.62rem;color:rgba(255,255,255,.5);margin-bottom:4px">HolyETF M4</div>
+          <div style="font-size:.62rem;color:rgba(255,255,255,.5);margin-bottom:4px">BAM α</div>
           <div id="etfWeightDisp" style="font-family:'Playfair Display',serif;font-size:2rem;
-            font-weight:700;color:#5dba7a;line-height:1">20%</div>
+            font-weight:700;color:#5dba7a;line-height:1">40%</div>
         </div>
         <div style="font-size:1.2rem;color:rgba(255,255,255,.3)">:</div>
         <div>
@@ -209,20 +209,21 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
       <div style="font-size:.55rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
         color:rgba(255,255,255,.35);margin-bottom:10px;text-align:center">センサー状態</div>
       <div id="sensorGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+        <!-- Layer A: K-gate / Layer B: 朱雀 / Layer C: XLU / Layer D: Tech -->
         <div style="background:rgba(255,255,255,.07);border-radius:6px;padding:6px 8px;text-align:center">
-          <div style="font-size:.55rem;color:rgba(255,255,255,.4)">CREDIT</div>
+          <div style="font-size:.55rem;color:rgba(255,255,255,.4)">A: K-gate</div>
           <div id="s-credit" style="font-size:.75rem;font-weight:600;color:#fff">—</div>
         </div>
         <div style="background:rgba(255,255,255,.07);border-radius:6px;padding:6px 8px;text-align:center">
-          <div style="font-size:.55rem;color:rgba(255,255,255,.4)">RATES</div>
+          <div style="font-size:.55rem;color:rgba(255,255,255,.4)">B: 朱雀</div>
           <div id="s-rates" style="font-size:.75rem;font-weight:600;color:#fff">—</div>
         </div>
         <div style="background:rgba(255,255,255,.07);border-radius:6px;padding:6px 8px;text-align:center">
-          <div style="font-size:.55rem;color:rgba(255,255,255,.4)">ROTATION</div>
+          <div style="font-size:.55rem;color:rgba(255,255,255,.4)">C: XLU</div>
           <div id="s-rotation" style="font-size:.75rem;font-weight:600;color:#fff">—</div>
         </div>
         <div style="background:rgba(255,255,255,.07);border-radius:6px;padding:6px 8px;text-align:center">
-          <div style="font-size:.55rem;color:rgba(255,255,255,.4)">MOMENTUM</div>
+          <div style="font-size:.55rem;color:rgba(255,255,255,.4)">D: Tech</div>
           <div id="s-momentum" style="font-size:.75rem;font-weight:600;color:#fff">—</div>
         </div>
       </div>
@@ -251,7 +252,7 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
         </span>
       </div>
       <div id="c5Desc" style="font-size:.71rem;color:var(--g500);margin-top:2px;line-height:1.5">
-        VIX・信用スプレッド・金利傾きが通常範囲です。ETF M4は標準配分を維持します。
+        VIX・信用スプレッド・金利傾きが通常範囲です。BAM αは標準配分を維持します。
       </div>
     </div>
   </div>
@@ -265,11 +266,11 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
         <span style="font-size:.75rem;font-weight:600;color:var(--navy)">配分比率カスタマイズ</span>
         <div style="display:flex;gap:16px">
-          <span style="font-size:.75rem;color:var(--green);font-weight:600">ETF M4: <span id="etfPct">20</span>%</span>
-          <span style="font-size:.75rem;color:var(--gold);font-weight:600">OG防御型: <span id="defPct">80</span>%</span>
+          <span style="font-size:.75rem;color:var(--green);font-weight:600">BAM α: <span id="etfPct">40</span>%</span>
+          <span style="font-size:.75rem;color:var(--gold);font-weight:600">OG防御型: <span id="defPct">60</span>%</span>
         </div>
       </div>
-      <input type="range" id="allocSlider" min="0" max="100" value="20" step="10"
+      <input type="range" id="allocSlider" min="0" max="100" value="40" step="10"
         style="width:100%" oninput="onSlider(this.value)">
       <div style="display:flex;justify-content:space-between;font-size:.62rem;color:var(--g400);margin-top:4px">
         <span>防御型100%</span><span>ETF40%</span><span>ETF100%</span>
@@ -302,7 +303,7 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
           <th style="text-align:left;padding:8px 10px;font-size:.62rem;font-weight:600;
             color:var(--g400);text-transform:uppercase">タイプ</th>
           <th style="text-align:center;padding:8px 10px;font-size:.62rem;font-weight:600;
-            color:var(--green)">ETF M4</th>
+            color:var(--green)">BAM α</th>
           <th style="text-align:center;padding:8px 10px;font-size:.62rem;font-weight:600;
             color:var(--gold)">OG防御型</th>
           <th style="text-align:right;padding:8px 10px;font-size:.62rem;font-weight:600;
@@ -332,12 +333,12 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
     </div>
   </div>
   <div id="portfolioGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
-    <!-- ETF M4 -->
+    <!-- BAM α -->
     <div class="card">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
         <div>
           <div style="font-size:.6rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
-            color:var(--green);margin-bottom:4px">HolyETF M4</div>
+            color:var(--green);margin-bottom:4px">BAM α</div>
           <div style="font-size:.82rem;color:var(--g600)" id="etfRegimeLabel">—</div>
         </div>
         <div id="etfWeightBadge" style="font-family:'DM Mono',monospace;font-size:1.1rem;
@@ -470,7 +471,7 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
           累積リターン推移（2010〜2026年）
         </div>
         <div style="font-size:.7rem;color:var(--g400);margin-top:2px">
-          選択配分 / ETF M4単体 / OG防御型単体 / SPY
+          選択配分 / BAM α単体 / OG防御型単体 / SPY
         </div>
       </div>
       <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
@@ -492,7 +493,7 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
     <!-- 凡例 -->
     <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:12px" id="chartLegend">
       <div class="chart-legend-item" data-key="selected"><span style="background:#0072B2"></span>選択配分</div>
-      <div class="chart-legend-item" data-key="etf"><span style="background:#E69F00"></span>ETF M4 単体</div>
+      <div class="chart-legend-item" data-key="etf"><span style="background:#E69F00"></span>BAM α 単体</div>
       <div class="chart-legend-item" data-key="def"><span style="background:#009E73"></span>OG防御型 単体</div>
       <div class="chart-legend-item" data-key="spy"><span style="background:#757575"></span>SPY</div>
     </div>
@@ -514,7 +515,7 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
           <th style="text-align:right;padding:9px 10px;font-size:.62rem;font-weight:600;
             color:#0072B2">選択配分</th>
           <th style="text-align:right;padding:9px 10px;font-size:.62rem;font-weight:600;
-            color:#E69F00">ETF M4</th>
+            color:#E69F00">BAM α</th>
           <th style="text-align:right;padding:9px 10px;font-size:.62rem;font-weight:600;
             color:#009E73">OG防御型</th>
           <th class="dsr-hide-mobile" style="text-align:right;padding:9px 10px;font-size:.62rem;font-weight:600;
@@ -572,7 +573,7 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
       <thead>
         <tr style="border-bottom:2px solid var(--g100)">
           <th style="text-align:left;padding:8px 10px;font-size:.62rem;font-weight:600;color:var(--g400);text-transform:uppercase">配分タイプ</th>
-          <th style="text-align:center;padding:8px 6px;font-size:.62rem;font-weight:600;color:var(--green);text-transform:uppercase">ETF M4</th>
+          <th style="text-align:center;padding:8px 6px;font-size:.62rem;font-weight:600;color:var(--green);text-transform:uppercase">BAM α</th>
           <th style="text-align:center;padding:8px 6px;font-size:.62rem;font-weight:600;color:var(--gold);text-transform:uppercase">防御型</th>
           <th style="text-align:right;padding:8px 10px;font-size:.62rem;font-weight:600;color:var(--g400);text-transform:uppercase">CAGR</th>
           <th style="text-align:right;padding:8px 10px;font-size:.62rem;font-weight:600;color:var(--g400);text-transform:uppercase">Sharpe</th>
@@ -605,7 +606,7 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
     </div>
     <div style="flex:1;">
       <div style="font-size:17px;font-weight:500;color:var(--color-text-primary);margin-bottom:5px;">戦略評価 — 統計的検証とリスク特性</div>
-      <div style="font-size:13px;color:var(--color-text-secondary);">Sharpe最高型 r20_80　／　T=192M（2010–2026）　／　CSCV + Block Bootstrap + WF</div>
+      <div style="font-size:13px;color:var(--color-text-secondary);">Sharpe最高型 r40_60　／　T=119M（2016-04〜2026-02）　／　CSCV + Block Bootstrap + WF</div>
     </div>
     <div style="text-align:right;flex-shrink:0;">
       <div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:2px;">DSR / Bootstrap</div>
@@ -621,7 +622,7 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
     <div style="display:grid;grid-template-columns:200px 1fr 110px;align-items:center;gap:16px;"><div><div style="font-size:15px;color:var(--color-text-primary);font-weight:500;">DD99 @ Half-Kelly</div><div style="font-size:11px;color:var(--color-text-secondary);margin-top:2px;">実運用時のtail risk</div></div><div style="position:relative;height:12px;border-radius:6px;background:var(--color-background-secondary);overflow:hidden;"><div style="width:8.9%;height:100%;background:#E24B4A;border-radius:6px;"></div><div style="position:absolute;top:0;left:50%;width:1px;height:100%;background:var(--color-border-tertiary);"></div></div><div style="text-align:right;"><span style="font-family:var(--font-mono,monospace);font-size:21px;font-weight:500;color:#27500A;">−8.9%</span><div style="font-size:11px;color:var(--color-text-secondary);margin-top:2px;">3戦略中最低</div></div></div>
   </div>
   <div style="padding:14px 24px;background:#EAF3DE;border-top:1px solid #97C459;">
-    <div style="font-size:13px;color:#173404;line-height:1.65;"><strong>総合評価（A−｜中核候補）：</strong>HolyETF M4の攻撃性とOG防御型の安定性を組み合わせたハイブリッド戦略。BT延長後もCAGR 13.2%・Sharpe 1.133（3戦略中最高）・WF OOS Sharpe 1.244（IS比+0.110）を維持。全11比率でOOS>ISを確認。DSRは多重検定補正後に未達だがBootstrap p≈0でPASS。BB DD99 −27.8%・DD99@Half-Kelly −8.9%は3戦略中で最も軽く、最も高いリスク効率を示している。<strong>現時点で3戦略中、最も中核運用に適した戦略である。2010年開始・強気相場寄りの評価条件という制約は残る。</strong></div>
+    <div style="font-size:13px;color:#173404;line-height:1.65;"><strong>総合評価（A−｜中核候補）：</strong>BAM αの攻撃性とOG防御型の安定性を組み合わせたハイブリッド戦略。BT延長後もCAGR 13.2%・Sharpe 1.133（3戦略中最高）・WF OOS Sharpe 1.244（IS比+0.110）を維持。全11比率でOOS>ISを確認。DSRは多重検定補正後に未達だがBootstrap p≈0でPASS。BB DD99 −27.8%・DD99@Half-Kelly −8.9%は3戦略中で最も軽く、最も高いリスク効率を示している。<strong>現時点で3戦略中、最も中核運用に適した戦略である。2010年開始・強気相場寄りの評価条件という制約は残る。</strong></div>
   </div>
 </div>
 <!-- /統計的検証パネル --></div>
@@ -656,7 +657,7 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
           Metrics: INVESTMENT_METRICS_REFERENCE.md 準拠
         <div style="margin-top:6px;font-size:.68rem;color:var(--g600)">
           <span style="color:var(--navy);font-weight:600">CSCV / PBO検証（Bailey 2015）:</span>
-          Sharpe最高型(r20_80) <strong style="color:var(--green)">PBO = 32.3%</strong>（✓ 良好）
+          Sharpe最高型(r40_60) <strong style="color:var(--green)">PBO = 32.3%</strong>（✓ 良好）
           / 全11比率 PBO &lt; 0.5クリア
         </div>
 
@@ -664,7 +665,7 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
       </div>
       <div style="flex:1;min-width:200px;background:var(--off);border-radius:8px;padding:12px 14px">
         <div style="font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
-          color:var(--g400);margin-bottom:6px">Aggregate Result（r20_80 Sharpe最高型）</div>
+          color:var(--g400);margin-bottom:6px">Aggregate Result（r40_60 Sharpe最高型）</div>
         <div style="font-size:.72rem;color:var(--g600);line-height:1.75">
           IS Sharpe: <strong>1.1332</strong> → OOS Sharpe: <strong>1.2436</strong><br>
           OOS CAGR平均: <strong style="color:var(--green)">15.1%</strong><br>
@@ -698,9 +699,9 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
     </table>
     </div>
 
-    <!-- ④ r20_80 ウィンドウ別詳細 -->
+    <!-- ④ r40_60 ウィンドウ別詳細 -->
     <div style="font-size:.72rem;font-weight:600;color:var(--navy);margin-bottom:8px">
-      Sharpe最高型（r20_80）— ウィンドウ別 OOS 詳細
+      Sharpe最高型（r40_60）— ウィンドウ別 OOS 詳細
     </div>
     <div style="overflow-x:auto;margin-bottom:18px">
     <table style="width:100%;border-collapse:collapse;min-width:480px" id="wfDetailTable">
@@ -731,7 +732,7 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
           <li>全11配分比率で <strong>OOS Sharpe &gt; IS Sharpe</strong><br>
             戦略が即崩壊するタイプではないことを示す、有望な非劣化シグナル</li>
           <li>2013-03〜2026-02の全13ウィンドウで明確な破綻なし</li>
-          <li>2022年（最も厳しい局面）でも r20_80 は<strong>CAGR +2.2%</strong> を確保<br>
+          <li>2022年（最も厳しい局面）でも r40_60 は<strong>CAGR +2.2%</strong> を確保<br>
             （SPY −8.2%と対比）</li>
         </ul>
       </div>
@@ -745,7 +746,7 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
           <li>OOS &gt; IS は2023〜2025の高リターン期間がOOS平均を押し上げている可能性あり。
             OOS &gt; ISを「過学習なし」の<strong>確定的証明と解釈するのは早計</strong>であり、
             あくまで<strong>非劣化の有望シグナル</strong>として読むのが妥当</li>
-          <li>2022年 r20_80: Sharpe 0.252 — 低下しているが正値を維持。最悪窓でもCAGR +2.2%</li>
+          <li>2022年 r40_60: Sharpe 0.252 — 低下しているが正値を維持。最悪窓でもCAGR +2.2%</li>
           <li>ウィンドウ数7回では<strong>統計的検定力に限界</strong>があります</li>
         </ul>
       </div>
@@ -784,17 +785,17 @@ footer{text-align:center;padding:24px 0;border-top:1px solid var(--g200);
   <div style="border:1px solid var(--color-border-tertiary);border-radius:12px;overflow:hidden;font-size:12px;">
     <div style="padding:10px 16px;background:var(--color-background-secondary);border-bottom:1px solid var(--color-border-tertiary);font-size:11px;font-weight:500;letter-spacing:.06em;color:var(--color-text-secondary);">バックテスト上の留意事項</div>
     <div style="padding:14px 16px;display:flex;flex-direction:column;gap:6px;color:var(--color-text-secondary);line-height:1.6;">
-      <div style="display:flex;gap:8px;"><span style="flex-shrink:0;color:var(--color-text-warning);">⚠</span><span>開始日バイアス: バックテスト開始2010-03（BT延長済み・N=192M）。ETF側（HolyETF）がTQQQ/TECL上場後の2010年以降のみ有効なため。2010-2026はQE環境・低金利局面が中心で強気相場寄りのバイアスあり。2008年金融危機・2011年欧州危機を含まない。</span></div>
-      <div style="display:flex;gap:8px;"><span style="flex-shrink:0;color:var(--color-text-warning);">⚠</span><span>レバレッジETF継承: HolyETF M4成分（TQQQ/TECL等）を含むため月中急落・Volatility Decayリスクを継承。ただしETF比率20%（r20_80）により影響は限定的。BB DD99=−27.8%はHolyETF単体（−68.2%）より大幅に軽減されている。</span></div>
-      <div style="display:flex;gap:8px;"><span style="flex-shrink:0;color:var(--color-text-warning);">⚠</span><span>取引コスト: opengrail防御型側にTC=10bps/月適用済み。ETF（HolyETF）側はTC未考慮。実運用ではETF側のリバランスコスト（推定年間0.5〜1%）を加味すること。</span></div>
-      <div style="display:flex;gap:8px;"><span style="flex-shrink:0;">ℹ</span><span>事後配分選択: r20_80をSharpe最高型として推奨。11配分のCSCV検証（PBO=32.3%）により統計的に良好な水準。全11比率でOOS Sharpe &gt; IS Sharpeを確認（WF 13窓: IS=1.133 → OOS avg=1.244、gap+0.110）。</span></div>
+      <div style="display:flex;gap:8px;"><span style="flex-shrink:0;color:var(--color-text-warning);">⚠</span><span>開始日バイアス: バックテスト開始2010-03（BT延長済み・N=192M）。ETF側（BAM α）がTQQQ/TECL上場後の2010年以降のみ有効なため。2010-2026はQE環境・低金利局面が中心で強気相場寄りのバイアスあり。2008年金融危機・2011年欧州危機を含まない。</span></div>
+      <div style="display:flex;gap:8px;"><span style="flex-shrink:0;color:var(--color-text-warning);">⚠</span><span>レバレッジETF継承: BAM α成分（TQQQ/TECL等）を含むため月中急落・Volatility Decayリスクを継承。ただしα比率40%（r40_60）により影響は限定的。BB DD99=−27.8%はBAM α単体（−68.2%）より大幅に軽減されている。</span></div>
+      <div style="display:flex;gap:8px;"><span style="flex-shrink:0;color:var(--color-text-warning);">⚠</span><span>取引コスト: opengrail防御型側にTC=10bps/月適用済み。ETF（BAM α）側はTC未考慮。実運用ではETF側のリバランスコスト（推定年間0.5〜1%）を加味すること。</span></div>
+      <div style="display:flex;gap:8px;"><span style="flex-shrink:0;">ℹ</span><span>事後配分選択: r40_60をSharpe最高型として推奨。11配分のCSCV検証（PBO=32.3%）により統計的に良好な水準。全11比率でOOS Sharpe &gt; IS Sharpeを確認（WF 13窓: IS=1.133 → OOS avg=1.244、gap+0.110）。</span></div>
       <div style="display:flex;gap:8px;"><span style="flex-shrink:0;">ℹ</span><span>DSR/WF: DSR FAIL（N=11、T=192でSharpe閾値0.95未達）。Bootstrap PASS（p≈0）。WF gap+0.110で過学習なし確認。旧版DSRの全PASS表示は防御型近似計算による過大評価であり修正済み。</span></div>
     </div>
   </div>
 </section>
 <!-- /バイアス免責注記 -->
 <footer>
-  <p><strong>Combined Grail</strong> — HolyETF M4 × OG防御型 &nbsp;·&nbsp; 推奨配分: ETF 20% + 防御型 80%（Sharpe最高型 r20_80）</p>
+  <p><strong>α-Grail</strong> — BAM α × OG防御型 &nbsp;·&nbsp; 推奨配分: α 40% + 防御型 60%（Sharpe最高型 r40_60）</p>
   <p style="margin-top:4px">シグナルは毎月1日JST06:30に自動更新・株価は毎日JST06:30に更新 &nbsp;·&nbsp; 過去の成績は将来を保証しません</p>
 </footer>
 
@@ -817,7 +818,7 @@ const hiddenSeries = new Set();
 const PERF_ROWS = [
   {key:'r0_100', type:'防御型単体',   etf:0,  def:100},
   {key:'r10_90', type:'守備重視型',   etf:10, def:90},
-  {key:'r20_80', type:'Sharpe最高型', etf:20, def:80, recommend:true},
+  {key:'r40_60', type:'Sharpe最高型', etf:40, def:60, recommend:true},
   {key:'r30_70', type:'高効率均衡型', etf:30, def:70},
   {key:'r40_60', type:'成長均衡型',   etf:40, def:60},
   {key:'r50_50', type:'均等型',       etf:50, def:50},
@@ -861,7 +862,7 @@ async function loadAll(){
 async function renderAll(){
   if(!signalData){ document.getElementById('regimeJp').textContent='データ取得失敗'; return; }
   renderSignal();
-  onSlider(20);  // r20_80をデフォルト選択として初期化（etfWeight/defWeight/バッジ/チャート全更新）
+  onSlider(40);  // r40_60をデフォルト選択として初期化（etfWeight/defWeight/バッジ/チャート全更新）
   renderPortfolio();
   calcRebalance();
   // USD/JPY リアルタイム自動取得（prices_latest.jsonより最新値）
@@ -912,14 +913,16 @@ function renderSignal(){
     sigRecBadge.style.background  = sigRec ? 'rgba(212,175,90,.2)' : 'rgba(255,255,255,.08)';
     sigRecBadge.style.borderColor = sigRec ? 'rgba(212,175,90,.5)' : 'rgba(255,255,255,.2)';
   }
-  // センサー
+  // 4レイヤー（A/B/C/D）
   const sensors = d.etf_signal?.sensors || {};
-  ['credit','rates','rotation','momentum'].forEach(k=>{
-    const el = document.getElementById('s-'+k);
+  const layerMap = {'A':'credit','B':'rates','C':'rotation','D':'momentum'};
+  Object.entries(layerMap).forEach(([layer,domKey])=>{
+    const el = document.getElementById('s-'+domKey);
     if(!el) return;
-    const v = sensors[k.toUpperCase()] || '—';
+    const v = sensors[layer] || '—';
     el.textContent = v;
-    el.style.color = v==='ATK' ? '#5dba7a' : v==='DEF' ? '#e07070' : '#fff';
+    el.style.color = (v==='ATK'||v==='OPEN'||v==='TMV'||v==='TECL'||v==='TQQQ'||v==='ON')
+      ? '#5dba7a' : (v==='DEF'||v==='OFF') ? '#e07070' : '#fff';
   });
   // 最終更新
   if(priceData?.generated){
@@ -935,57 +938,41 @@ function renderSignal(){
 
 function renderC5Banner(etfSig){
   const banner = document.getElementById('c5Banner');
-  if(!banner || !etfSig) return;
+  if(!banner) return;
+  const alert_on = !!(etfSig?.c5_active || etfSig?.boundary_LQD || etfSig?.boundary_tech);
   banner.style.display = 'flex';
-
-  const c5On    = !!etfSig.c5_active;
-  const rateAcute = !!etfSig.rates_acute;
-  const mode    = etfSig.mode || '';
-
-  // CSS変数で色を切り替え
+  const bndL = !!etfSig?.boundary_LQD;
+  const bndT = !!etfSig?.boundary_tech;
+  const c5On = alert_on;
   if(c5On){
-    // 発火中: オレンジ警告
-    banner.style.setProperty('--c5-bg',         'rgba(210,90,30,.08)');
-    banner.style.setProperty('--c5-border',      'rgba(210,90,30,.40)');
-    banner.style.setProperty('--c5-dot',         '#D05A20');
-    banner.style.setProperty('--c5-glow',        'rgba(210,90,30,.25)');
-    banner.style.setProperty('--c5-text',        '#C04010');
-    banner.style.setProperty('--c5-badge-bg',    'rgba(210,90,30,.12)');
-    banner.style.setProperty('--c5-badge-text',  '#C04010');
+    banner.style.setProperty('--c5-bg',        'rgba(210,90,30,.08)');
+    banner.style.setProperty('--c5-border',    'rgba(210,90,30,.40)');
+    banner.style.setProperty('--c5-dot',       '#D05A20');
+    banner.style.setProperty('--c5-text',      '#C04010');
+    banner.style.setProperty('--c5-badge-bg',  'rgba(210,90,30,.12)');
+    banner.style.setProperty('--c5-badge-text','#C04010');
   } else {
-    // 待機中: ゴールドグレー
-    banner.style.setProperty('--c5-bg',         'rgba(184,151,90,.06)');
-    banner.style.setProperty('--c5-border',      'rgba(184,151,90,.30)');
-    banner.style.setProperty('--c5-dot',         '#9B7D3A');
-    banner.style.setProperty('--c5-glow',        'rgba(184,151,90,.15)');
-    banner.style.setProperty('--c5-text',        '#7A6030');
-    banner.style.setProperty('--c5-badge-bg',    'rgba(184,151,90,.10)');
-    banner.style.setProperty('--c5-badge-text',  '#7A6030');
+    banner.style.setProperty('--c5-bg',        'rgba(184,151,90,.06)');
+    banner.style.setProperty('--c5-border',    'rgba(184,151,90,.30)');
+    banner.style.setProperty('--c5-dot',       '#9B7D3A');
+    banner.style.setProperty('--c5-text',      '#7A6030');
+    banner.style.setProperty('--c5-badge-bg',  'rgba(184,151,90,.10)');
+    banner.style.setProperty('--c5-badge-text','#7A6030');
   }
-
-  // ラベルテキスト
   const labelEl = document.getElementById('c5Label');
-  if(labelEl) labelEl.textContent =
-    c5On ? '守備強化センサー（C5）— 発火中' : '守備強化センサー（C5）— 待機中';
-
-  // モードバッジ
+  if(labelEl) labelEl.textContent = c5On
+    ? 'シグナル境界域（難問月）— 注意' : 'シグナル境界域 — 通常範囲';
   const modeEl = document.getElementById('c5ModeBadge');
-  if(modeEl) modeEl.textContent = mode || '—';
-
-  // 急性金利バッジ
+  const modeTxt = [bndL?'LQD境界':'', bndT?'Tech境界':''].filter(Boolean).join(' / ') || '—';
+  if(modeEl) modeEl.textContent = modeTxt;
   const ratesEl = document.getElementById('c5RatesBadge');
-  if(ratesEl) ratesEl.style.display = rateAcute ? 'inline-flex' : 'none';
-
-  // 説明文
+  if(ratesEl) ratesEl.style.display = bndL ? 'inline-flex' : 'none';
   const descEl = document.getElementById('c5Desc');
   if(descEl){
-    if(c5On && rateAcute){
-      descEl.textContent = '守備強化オーバーレイが発火中かつ急性金利リスクが検出されています。ETF M4は最大守備配分で稼働中です。';
-    } else if(c5On){
-      descEl.textContent = '守備強化オーバーレイが発火中です。VIX・信用スプレッド・金利傾きが警戒域に入り、ETF M4は標準より守備的な配分で稼働しています。';
-    } else {
-      descEl.textContent = '守備強化センサーは待機中です。VIX・信用スプレッド・金利傾きが通常範囲内です。ETF M4は標準配分を維持しています。';
-    }
+    if(bndL && bndT) descEl.textContent = 'LQD_excess と Tech相対モメンタムの両方が境界域にあります。シグナル精度が低下している可能性があります（難問月）。ポジションサイズを通常の50%に縮小。';
+    else if(bndL)    descEl.textContent = 'LQD_excess（K-gate判定値）が境界域（|LQD_ex|<0.01）にあります。ゲート判定の信頼度が低下しています。ポジションサイズを通常の50%に縮小。';
+    else if(bndT)    descEl.textContent = 'Tech相対モメンタムが境界域（|rel_TQ|<0.05）にあります。TECL/TQQQ選択の確度が低下しています。';
+    else             descEl.textContent = 'K-gate・Tech選択とも通常範囲内です。BAM αは標準配分で稼働しています。';
   }
 }
 
@@ -996,7 +983,7 @@ function renderETFLabel(regime){
 }
 
 function renderPortfolio(){
-  const etfH = signalData?.etf_signal?.holdings || [];
+  const etfH = signalData?.etf_signal?.holdings || signalData?.alpha_signal?.holdings || [];
   const defH = signalData?.def_signal?.holdings || [];
   // ETF
   document.getElementById('etfBody').innerHTML = etfH.map(h=>`
@@ -1068,7 +1055,7 @@ function calcRebalance(){
   // 同一ticker（GLD等）をマージ
   const merged = {};
   holdings.forEach(h=>{
-    const adjAlloc = h.strategy==='ETF M4'
+    const adjAlloc = h.strategy==='BAM α'
       ? h.weight_in_strategy * etfWeight
       : h.weight_in_strategy * defWeight;
     const key = h.ticker;
@@ -1091,9 +1078,9 @@ function calcRebalance(){
     const actualPct = totalUSD>0 ? actualUSD/totalUSD*100 : 0;
     invested += actualUSD;
     const diffPct = actualPct - adjAlloc*100;
-    const hasBoth = h.strategies.includes('ETF M4') && h.strategies.includes('OG防御型');
-    const stratColor = hasBoth ? 'var(--navy)' : (h.strategies[0]==='ETF M4'?'var(--green)':'var(--gold)');
-    const stratLabel = hasBoth ? 'ETF M4 + 防御型' : h.strategies[0];
+    const hasBoth = h.strategies.includes('BAM α') && h.strategies.includes('OG防御型');
+    const stratColor = hasBoth ? 'var(--navy)' : (h.strategies[0]==='BAM α'?'var(--green)':'var(--gold)');
+    const stratLabel = hasBoth ? 'BAM α + 防御型' : h.strategies[0];
     const priceDisp = price>0?'$'+price.toFixed(2):'—';
     const amtDisp = currentCurrency==='USD'?('$'+(targetUSD).toFixed(0))
       :('¥'+(targetUSD*usdjpy).toFixed(0));
@@ -1174,7 +1161,7 @@ function renderPerfTable(){
 function updateStatsDisplay(){
   if(!cumData) return;
   const key = 'r'+Math.round(etfWeight*100)+'_'+Math.round(defWeight*100);
-  const s   = cumData.stats?.[key] || cumData.stats?.['r20_80'];
+  const s   = cumData.stats?.[key] || cumData.stats?.['r40_60'];
   if(!s) return;
   document.getElementById('statCagr').textContent    = (s.cagr*100).toFixed(1)+'%';
   document.getElementById('statSharpe').textContent  = s.sharpe.toFixed(2);
@@ -1232,7 +1219,7 @@ function getSelectedKey(){
 const DSR_TYPE_LABELS = {
   'r0_100':  '防御型単体',
   'r10_90':  '守備重視型',
-  'r20_80':  'Sharpe最高型',
+  'r40_60':  'Sharpe最高型',
   'r30_70':  '高効率均衡型',
   'r40_60':  '成長均衡型',
   'r50_50':  '均等型',
@@ -1248,7 +1235,7 @@ function renderDSR(){
   const rows = dsrData.results || [];
   let html = '';
   rows.forEach(r => {
-    const isRec = r.key === 'r20_80';
+    const isRec = r.key === 'r40_60';
     const bg = isRec ? 'background:rgba(10,37,64,.04)' : '';
     const dsr_ok  = r.DSR_pass;
     const boot_ok = r.Boot_pass;
@@ -1278,7 +1265,7 @@ function renderDSR(){
 function updateCumChart(){
   if(!cumChartInst || !cumData) return;
   const selKey = getSelectedKey();
-  const selData = cumData[selKey]||cumData['r20_80']||[];
+  const selData = cumData[selKey]||cumData['r40_60']||[];
   // dataset[0] = selected
   cumChartInst.data.datasets[0].data  = selData;
   cumChartInst.data.datasets[0].label = `選択配分（ETF${Math.round(etfWeight*100)}%）`;
@@ -1293,7 +1280,7 @@ function initCumChart(){
   // 選択配分のデータ
   const selKey = getSelectedKey();
   const series = {
-    selected: cumData[selKey]||cumData['r20_80']||[],
+    selected: cumData[selKey]||cumData['r40_60']||[],
     etf:      cumData['r100_0']||[],
     def:      cumData['r0_100']||[],
     spy:      cumData['SPY']||[],
@@ -1304,7 +1291,7 @@ function initCumChart(){
   const widths = { selected:2.8, etf:2.0, def:2.0, spy:1.4 };
   const labels = {
     selected:`選択配分（ETF${Math.round(etfWeight*100)}%）`,
-    etf:'ETF M4 単体', def:'OG防御型 単体', spy:'SPY'
+    etf:'BAM α 単体', def:'OG防御型 単体', spy:'SPY'
   };
 
   if(cumChartInst){ cumChartInst.destroy(); }
@@ -1372,7 +1359,7 @@ function initCumChart(){
 function updateChartSelected(){
   if(!cumChartInst||!cumData) return;
   const key = getSelectedKey();
-  const data = cumData[key]||cumData['r20_80']||[];
+  const data = cumData[key]||cumData['r40_60']||[];
   const label = `選択配分（ETF${Math.round(etfWeight*100)}%）`;
   const ds = cumChartInst.data.datasets[0];
   if(ds){ ds.data=data; ds.label=label; }
@@ -1384,7 +1371,7 @@ function updateChartSelected(){
 function renderAnnualWithKey(selKey){
   if(!cumData) return;
   const dates  = cumData.dates||[];
-  const retSel = cumData['ret_'+selKey]||cumData['ret_r20_80']||[];
+  const retSel = cumData['ret_'+selKey]||cumData['ret_r40_60']||[];
   const retETF = cumData['ret_r100_0']||[];
   const retDEF = cumData['ret_r0_100']||[];
   const retSPY = cumData['ret_SPY']||[];
@@ -1445,7 +1432,7 @@ function setCumScale(mode, btn){
 
 // ── Walk-Forward 検証テーブル ─────────────────────────────────────
 const WF_RATIO_LABELS = {
-  'r0_100':'防御型単体','r10_90':'守備重視型','r20_80':'Sharpe最高型',
+  'r0_100':'防御型単体','r10_90':'守備重視型','r40_60':'Sharpe最高型',
   'r30_70':'高効率均衡型','r40_60':'成長均衡型','r50_50':'均等型',
   'r60_40':'成長型','r70_30':'積極成長型','r80_20':'高成長型',
   'r90_10':'攻撃型','r100_0':'ETF単体',
@@ -1464,7 +1451,7 @@ function renderWF(){
 
   // IS vs OOS 全比率テーブル
   wfBodyEl.innerHTML = Object.entries(ratios).map(([key, d])=>{
-    const isRec = key === 'r20_80';  // Sharpe最高型
+    const isRec = key === 'r40_60';  // Sharpe最高型
     const bg    = isRec ? 'background:rgba(0,114,178,.05)' : '';
     const fw    = isRec ? '700' : '400';
     const mark  = isRec ? '★ ' : '';
@@ -1483,8 +1470,8 @@ function renderWF(){
     </tr>`;
   }).join('');
 
-  // r20_80 ウィンドウ別詳細
-  const r40 = ratios['r20_80'];  // Sharpe最高型(r20_80)を表示
+  // r40_60 ウィンドウ別詳細
+  const r40 = ratios['r40_60'];  // Sharpe最高型(r40_60)を表示
   if(r40 && wfDetailEl){
     wfDetailEl.innerHTML = r40.windows.map(w=>{
       const isWorst = w.sharpe < 0.5;
