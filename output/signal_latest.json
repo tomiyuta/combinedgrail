@@ -1,49 +1,62 @@
 {
   "date": "2026-03",
-  "generated": "2026-03-22T12:33:57Z",
+  "generated": "2026-03-23T02:12:09Z",
   "etf_weight": 0.4,
   "def_weight": 0.6,
-  "regime": "ATK",
-  "regime_label": "1st gate通過",
+  "regime": "DEF",
+  "regime_label": "1st gate閉鎖",
   "etf_signal": {
     "date": "2026-03",
-    "generated": "2026-03-22T12:33:57Z",
-    "regime": "ATK",
-    "regime_label": "1st gate通過",
+    "generated": "2026-03-23T02:12:09Z",
+    "regime": "DEF",
+    "regime_label": "1st gate閉鎖",
     "sensors": {
-      "A": "ATK",
-      "B": "TMV",
-      "C": "XLU",
-      "D": "TQQQ"
+      "A": "DEF",
+      "B": "SubA:DEF",
+      "C": "SubB:DEF",
+      "D": "SubC:ATK"
     },
     "mode": "sz=1.00",
     "c5_active": true,
     "rates_acute": false,
     "holdings": [
       {
-        "ticker": "XLU",
-        "name": "公益セクター（守備）",
-        "weight": 0.5,
-        "color": "#34D399"
+        "ticker": "TECL",
+        "name": "テクノロジー 3倍レバレッジ",
+        "weight": 0.333,
+        "color": "#F59E0B"
       },
       {
-        "ticker": "TQQQ",
-        "name": "NASDAQ 3倍レバレッジ",
-        "weight": 0.5,
-        "color": "#60A5FA"
+        "ticker": "XLU",
+        "name": "公益セクター（守備）",
+        "weight": 0.667,
+        "color": "#34D399"
       }
     ],
     "weights_M4": {
-      "XLU": 0.5,
-      "TQQQ": 0.5
+      "TECL": 0.33299999999999996,
+      "XLU": 0.667
     },
     "features": {
-      "LQD_ex": 0.03,
-      "LQD_12m": 0.0659,
-      "rel_TQ_12m": 0.0425,
-      "mom4m_TMV": -0.0214,
-      "XLU_12m": 0.2394,
-      "HY_spread_pct": 3.12
+      "LQD_ex": 0.030008581206480006,
+      "LQD_12m": 0.06590858120648001,
+      "rel_TQ_12m": 0.04254080423676471,
+      "mom4m_TMV": -0.021372167308643244,
+      "XLU_12m": 0.23941898890161226,
+      "HY_spread_pct": 3.12,
+      "VIX": 21.56,
+      "SPY_12m": 0.1680731608315891,
+      "SPY_3m": 0.006770697806726848,
+      "LQD_6m": 0.04025676586691082,
+      "TQQQ_3m": -0.0906208498196355,
+      "XLU_3m": 0.06118472313949249,
+      "XLU_6m": 0.14827503611264575,
+      "GLD_3m": 0.24716405566240013,
+      "GLD_6m": 0.5208915926074678,
+      "TECL_6m": 0.0583136672890367,
+      "TECL_3m": -0.13654909949116187,
+      "TQQQ_6m": 0.11112251408314598,
+      "rel_TQ_6m": -0.052808846794109285
     },
     "boundary_LQD": false,
     "boundary_tech": true,
@@ -87,16 +100,12 @@
   },
   "holdings": [
     {
+      "ticker": "XLU",
+      "weight": 0.2668
+    },
+    {
       "ticker": "EFA",
       "weight": 0.203
-    },
-    {
-      "ticker": "XLU",
-      "weight": 0.2
-    },
-    {
-      "ticker": "TQQQ",
-      "weight": 0.2
     },
     {
       "ticker": "EEM",
@@ -107,21 +116,25 @@
       "weight": 0.1515
     },
     {
+      "ticker": "TECL",
+      "weight": 0.1332
+    },
+    {
       "ticker": "GLD",
       "weight": 0.0907
     }
   ],
-  "alpha_gate": "ATK",
+  "alpha_gate": "DEF",
   "alpha_sz": 1.0,
   "alpha_layers": {
-    "A": "ATK",
-    "B": "TMV",
-    "C": "XLU",
-    "D": "TQQQ"
+    "A": "DEF",
+    "B": "SubA:DEF",
+    "C": "SubB:DEF",
+    "D": "SubC:ATK"
   },
   "alpha_alloc": {
-    "XLU": 50.0,
-    "TQQQ": 50.0
+    "TECL": 33.3,
+    "XLU": 66.7
   },
   "alert": true
 }

@@ -789,14 +789,16 @@ async function renderAll(){
   renderAnnual();
   initCumChart();
   updateStatsDisplay(); renderDSR(); renderWF(); renderRobust();
-  const d=signalData.date; if(d){
-    const parts=d.split('-'); const y=parts[0]; const m=parseInt(parts[1],10);
+  // 動的日付計算（毎月1日自動切替）
+  const _cgNow = new Date();
+  const _cgExecM = _cgNow.getMonth() + 1;
+  const _cgExecY = _cgNow.getFullYear();
+  {
     const pmEl=document.getElementById('portfolioMonthText');
-    if(pmEl) pmEl.textContent = y+'年 '+m+'月';
-    // ポートフォリオ構成・リバランスの年月も同期
+    if(pmEl) pmEl.textContent = _cgExecY+'年 '+_cgExecM+'月';
     const portEl = document.getElementById('portMonthText');
     const rebEl  = document.getElementById('rebalMonthText');
-    const ymlbl = y+'年 '+m+'月 シグナル';
+    const ymlbl = _cgExecY+'年 '+_cgExecM+'月 シグナル';
     if(portEl) portEl.textContent = ymlbl;
     if(rebEl)  rebEl.textContent  = ymlbl;
   }
