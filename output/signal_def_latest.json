@@ -1,36 +1,36 @@
 {
-  "date": "2026-03",
-  "generated": "2026-03-19T09:02:19Z",
+  "date": "2026-04",
+  "generated": "2026-04-01T22:03:46Z",
   "strategy": "OG防御型",
   "top_n": 4,
   "holdings": [
     {
       "ticker": "DBC",
       "name": "Invesco DB Commodity",
-      "momentum": 0.3423,
+      "momentum": 0.3182,
       "category": "コモディティ",
-      "weight": 0.2525
+      "weight": 0.2614
     },
     {
       "ticker": "GLD",
       "name": "SPDR Gold Shares",
-      "momentum": 0.3198,
+      "momentum": 0.2297,
       "category": "金",
-      "weight": 0.1511
+      "weight": 0.1577
     },
     {
       "ticker": "EEM",
       "name": "iShares MSCI Emerging Markets",
-      "momentum": 0.0962,
+      "momentum": 0.0786,
       "category": "新興国株",
-      "weight": 0.258
+      "weight": 0.2527
     },
     {
       "ticker": "EFA",
       "name": "iShares MSCI EAFE",
-      "momentum": 0.0585,
+      "momentum": 0.0665,
       "category": "先進国株",
-      "weight": 0.3384
+      "weight": 0.3282
     }
   ]
 }

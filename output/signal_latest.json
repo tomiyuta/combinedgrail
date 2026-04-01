@@ -1,30 +1,30 @@
 {
-  "date": "2026-03",
-  "generated": "2026-03-23T02:12:09Z",
+  "date": "2026-04",
+  "generated": "2026-04-01T22:03:47Z",
   "etf_weight": 0.4,
   "def_weight": 0.6,
   "regime": "DEF",
   "regime_label": "1st gate閉鎖",
   "etf_signal": {
-    "date": "2026-03",
-    "generated": "2026-03-23T02:12:09Z",
+    "date": "2026-04",
+    "generated": "2026-04-01T22:03:47Z",
     "regime": "DEF",
     "regime_label": "1st gate閉鎖",
     "sensors": {
       "A": "DEF",
-      "B": "SubA:DEF",
+      "B": "SubA:DEF(GLD)",
       "C": "SubB:DEF",
-      "D": "SubC:ATK"
+      "D": "SubC:DEF"
     },
     "mode": "sz=1.00",
-    "c5_active": true,
+    "c5_active": false,
     "rates_acute": false,
     "holdings": [
       {
-        "ticker": "TECL",
-        "name": "テクノロジー 3倍レバレッジ",
+        "ticker": "GLD",
+        "name": "金・クライシスヘッジ",
         "weight": 0.333,
-        "color": "#F59E0B"
+        "color": "#D4AF7A"
       },
       {
         "ticker": "XLU",
@@ -34,67 +34,69 @@
       }
     ],
     "weights_M4": {
-      "TECL": 0.33299999999999996,
+      "GLD": 0.33299999999999996,
       "XLU": 0.667
     },
     "features": {
-      "LQD_ex": 0.030008581206480006,
-      "LQD_12m": 0.06590858120648001,
-      "rel_TQ_12m": 0.04254080423676471,
-      "mom4m_TMV": -0.021372167308643244,
-      "XLU_12m": 0.23941898890161226,
-      "HY_spread_pct": 3.12,
-      "VIX": 21.56,
-      "SPY_12m": 0.1680731608315891,
-      "SPY_3m": 0.006770697806726848,
-      "LQD_6m": 0.04025676586691082,
-      "TQQQ_3m": -0.0906208498196355,
-      "XLU_3m": 0.06118472313949249,
-      "XLU_6m": 0.14827503611264575,
-      "GLD_3m": 0.24716405566240013,
-      "GLD_6m": 0.5208915926074678,
-      "TECL_6m": 0.0583136672890367,
-      "TECL_3m": -0.13654909949116187,
-      "TQQQ_6m": 0.11112251408314598,
-      "rel_TQ_6m": -0.052808846794109285
+      "LQD_ex": 0.01301305594558852,
+      "LQD_12m": 0.04911305594558852,
+      "rel_TQ_12m": 0.11190703618414893,
+      "mom4m_TMV": 0.10034591512942055,
+      "XLU_12m": 0.19723103667407713,
+      "HY_spread_pct": 3.28,
+      "VIX": 25.55,
+      "SPY_12m": 0.17624039240221048,
+      "SPY_3m": -0.0434922209460165,
+      "LQD_6m": -0.00038968983217077036,
+      "TQQQ_3m": -0.2081703125396981,
+      "XLU_3m": 0.08301241520059986,
+      "XLU_6m": 0.06742373487738483,
+      "GLD_3m": 0.08574098860906036,
+      "GLD_6m": 0.21048191708803224,
+      "TECL_6m": -0.26066392421555107,
+      "TECL_3m": -0.2173696882839276,
+      "TQQQ_6m": -0.19177620374708285,
+      "rel_TQ_6m": -0.06888772046846822,
+      "XLU_52w_dist": null,
+      "XLU_SPY_3m": 0.12650463614661636
     },
     "boundary_LQD": false,
-    "boundary_tech": true,
+    "boundary_tech": false,
     "sz": 1.0
   },
   "def_signal": {
-    "date": "2026-03",
-    "generated": "2026-03-19T09:02:19Z",
+    "date": "2026-04",
+    "generated": "2026-04-01T22:03:46Z",
     "strategy": "OG防御型",
     "top_n": 4,
     "holdings": [
       {
         "ticker": "DBC",
         "name": "Invesco DB Commodity",
-        "momentum": 0.3423,
+        "momentum": 0.3182,
         "category": "コモディティ",
-        "weight": 0.2525
+        "weight": 0.2614
       },
       {
         "ticker": "GLD",
         "name": "SPDR Gold Shares",
-        "momentum": 0.3198,
+        "momentum": 0.2297,
         "category": "金",
-        "weight": 0.1511
+        "weight": 0.1577
       },
       {
         "ticker": "EEM",
         "name": "iShares MSCI Emerging Markets",
-        "momentum": 0.0962,
+        "momentum": 0.0786,
         "category": "新興国株",
-        "weight": 0.258
+        "weight": 0.2527
       },
       {
         "ticker": "EFA",
         "name": "iShares MSCI EAFE",
-        "momentum": 0.0585,
+        "momentum": 0.0665,
         "category": "先進国株",
-        "weight": 0.3384
+        "weight": 0.3282
       }
     ]
   },
@@ -104,37 +106,33 @@
       "weight": 0.2668
     },
     {
-      "ticker": "EFA",
-      "weight": 0.203
+      "ticker": "GLD",
+      "weight": 0.2278
     },
     {
-      "ticker": "EEM",
-      "weight": 0.1548
+      "ticker": "EFA",
+      "weight": 0.1969
     },
     {
       "ticker": "DBC",
-      "weight": 0.1515
+      "weight": 0.1568
     },
     {
-      "ticker": "TECL",
-      "weight": 0.1332
-    },
-    {
-      "ticker": "GLD",
-      "weight": 0.0907
+      "ticker": "EEM",
+      "weight": 0.1516
     }
   ],
   "alpha_gate": "DEF",
   "alpha_sz": 1.0,
   "alpha_layers": {
     "A": "DEF",
-    "B": "SubA:DEF",
+    "B": "SubA:DEF(GLD)",
     "C": "SubB:DEF",
-    "D": "SubC:ATK"
+    "D": "SubC:DEF"
   },
   "alpha_alloc": {
-    "TECL": 33.3,
+    "GLD": 33.3,
     "XLU": 66.7
   },
-  "alert": true
+  "alert": false
 }
